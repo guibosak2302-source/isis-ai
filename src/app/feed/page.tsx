@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function FeedPage() {
   return (
     <div style={{ backgroundColor: "#0E0E0E", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
@@ -271,7 +273,8 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
           <StatButton icon={<ReplyIcon />} count={stats.replies} label={replyLabel} />
           <StatButton icon={<StarIcon />} count={stats.interested} label={`${stats.interested} interesse`} />
         </div>
-        <button
+        <Link
+          href="/perfil"
           style={{
             height: "36px",
             padding: "0 18px",
@@ -283,10 +286,13 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
             fontWeight: 500,
             fontFamily: "var(--font-inter), Inter, sans-serif",
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            textDecoration: "none",
           }}
         >
           {interestLabel}
-        </button>
+        </Link>
       </div>
     </article>
   );
