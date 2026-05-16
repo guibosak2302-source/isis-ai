@@ -292,7 +292,7 @@ const NAV_ITEMS = [
   { label: "Feed", href: "/feed", icon: <HomeIcon /> },
   { label: "Buscar", href: "/feed", icon: <SearchNavIcon /> },
   { label: "Pedidos", href: "/pedidos", icon: <ClipboardIcon /> },
-  { label: "Perfil", href: "/perfil", icon: <UserIcon /> },
+  { label: "Perfil", href: "/meu-perfil", icon: <UserIcon /> },
 ];
 
 function BottomNav({ active }: { active: string }) {

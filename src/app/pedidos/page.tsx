@@ -367,7 +367,7 @@ const NAV_ITEMS = [
   { label: "Buscar",  href: "/feed",       icon: <SearchIcon /> },
   { label: "Criar",   href: "/criar-post", icon: <CreateIcon />, special: true },
   { label: "Pedidos", href: "/pedidos",    icon: <ClipboardIcon /> },
-  { label: "Perfil",  href: "/perfil",     icon: <UserIcon /> },
+  { label: "Perfil",  href: "/meu-perfil", icon: <UserIcon /> },
 ];
 
 function BottomNav({ active }: { active: string }) {

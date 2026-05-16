@@ -22,7 +22,7 @@ const NAV_ITEMS = [
   { label: "Buscar",  href: "/feed",        icon: <SearchNavIcon2 /> },
   { label: "Criar",   href: "/criar-post",  icon: <CreateNavIcon />, special: true },
   { label: "Pedidos", href: "/pedidos",     icon: <ClipboardNavIcon /> },
-  { label: "Perfil",  href: "/perfil",      icon: <UserNavIcon /> },
+  { label: "Perfil",  href: "/meu-perfil",  icon: <UserNavIcon /> },
 ];
 
 function BottomNav({ active }: { active: string }) {
