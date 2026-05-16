@@ -19,7 +19,7 @@ export default function FeedPage() {
 /* ─── Bottom Nav ──────────────────────────────────────────── */
 const NAV_ITEMS = [
   { label: "Feed",    href: "/feed",        icon: <HomeNavIcon /> },
-  { label: "Buscar",  href: "/feed",        icon: <SearchNavIcon2 /> },
+  { label: "Buscar",  href: "/busca",        icon: <SearchNavIcon2 /> },
   { label: "Criar",   href: "/criar-post",  icon: <CreateNavIcon />, special: true },
   { label: "Pedidos", href: "/pedidos",     icon: <ClipboardNavIcon /> },
   { label: "Perfil",  href: "/meu-perfil",  icon: <UserNavIcon /> },

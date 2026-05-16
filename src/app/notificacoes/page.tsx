@@ -248,7 +248,7 @@ function IconBox({ children, color = "#222222", stroke: _stroke }: { children: R
 /* ─── Bottom Nav ──────────────────────────────────────────── */
 const NAV_ITEMS = [
   { label: "Feed",    href: "/feed",       icon: <HomeIcon /> },
-  { label: "Buscar",  href: "/feed",       icon: <SearchIcon /> },
+  { label: "Buscar",  href: "/busca",       icon: <SearchIcon /> },
   { label: "Criar",   href: "/criar-post", icon: <CreateIcon />, special: true },
   { label: "Pedidos", href: "/pedidos",    icon: <ClipboardIcon /> },
   { label: "Perfil",  href: "/meu-perfil", icon: <UserIcon /> },

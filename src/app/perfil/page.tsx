@@ -290,7 +290,7 @@ function Reviews() {
 /* ─── Bottom Nav ──────────────────────────────────────────── */
 const NAV_ITEMS = [
   { label: "Feed", href: "/feed", icon: <HomeIcon /> },
-  { label: "Buscar", href: "/feed", icon: <SearchNavIcon /> },
+  { label: "Buscar", href: "/busca", icon: <SearchNavIcon /> },
   { label: "Pedidos", href: "/pedidos", icon: <ClipboardIcon /> },
   { label: "Perfil", href: "/meu-perfil", icon: <UserIcon /> },
 ];
