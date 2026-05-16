@@ -353,7 +353,7 @@ const NAV_ITEMS = [
   { label: "Feed",    href: "/feed",        icon: <HomeIcon /> },
   { label: "Buscar",  href: "/feed",        icon: <SearchIcon /> },
   { label: "Criar",   href: "/criar-post",  icon: <CreateIcon />, special: true },
-  { label: "Pedidos", href: "/feed",        icon: <ClipboardIcon /> },
+  { label: "Pedidos", href: "/pedidos",     icon: <ClipboardIcon /> },
   { label: "Perfil",  href: "/perfil",      icon: <UserIcon /> },
 ];
 

@@ -21,7 +21,7 @@ const NAV_ITEMS = [
   { label: "Feed",    href: "/feed",        icon: <HomeNavIcon /> },
   { label: "Buscar",  href: "/feed",        icon: <SearchNavIcon2 /> },
   { label: "Criar",   href: "/criar-post",  icon: <CreateNavIcon />, special: true },
-  { label: "Pedidos", href: "/feed",        icon: <ClipboardNavIcon /> },
+  { label: "Pedidos", href: "/pedidos",     icon: <ClipboardNavIcon /> },
   { label: "Perfil",  href: "/perfil",      icon: <UserNavIcon /> },
 ];
 
