@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function LoginPage() {
   return (
     <main
@@ -42,7 +44,8 @@ export default function LoginPage() {
       {/* Buttons container */}
       <div style={{ width: "100%", maxWidth: "360px", display: "flex", flexDirection: "column", gap: "0" }}>
         {/* Entrar */}
-        <button
+        <Link
+          href="/feed"
           style={{
             width: "100%",
             height: "52px",
@@ -55,13 +58,18 @@ export default function LoginPage() {
             fontFamily: "var(--font-inter), Inter, sans-serif",
             cursor: "pointer",
             marginBottom: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
           }}
         >
           Entrar
-        </button>
+        </Link>
 
         {/* Criar conta */}
-        <button
+        <Link
+          href="/feed"
           style={{
             width: "100%",
             height: "52px",
@@ -74,10 +82,14 @@ export default function LoginPage() {
             fontFamily: "var(--font-inter), Inter, sans-serif",
             cursor: "pointer",
             marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
           }}
         >
           Criar conta
-        </button>
+        </Link>
 
         {/* Divider "ou" */}
         <div
