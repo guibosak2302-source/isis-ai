@@ -19,6 +19,8 @@ export default function ChatPage() {
           <ContextBanner />
           <Messages />
           <ActionBanner />
+          <Gap h={10} />
+          <ScheduleBanner />
         </div>
       </div>
 
@@ -264,6 +266,74 @@ function ActionBanner() {
   );
 }
 
+/* ─── Schedule Banner ────────────────────────────────────── */
+function ScheduleBanner() {
+  return (
+    <div
+      style={{
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
+        borderRadius: "10px",
+        padding: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "12px",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+        <div
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "8px",
+            backgroundColor: "#2E2E2E",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <CalendarIcon />
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>
+            Agendar visita técnica
+          </p>
+          <p style={{ fontSize: "12px", color: "#555555" }}>Escolha data e horário com Carlos</p>
+        </div>
+      </div>
+      <Link
+        href="/agendamento"
+        style={{
+          flexShrink: 0,
+          height: "34px",
+          padding: "0 16px",
+          borderRadius: "999px",
+          backgroundColor: "transparent",
+          color: "#FFD11A",
+          border: "1px solid #FFD11A",
+          fontSize: "13px",
+          fontWeight: 500,
+          fontFamily: "var(--font-inter), Inter, sans-serif",
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+        }}
+      >
+        Agendar
+      </Link>
+    </div>
+  );
+}
+
+/* ─── Gap ─────────────────────────────────────────────────── */
+function Gap({ h }: { h: number }) {
+  return <div style={{ height: `${h}px` }} />;
+}
+
 /* ─── Chat Input ──────────────────────────────────────────── */
 function ChatInput() {
   return (
@@ -354,6 +424,17 @@ function SendIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="22" y1="2" x2="11" y2="13" />
       <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
     </svg>
   );
 }
