@@ -4,14 +4,133 @@ export default function FeedPage() {
   return (
     <div style={{ backgroundColor: "#0E0E0E", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
       <Navbar />
-      <main style={{ paddingTop: "64px", paddingBottom: "32px" }}>
+      <main style={{ paddingTop: "64px", paddingBottom: "88px" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
           <SearchBar />
           <Filters />
           <Section />
         </div>
       </main>
+      <BottomNav active="Feed" />
     </div>
+  );
+}
+
+/* ─── Bottom Nav ──────────────────────────────────────────── */
+const NAV_ITEMS = [
+  { label: "Feed",    href: "/feed",        icon: <HomeNavIcon /> },
+  { label: "Buscar",  href: "/feed",        icon: <SearchNavIcon2 /> },
+  { label: "Criar",   href: "/criar-post",  icon: <CreateNavIcon />, special: true },
+  { label: "Pedidos", href: "/feed",        icon: <ClipboardNavIcon /> },
+  { label: "Perfil",  href: "/perfil",      icon: <UserNavIcon /> },
+];
+
+function BottomNav({ active }: { active: string }) {
+  return (
+    <nav
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: "64px",
+        backgroundColor: "#0E0E0E",
+        borderTop: "1px solid #222222",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+        padding: "0 8px",
+        zIndex: 50,
+      }}
+    >
+      {NAV_ITEMS.map(({ label, href, icon, special }) => {
+        const isActive = label === active;
+        return (
+          <Link
+            key={label}
+            href={href}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "3px",
+              textDecoration: "none",
+              color: isActive ? "#FFFFFF" : "#555555",
+              minWidth: "48px",
+            }}
+          >
+            {special ? (
+              <div
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  backgroundColor: "#FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: "-2px",
+                }}
+              >
+                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+              </div>
+            ) : (
+              <>
+                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
+              </>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+function HomeNavIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function SearchNavIcon2() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function CreateNavIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+function ClipboardNavIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" ry="1" />
+      <line x1="9" y1="12" x2="15" y2="12" />
+      <line x1="9" y1="16" x2="13" y2="16" />
+    </svg>
+  );
+}
+
+function UserNavIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
   );
 }
 
