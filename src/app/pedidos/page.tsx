@@ -4,7 +4,7 @@ export default function PedidosPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingBottom: "80px",
@@ -31,15 +31,15 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "0 16px",
       }}
     >
-      <span style={{ fontSize: "17px", fontWeight: 500, color: "#FFFFFF" }}>Meus pedidos</span>
+      <span style={{ fontSize: "17px", fontWeight: 500, color: "#F0F0F0" }}>Meus pedidos</span>
     </header>
   );
 }
@@ -69,9 +69,9 @@ function StatusFilters() {
               height: "34px",
               padding: "0 16px",
               borderRadius: "999px",
-              border: active ? "none" : "1px solid #222222",
-              backgroundColor: active ? "#FFFFFF" : "transparent",
-              color: active ? "#0E0E0E" : "#888888",
+              border: active ? "none" : "1px solid #2E2E2E",
+              backgroundColor: active ? "#FFD11A" : "transparent",
+              color: active ? "#0F0F0F" : "#888888",
               fontSize: "13px",
               fontWeight: active ? 500 : 400,
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -128,8 +128,8 @@ function CardEmAndamento() {
   return (
     <article
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "16px",
         padding: "18px",
       }}
@@ -138,7 +138,7 @@ function CardEmAndamento() {
         <Badge bg="#1A3A1A" color="#4CAF50" label="Em andamento" />
       </div>
 
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         Pintura de apartamento 80m²
       </p>
 
@@ -148,7 +148,7 @@ function CardEmAndamento() {
         Iniciado em 10 mai 2026
       </p>
 
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "14px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "14px" }}>
         R$ 3.200
       </p>
 
@@ -157,7 +157,7 @@ function CardEmAndamento() {
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
           <span style={{ fontSize: "12px", color: "#555555" }}>2 de 4 etapas concluídas</span>
         </div>
-        <div style={{ height: "4px", backgroundColor: "#222222", borderRadius: "999px", overflow: "hidden" }}>
+        <div style={{ height: "4px", backgroundColor: "#2E2E2E", borderRadius: "999px", overflow: "hidden" }}>
           <div style={{ width: "50%", height: "100%", backgroundColor: "#4CAF50", borderRadius: "999px" }} />
         </div>
       </div>
@@ -169,13 +169,13 @@ function CardEmAndamento() {
             key={label}
             style={{
               fontSize: "12px",
-              color: done ? "#4CAF50" : current ? "#FFFFFF" : "#555555",
+              color: done ? "#4CAF50" : current ? "#F0F0F0" : "#555555",
               fontWeight: current ? 500 : 400,
             }}
           >
             {done ? `${label} ✓` : current ? `${label} →` : label}
             {label !== "Acabamento" && (
-              <span style={{ color: "#333333", marginLeft: "6px" }}>·</span>
+              <span style={{ color: "#3A3A3A", marginLeft: "6px" }}>·</span>
             )}
           </span>
         ))}
@@ -192,8 +192,8 @@ function CardAguardando() {
   return (
     <article
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "16px",
         padding: "18px",
       }}
@@ -202,13 +202,13 @@ function CardAguardando() {
         <Badge bg="#3A3A1A" color="#FFB800" label="Aguardando aprovação" />
       </div>
 
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         Instalação elétrica residencial
       </p>
 
       <ProviderRow letter="R" bg="#1E3A2A" name="Ricardo Alves" verified={false} />
 
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", margin: "12px 0 16px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", margin: "12px 0 16px" }}>
         R$ 850
       </p>
 
@@ -234,8 +234,8 @@ function CardConcluido({ title, avatarLetter, avatarBg, provider, verified, date
   return (
     <article
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "16px",
         padding: "18px",
       }}
@@ -244,7 +244,7 @@ function CardConcluido({ title, avatarLetter, avatarBg, provider, verified, date
         <Badge bg="#1A2A3A" color="#4A9EFF" label="Concluído" />
       </div>
 
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         {title}
       </p>
 
@@ -255,7 +255,7 @@ function CardConcluido({ title, avatarLetter, avatarBg, provider, verified, date
       )}
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "10px 0 16px" }}>
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>{price}</p>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{price}</p>
         <Stars count={stars} />
       </div>
 
@@ -268,8 +268,8 @@ function CardConcluido({ title, avatarLetter, avatarBg, provider, verified, date
             height: "38px",
             padding: "0 18px",
             borderRadius: "999px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             fontSize: "13px",
             fontWeight: 500,
@@ -321,7 +321,7 @@ function ProviderRow({ letter, bg, name, verified }: { letter: string; bg: strin
           flexShrink: 0,
         }}
       >
-        <span style={{ fontSize: "12px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+        <span style={{ fontSize: "12px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
       </div>
       <span style={{ fontSize: "13px", color: "#888888" }}>{name}</span>
       {verified && <VerifiedBadge />}
@@ -338,7 +338,7 @@ function Stars({ count }: { count: number }) {
 }
 
 function Divider() {
-  return <div style={{ height: "1px", backgroundColor: "#222222", marginBottom: "14px" }} />;
+  return <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "14px" }} />;
 }
 
 function OutlineButton({ label, href }: { label: string; href?: string }) {
@@ -347,8 +347,8 @@ function OutlineButton({ label, href }: { label: string; href?: string }) {
     padding: "0 18px",
     borderRadius: "999px",
     backgroundColor: "transparent",
-    color: "#FFFFFF",
-    border: "1px solid #333333",
+    color: "#F0F0F0",
+    border: "1px solid #3A3A3A",
     fontSize: "13px",
     fontWeight: 400 as const,
     fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -367,8 +367,8 @@ function OutlineButton({ label, href }: { label: string; href?: string }) {
         padding: "0 18px",
         borderRadius: "999px",
         backgroundColor: "transparent",
-        color: "#FFFFFF",
-        border: "1px solid #333333",
+        color: "#F0F0F0",
+        border: "1px solid #3A3A3A",
         fontSize: "13px",
         fontWeight: 400,
         fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -387,8 +387,8 @@ function SolidButton({ label }: { label: string }) {
         height: "38px",
         padding: "0 18px",
         borderRadius: "999px",
-        backgroundColor: "#FFFFFF",
-        color: "#0E0E0E",
+        backgroundColor: "#FFD11A",
+        color: "#0F0F0F",
         border: "none",
         fontSize: "13px",
         fontWeight: 500,
@@ -419,8 +419,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -440,7 +440,7 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "48px",
             }}
           >
@@ -450,18 +450,18 @@ function BottomNav({ active }: { active: string }) {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "#FFD11A",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: "-2px",
                 }}
               >
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}

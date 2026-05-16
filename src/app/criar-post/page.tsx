@@ -4,7 +4,7 @@ export default function CriarPostPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingBottom: "88px",
@@ -42,8 +42,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -63,13 +63,13 @@ function Header() {
         Cancelar
       </Link>
 
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Novo post</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Novo post</span>
 
       <button
         style={{
           fontSize: "15px",
           fontWeight: 500,
-          color: "#FFFFFF",
+          color: "#F0F0F0",
           background: "none",
           border: "none",
           cursor: "pointer",
@@ -96,9 +96,9 @@ function PostTypePills() {
             height: "38px",
             padding: "0 20px",
             borderRadius: "999px",
-            border: active ? "none" : "1px solid #333333",
-            backgroundColor: active ? "#FFFFFF" : "transparent",
-            color: active ? "#0E0E0E" : "#888888",
+            border: active ? "none" : "1px solid #3A3A3A",
+            backgroundColor: active ? "#FFD11A" : "transparent",
+            color: active ? "#0F0F0F" : "#888888",
             fontSize: "14px",
             fontWeight: active ? 500 : 400,
             fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -114,7 +114,7 @@ function PostTypePills() {
 
 /* ─── Divider ─────────────────────────────────────────────── */
 function Divider() {
-  return <div style={{ height: "1px", backgroundColor: "#222222", margin: "20px 0" }} />;
+  return <div style={{ height: "1px", backgroundColor: "#2E2E2E", margin: "20px 0" }} />;
 }
 
 /* ─── Text Area ───────────────────────────────────────────── */
@@ -132,7 +132,7 @@ function TextArea() {
         fontSize: "15px",
         fontWeight: 400,
         fontFamily: "var(--font-inter), Inter, sans-serif",
-        color: "#FFFFFF",
+        color: "#F0F0F0",
         lineHeight: 1.65,
       }}
     />
@@ -152,8 +152,8 @@ function PhotoSection() {
           aria-label="Adicionar foto"
           style={{
             height: "80px",
-            backgroundColor: "#161616",
-            border: "1px dashed #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px dashed #2E2E2E",
             borderRadius: "10px",
             display: "flex",
             alignItems: "center",
@@ -169,8 +169,8 @@ function PhotoSection() {
             key={i}
             style={{
               height: "80px",
-              backgroundColor: "#161616",
-              border: "1px dashed #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px dashed #2E2E2E",
               borderRadius: "10px",
             }}
           />
@@ -192,12 +192,12 @@ function CategoryField() {
         style={{
           width: "100%",
           height: "48px",
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "10px",
           padding: "0 14px",
           fontSize: "14px",
-          color: "#FFFFFF",
+          color: "#F0F0F0",
           fontFamily: "var(--font-inter), Inter, sans-serif",
           outline: "none",
           appearance: "none",
@@ -207,11 +207,11 @@ function CategoryField() {
           cursor: "pointer",
         }}
       >
-        <option value="" disabled style={{ color: "#555555", backgroundColor: "#161616" }}>
+        <option value="" disabled style={{ color: "#555555", backgroundColor: "#1A1A1A" }}>
           Selecione uma categoria
         </option>
         {["Reformas", "Pintura", "Faxina", "Elétrica", "Aulas", "Beleza", "Jardinagem", "TI", "Outros"].map((cat) => (
-          <option key={cat} value={cat} style={{ backgroundColor: "#161616" }}>
+          <option key={cat} value={cat} style={{ backgroundColor: "#1A1A1A" }}>
             {cat}
           </option>
         ))}
@@ -237,13 +237,13 @@ function LocationField() {
           style={{
             width: "100%",
             height: "48px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "10px",
             paddingLeft: "40px",
             paddingRight: "14px",
             fontSize: "14px",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             fontFamily: "var(--font-inter), Inter, sans-serif",
             outline: "none",
           }}
@@ -272,12 +272,12 @@ function PriceField() {
             style={{
               flex: 1,
               height: "48px",
-              backgroundColor: "#161616",
-              border: "1px solid #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "0 14px",
               fontSize: "14px",
-              color: "#FFFFFF",
+              color: "#F0F0F0",
               fontFamily: "var(--font-inter), Inter, sans-serif",
               outline: "none",
               minWidth: 0,
@@ -294,8 +294,8 @@ function AISuggestion() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "10px",
         padding: "14px",
         display: "flex",
@@ -310,7 +310,7 @@ function AISuggestion() {
             width: "36px",
             height: "36px",
             borderRadius: "8px",
-            backgroundColor: "#222222",
+            backgroundColor: "#2E2E2E",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -320,8 +320,8 @@ function AISuggestion() {
           <StarIcon />
         </div>
         <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", marginBottom: "2px" }}>
-            Sugestão da Ísis AI
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>
+            Sugestão da Bico AI
           </p>
           <p style={{ fontSize: "12px", color: "#555555" }}>Melhore sua descrição com IA</p>
         </div>
@@ -333,8 +333,8 @@ function AISuggestion() {
           padding: "0 16px",
           borderRadius: "999px",
           backgroundColor: "transparent",
-          color: "#FFFFFF",
-          border: "1px solid #333333",
+          color: "#F0F0F0",
+          border: "1px solid #3A3A3A",
           fontSize: "13px",
           fontWeight: 400,
           fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -366,8 +366,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -387,7 +387,7 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "48px",
             }}
           >
@@ -397,18 +397,18 @@ function BottomNav({ active }: { active: string }) {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "#FFD11A",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: "-2px",
                 }}
               >
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}

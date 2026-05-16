@@ -4,7 +4,7 @@ export default function AssinaturaPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -39,8 +39,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -50,11 +50,11 @@ function Header() {
       <Link
         href="/contrato"
         aria-label="Voltar"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}
       >
         <ArrowLeftIcon />
       </Link>
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Assinar contrato</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Assinar contrato</span>
       <div style={{ width: "36px" }} />
     </header>
   );
@@ -65,8 +65,8 @@ function ContractSummary() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         padding: "16px",
         display: "flex",
@@ -79,7 +79,7 @@ function ContractSummary() {
           width: "40px",
           height: "40px",
           borderRadius: "10px",
-          backgroundColor: "#222222",
+          backgroundColor: "#2E2E2E",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -90,7 +90,7 @@ function ContractSummary() {
         <DocumentIcon />
       </div>
       <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>
           Pintura completa de apartamento 80m²
         </p>
         <p style={{ fontSize: "13px", color: "#888888", marginBottom: "4px" }}>
@@ -109,19 +109,19 @@ function SignaturesStatus() {
       <SectionLabel text="Assinaturas" />
       <div
         style={{
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "12px",
           overflow: "hidden",
         }}
       >
         {/* Marina — signed */}
-        <div style={{ padding: "16px", borderBottom: "1px solid #222222" }}>
+        <div style={{ padding: "16px", borderBottom: "1px solid #2E2E2E" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <SmallAvatar letter="M" bg="#2A2A2A" />
               <div>
-                <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Marina Costa</p>
+                <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>Marina Costa</p>
                 <p style={{ fontSize: "12px", color: "#888888" }}>Pintora</p>
               </div>
             </div>
@@ -136,7 +136,7 @@ function SignaturesStatus() {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <SmallAvatar letter="G" bg="#1E2A3A" />
               <div>
-                <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Guilherme Bosak</p>
+                <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>Guilherme Bosak</p>
                 <p style={{ fontSize: "12px", color: "#888888" }}>Contratante</p>
               </div>
             </div>
@@ -153,14 +153,14 @@ function SignaturesStatus() {
 function SignatureArea() {
   return (
     <div>
-      <p style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+      <p style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         Sua assinatura
       </p>
       <div
         style={{
           position: "relative",
-          backgroundColor: "#161616",
-          border: "1px dashed #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px dashed #2E2E2E",
           borderRadius: "12px",
           height: "180px",
           display: "flex",
@@ -186,7 +186,7 @@ function SignatureArea() {
           Limpar
         </button>
         <PenIcon />
-        <p style={{ fontSize: "14px", color: "#333333" }}>Assine aqui com o dedo</p>
+        <p style={{ fontSize: "14px", color: "#3A3A3A" }}>Assine aqui com o dedo</p>
       </div>
     </div>
   );
@@ -220,8 +220,8 @@ function AuthMethod() {
           <div
             key={label}
             style={{
-              backgroundColor: "#161616",
-              border: `1px solid ${active ? "#FFFFFF" : "#222222"}`,
+              backgroundColor: "#1A1A1A",
+              border: `1px solid ${active ? "#FFD11A" : "#2E2E2E"}`,
               borderRadius: "10px",
               padding: "14px 16px",
               display: "flex",
@@ -230,8 +230,8 @@ function AuthMethod() {
               cursor: "pointer",
             }}
           >
-            <span style={{ color: active ? "#FFFFFF" : "#555555", display: "flex", flexShrink: 0 }}>{icon}</span>
-            <span style={{ fontSize: "14px", color: active ? "#FFFFFF" : "#888888" }}>{label}</span>
+            <span style={{ color: active ? "#F0F0F0" : "#555555", display: "flex", flexShrink: 0 }}>{icon}</span>
+            <span style={{ fontSize: "14px", color: active ? "#F0F0F0" : "#888888" }}>{label}</span>
             {active && (
               <div style={{ marginLeft: "auto" }}>
                 <CheckCircleIcon />
@@ -249,8 +249,8 @@ function LegalTerms() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "10px",
         padding: "14px",
       }}
@@ -262,7 +262,7 @@ function LegalTerms() {
         <input
           type="checkbox"
           id="agree"
-          style={{ width: "16px", height: "16px", accentColor: "#FFFFFF", cursor: "pointer", flexShrink: 0 }}
+          style={{ width: "16px", height: "16px", accentColor: "#FFD11A", cursor: "pointer", flexShrink: 0 }}
         />
         <label htmlFor="agree" style={{ fontSize: "13px", color: "#888888", cursor: "pointer" }}>
           Li e concordo com os termos
@@ -281,8 +281,8 @@ function FooterActions() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         padding: "16px",
         zIndex: 50,
       }}
@@ -293,8 +293,8 @@ function FooterActions() {
             flex: 1,
             height: "48px",
             backgroundColor: "transparent",
-            color: "#FFFFFF",
-            border: "1px solid #333333",
+            color: "#F0F0F0",
+            border: "1px solid #3A3A3A",
             borderRadius: "999px",
             fontSize: "14px",
             fontWeight: 400,
@@ -309,8 +309,8 @@ function FooterActions() {
           style={{
             flex: 1,
             height: "48px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "14px",
@@ -365,7 +365,7 @@ function SmallAvatar({ letter, bg }: { letter: string; bg: string }) {
         flexShrink: 0,
       }}
     >
-      <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }
@@ -392,7 +392,7 @@ function DocumentIcon() {
 
 function PenIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333333" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 20h9" />
       <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
     </svg>
@@ -433,7 +433,7 @@ function CheckCircleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="10" fill="#FFFFFF" />
-      <path d="M8 12l3 3 5-5" stroke="#0E0E0E" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 12l3 3 5-5" stroke="#0F0F0F" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

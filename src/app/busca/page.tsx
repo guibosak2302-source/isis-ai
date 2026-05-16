@@ -4,7 +4,7 @@ export default function BuscaPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "64px",
@@ -38,8 +38,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         gap: "12px",
@@ -49,7 +49,7 @@ function Header() {
       <Link
         href="/feed"
         aria-label="Voltar"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#FFFFFF", textDecoration: "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#F0F0F0", textDecoration: "none" }}
       >
         <ArrowLeftIcon />
       </Link>
@@ -65,13 +65,13 @@ function Header() {
           style={{
             width: "100%",
             height: "42px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "999px",
             paddingLeft: "42px",
             paddingRight: "42px",
             fontSize: "14px",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             fontFamily: "var(--font-inter), Inter, sans-serif",
             outline: "none",
           }}
@@ -113,9 +113,9 @@ function QuickFilters() {
               height: "34px",
               padding: "0 14px",
               borderRadius: "999px",
-              border: active ? "none" : "1px solid #222222",
-              backgroundColor: active ? "#FFFFFF" : "transparent",
-              color: active ? "#0E0E0E" : "#888888",
+              border: active ? "none" : "1px solid #2E2E2E",
+              backgroundColor: active ? "#FFD11A" : "transparent",
+              color: active ? "#0F0F0F" : "#888888",
               fontSize: "13px",
               fontWeight: active ? 500 : 400,
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -146,7 +146,7 @@ function AdvancedFilters() {
           height: "34px",
           padding: "0 14px",
           borderRadius: "999px",
-          border: "1px solid #222222",
+          border: "1px solid #2E2E2E",
           backgroundColor: "transparent",
           color: "#888888",
           fontSize: "13px",
@@ -162,8 +162,8 @@ function AdvancedFilters() {
       {/* Expanded filter card */}
       <div
         style={{
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "12px",
           padding: "16px",
           display: "flex",
@@ -184,9 +184,9 @@ function AdvancedFilters() {
                     height: "30px",
                     padding: "0 12px",
                     borderRadius: "999px",
-                    border: sel ? "none" : "1px solid #222222",
-                    backgroundColor: sel ? "#FFFFFF" : "transparent",
-                    color: sel ? "#0E0E0E" : "#888888",
+                    border: sel ? "none" : "1px solid #2E2E2E",
+                    backgroundColor: sel ? "#FFD11A" : "transparent",
+                    color: sel ? "#0F0F0F" : "#888888",
                     fontSize: "12px",
                     fontWeight: sel ? 500 : 400,
                     fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -209,12 +209,12 @@ function AdvancedFilters() {
             style={{
               width: "100%",
               height: "44px",
-              backgroundColor: "#0E0E0E",
-              border: "1px solid #222222",
+              backgroundColor: "#0F0F0F",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "0 14px",
               fontSize: "14px",
-              color: "#FFFFFF",
+              color: "#F0F0F0",
               fontFamily: "var(--font-inter), Inter, sans-serif",
               outline: "none",
               boxSizing: "border-box",
@@ -223,10 +223,10 @@ function AdvancedFilters() {
           />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
             <span style={{ fontSize: "13px", color: "#888888" }}>Distância</span>
-            <span style={{ fontSize: "13px", color: "#FFFFFF", fontWeight: 500 }}>Até 5km</span>
+            <span style={{ fontSize: "13px", color: "#F0F0F0", fontWeight: 500 }}>Até 5km</span>
           </div>
           <div style={{ height: "4px", backgroundColor: "#2A2A2A", borderRadius: "999px", position: "relative" }}>
-            <div style={{ width: "40%", height: "100%", backgroundColor: "#FFFFFF", borderRadius: "999px" }} />
+            <div style={{ width: "40%", height: "100%", backgroundColor: "#FFD11A", borderRadius: "999px" }} />
             <div style={{
               position: "absolute",
               left: "calc(40% - 8px)",
@@ -234,8 +234,8 @@ function AdvancedFilters() {
               width: "16px",
               height: "16px",
               borderRadius: "50%",
-              backgroundColor: "#FFFFFF",
-              border: "2px solid #0E0E0E",
+              backgroundColor: "#FFD11A",
+              border: "2px solid #0F0F0F",
               boxShadow: "0 0 0 2px #FFFFFF",
             }} />
           </div>
@@ -246,7 +246,7 @@ function AdvancedFilters() {
           <p style={labelStyle}>Avaliação mínima</p>
           <div style={{ display: "flex", gap: "4px" }}>
             {[1, 2, 3, 4, 5].map((s) => (
-              <span key={s} style={{ fontSize: "24px", color: s <= 4 ? "#FFFFFF" : "#333333", cursor: "pointer" }}>★</span>
+              <span key={s} style={{ fontSize: "24px", color: s <= 4 ? "#FFD11A" : "#3A3A3A", cursor: "pointer" }}>★</span>
             ))}
           </div>
         </div>
@@ -263,12 +263,12 @@ function AdvancedFilters() {
                 style={{
                   flex: 1,
                   height: "44px",
-                  backgroundColor: "#0E0E0E",
-                  border: "1px solid #222222",
+                  backgroundColor: "#0F0F0F",
+                  border: "1px solid #2E2E2E",
                   borderRadius: "10px",
                   padding: "0 14px",
                   fontSize: "14px",
-                  color: "#FFFFFF",
+                  color: "#F0F0F0",
                   fontFamily: "var(--font-inter), Inter, sans-serif",
                   outline: "none",
                   minWidth: 0,
@@ -280,16 +280,16 @@ function AdvancedFilters() {
 
         {/* Verified toggle */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "14px", color: "#FFFFFF" }}>Somente prestadores verificados</span>
+          <span style={{ fontSize: "14px", color: "#F0F0F0" }}>Somente prestadores verificados</span>
           <Toggle active />
         </div>
 
         {/* Actions */}
         <div style={{ display: "flex", gap: "10px" }}>
-          <button style={{ flex: 1, height: "42px", backgroundColor: "transparent", color: "#FFFFFF", border: "1px solid #333333", borderRadius: "999px", fontSize: "13px", fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>
+          <button style={{ flex: 1, height: "42px", backgroundColor: "transparent", color: "#F0F0F0", border: "1px solid #3A3A3A", borderRadius: "999px", fontSize: "13px", fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>
             Limpar filtros
           </button>
-          <button style={{ flex: 1, height: "42px", backgroundColor: "#FFFFFF", color: "#0E0E0E", border: "none", borderRadius: "999px", fontSize: "13px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>
+          <button style={{ flex: 1, height: "42px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "13px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>
             Aplicar
           </button>
         </div>
@@ -306,7 +306,7 @@ function Toggle({ active }: { active: boolean }) {
         width: "44px",
         height: "24px",
         borderRadius: "999px",
-        backgroundColor: active ? "#FFFFFF" : "#333333",
+        backgroundColor: active ? "#FFD11A" : "#3A3A3A",
         position: "relative",
         cursor: "pointer",
         flexShrink: 0,
@@ -320,7 +320,7 @@ function Toggle({ active }: { active: boolean }) {
           width: "18px",
           height: "18px",
           borderRadius: "50%",
-          backgroundColor: active ? "#0E0E0E" : "#888888",
+          backgroundColor: active ? "#0F0F0F" : "#888888",
           transition: "left 0.15s",
         }}
       />
@@ -332,7 +332,7 @@ function Toggle({ active }: { active: boolean }) {
 function ResultsLabel() {
   return (
     <p style={{ fontSize: "13px", color: "#555555", marginBottom: "12px" }}>
-      23 resultados para <span style={{ color: "#FFFFFF" }}>Pintura</span> em Taubaté
+      23 resultados para <span style={{ color: "#F0F0F0" }}>Pintura</span> em Taubaté
     </p>
   );
 }
@@ -347,15 +347,15 @@ function Results() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {RESULTS.map(({ letter, bg, name, verified, rating, jobs, location, price, tags }) => (
-        <div key={name} style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
+        <div key={name} style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
           {/* Row 1 */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
             <SmallAvatar letter={letter} bg={bg} />
             <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "6px", minWidth: 0 }}>
-              <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>{name}</span>
+              <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{name}</span>
               {verified && <VerifiedBadge />}
             </div>
-            <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", flexShrink: 0 }}>{rating} ★</span>
+            <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", flexShrink: 0 }}>{rating} ★</span>
           </div>
 
           {/* Row 2 */}
@@ -373,7 +373,7 @@ function Results() {
           {/* Row 4 + tags + button */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: "38px" }}>
             <div>
-              <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", marginBottom: "6px" }}>{price}</p>
+              <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "6px" }}>{price}</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
                 {tags.map((t) => (
                   <span key={t} style={{ fontSize: "11px", color: "#888888", backgroundColor: "#1E1E1E", border: "1px solid #2A2A2A", borderRadius: "999px", padding: "2px 8px" }}>
@@ -390,8 +390,8 @@ function Results() {
                 padding: "0 14px",
                 borderRadius: "999px",
                 backgroundColor: "transparent",
-                color: "#FFFFFF",
-                border: "1px solid #333333",
+                color: "#F0F0F0",
+                border: "1px solid #3A3A3A",
                 fontSize: "12px",
                 fontWeight: 400,
                 fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -418,7 +418,7 @@ function RecentSearches() {
   return (
     <div>
       <SectionLabel text="Buscas recentes" />
-      <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", overflow: "hidden" }}>
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", overflow: "hidden" }}>
         {RECENTS.map((item, i) => (
           <div
             key={item}
@@ -427,7 +427,7 @@ function RecentSearches() {
               alignItems: "center",
               gap: "10px",
               padding: "14px 16px",
-              borderBottom: i < RECENTS.length - 1 ? "1px solid #222222" : "none",
+              borderBottom: i < RECENTS.length - 1 ? "1px solid #2E2E2E" : "none",
             }}
           >
             <ClockIcon />
@@ -454,14 +454,14 @@ function PopularSuggestions() {
           <div
             key={item}
             style={{
-              backgroundColor: "#161616",
-              border: "1px solid #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "14px 16px",
               cursor: "pointer",
             }}
           >
-            <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{item}</span>
+            <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{item}</span>
           </div>
         ))}
       </div>
@@ -480,18 +480,18 @@ const NAV_ITEMS = [
 
 function BottomNav({ active }: { active: string }) {
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0E0E0E", borderTop: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0F0F0F", borderTop: "1px solid #2E2E2E", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
       {NAV_ITEMS.map(({ label, href, icon, special }) => {
         const isActive = label === active;
         return (
-          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#FFFFFF" : "#555555", minWidth: "48px" }}>
+          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#F0F0F0" : "#555555", minWidth: "48px" }}>
             {special ? (
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFD11A", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}
@@ -526,7 +526,7 @@ const labelStyle: React.CSSProperties = {
 function SmallAvatar({ letter, bg }: { letter: string; bg: string }) {
   return (
     <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-      <span style={{ fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }
@@ -540,7 +540,7 @@ function ArrowLeftIcon() {
   );
 }
 
-function SearchIcon({ color = "#FFFFFF" }: { color?: string }) {
+function SearchIcon({ color = "#F0F0F0" }: { color?: string }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="8" />

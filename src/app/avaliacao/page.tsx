@@ -4,7 +4,7 @@ export default function AvaliacaoPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -43,18 +43,18 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 16px",
       }}
     >
-      <Link href="/pedidos" aria-label="Voltar" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}>
+      <Link href="/pedidos" aria-label="Voltar" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}>
         <ArrowLeftIcon />
       </Link>
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Avaliar serviço</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Avaliar serviço</span>
       <div style={{ width: "36px" }} />
     </header>
   );
@@ -63,16 +63,16 @@ function Header() {
 /* ─── Service Card ────────────────────────────────────────── */
 function ServiceCard() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
       <span style={{ display: "inline-block", backgroundColor: "#1A3A1A", color: "#4CAF50", fontSize: "12px", fontWeight: 500, padding: "4px 10px", borderRadius: "999px", marginBottom: "12px" }}>
         Serviço concluído
       </span>
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         Pintura completa de apartamento 80m²
       </p>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
         <SmallAvatar letter="M" bg="#2A2A2A" />
-        <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Marina Costa</span>
+        <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>Marina Costa</span>
         <VerifiedBadge />
       </div>
       <p style={{ fontSize: "12px", color: "#555555" }}>Concluído em 30 mai 2026 · R$ 3.200</p>
@@ -84,7 +84,7 @@ function ServiceCard() {
 function OverallRating() {
   return (
     <div style={{ textAlign: "center" }}>
-      <p style={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF", marginBottom: "6px" }}>
+      <p style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", marginBottom: "6px" }}>
         Como foi o serviço?
       </p>
       <p style={{ fontSize: "14px", color: "#555555", marginBottom: "20px" }}>
@@ -92,12 +92,12 @@ function OverallRating() {
       </p>
       <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "12px" }}>
         {[1, 2, 3, 4, 5].map((s) => (
-          <span key={s} style={{ fontSize: "52px", color: s <= 5 ? "#FFFFFF" : "#333333", cursor: "pointer", lineHeight: 1 }}>
+          <span key={s} style={{ fontSize: "52px", color: s <= 5 ? "#FFD11A" : "#3A3A3A", cursor: "pointer", lineHeight: 1 }}>
             ★
           </span>
         ))}
       </div>
-      <p style={{ fontSize: "16px", color: "#FFFFFF" }}>Excelente</p>
+      <p style={{ fontSize: "16px", color: "#F0F0F0" }}>Excelente</p>
     </div>
   );
 }
@@ -114,7 +114,7 @@ function CriteriaRatings() {
   return (
     <div>
       <SectionLabel text="Avalie cada critério" />
-      <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", overflow: "hidden" }}>
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", overflow: "hidden" }}>
         {CRITERIA.map(({ label, stars }, i) => (
           <div
             key={label}
@@ -123,13 +123,13 @@ function CriteriaRatings() {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "14px 16px",
-              borderBottom: i < CRITERIA.length - 1 ? "1px solid #222222" : "none",
+              borderBottom: i < CRITERIA.length - 1 ? "1px solid #2E2E2E" : "none",
             }}
           >
             <span style={{ fontSize: "14px", color: "#888888" }}>{label}</span>
             <div style={{ display: "flex", gap: "3px" }}>
               {[1, 2, 3, 4, 5].map((s) => (
-                <span key={s} style={{ fontSize: "18px", color: s <= stars ? "#FFFFFF" : "#333333", cursor: "pointer" }}>★</span>
+                <span key={s} style={{ fontSize: "18px", color: s <= stars ? "#FFD11A" : "#3A3A3A", cursor: "pointer" }}>★</span>
               ))}
             </div>
           </div>
@@ -150,12 +150,12 @@ function CommentField() {
           style={{
             width: "100%",
             minHeight: "120px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "12px",
             padding: "16px",
             fontSize: "14px",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             fontFamily: "var(--font-inter), Inter, sans-serif",
             outline: "none",
             resize: "none",
@@ -180,12 +180,12 @@ function PhotoSection() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
         <button
           aria-label="Adicionar foto"
-          style={{ height: "80px", backgroundColor: "#161616", border: "1px dashed #222222", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+          style={{ height: "80px", backgroundColor: "#1A1A1A", border: "1px dashed #2E2E2E", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
         >
           <PlusIcon />
         </button>
         {[0, 1, 2].map((i) => (
-          <div key={i} style={{ height: "80px", backgroundColor: "#161616", border: "1px dashed #222222", borderRadius: "10px" }} />
+          <div key={i} style={{ height: "80px", backgroundColor: "#1A1A1A", border: "1px dashed #2E2E2E", borderRadius: "10px" }} />
         ))}
       </div>
     </div>
@@ -195,9 +195,9 @@ function PhotoSection() {
 /* ─── Recommend Card ──────────────────────────────────────── */
 function RecommendCard() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-        <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>Recomendo este prestador</span>
+        <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Recomendo este prestador</span>
         <Toggle active />
       </div>
       <p style={{ fontSize: "13px", color: "#555555" }}>Sua recomendação aparece no perfil de Marina</p>
@@ -210,10 +210,10 @@ const TIP_OPTIONS = ["R$ 10", "R$ 20", "R$ 50", "Outro valor"];
 
 function TipCard() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
         <HeartIcon />
-        <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>Deixar uma gorjeta?</span>
+        <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Deixar uma gorjeta?</span>
       </div>
       <p style={{ fontSize: "13px", color: "#555555", marginBottom: "14px" }}>Reconheça um trabalho excepcional</p>
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -226,9 +226,9 @@ function TipCard() {
                 height: "36px",
                 padding: "0 16px",
                 borderRadius: "999px",
-                border: active ? "none" : "1px solid #222222",
-                backgroundColor: active ? "#FFFFFF" : "transparent",
-                color: active ? "#0E0E0E" : "#888888",
+                border: active ? "none" : "1px solid #2E2E2E",
+                backgroundColor: active ? "#FFD11A" : "transparent",
+                color: active ? "#0F0F0F" : "#888888",
                 fontSize: "13px",
                 fontWeight: active ? 500 : 400,
                 fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -247,16 +247,16 @@ function TipCard() {
 /* ─── Footer Actions ──────────────────────────────────────── */
 function FooterActions() {
   return (
-    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, backgroundColor: "#0E0E0E", borderTop: "1px solid #222222", padding: "16px", zIndex: 50 }}>
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, backgroundColor: "#0F0F0F", borderTop: "1px solid #2E2E2E", padding: "16px", zIndex: 50 }}>
       <div style={{ maxWidth: "600px", margin: "0 auto", display: "flex", gap: "10px" }}>
         <button
-          style={{ flex: 1, height: "48px", backgroundColor: "transparent", color: "#FFFFFF", border: "1px solid #333333", borderRadius: "999px", fontSize: "14px", fontWeight: 400, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
+          style={{ flex: 1, height: "48px", backgroundColor: "transparent", color: "#F0F0F0", border: "1px solid #3A3A3A", borderRadius: "999px", fontSize: "14px", fontWeight: 400, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
         >
           Agora não
         </button>
         <Link
           href="/pedidos"
-          style={{ flex: 1, height: "48px", backgroundColor: "#FFFFFF", color: "#0E0E0E", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+          style={{ flex: 1, height: "48px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
         >
           Enviar avaliação
         </Link>
@@ -280,8 +280,8 @@ function SectionLabel({ text }: { text: string }) {
 
 function Toggle({ active }: { active: boolean }) {
   return (
-    <div style={{ width: "44px", height: "24px", borderRadius: "999px", backgroundColor: active ? "#FFFFFF" : "#333333", position: "relative", cursor: "pointer", flexShrink: 0 }}>
-      <div style={{ position: "absolute", top: "3px", left: active ? "23px" : "3px", width: "18px", height: "18px", borderRadius: "50%", backgroundColor: active ? "#0E0E0E" : "#888888" }} />
+    <div style={{ width: "44px", height: "24px", borderRadius: "999px", backgroundColor: active ? "#FFD11A" : "#3A3A3A", position: "relative", cursor: "pointer", flexShrink: 0 }}>
+      <div style={{ position: "absolute", top: "3px", left: active ? "23px" : "3px", width: "18px", height: "18px", borderRadius: "50%", backgroundColor: active ? "#0F0F0F" : "#888888" }} />
     </div>
   );
 }
@@ -289,7 +289,7 @@ function Toggle({ active }: { active: boolean }) {
 function SmallAvatar({ letter, bg }: { letter: string; bg: string }) {
   return (
     <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-      <span style={{ fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }

@@ -4,7 +4,7 @@ export default function EtapasPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -39,8 +39,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -50,11 +50,11 @@ function Header() {
       <Link
         href="/pedidos"
         aria-label="Voltar"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}
       >
         <ArrowLeftIcon />
       </Link>
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Acompanhamento</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Acompanhamento</span>
       <Link
         href="/chat"
         aria-label="Chat"
@@ -69,14 +69,14 @@ function Header() {
 /* ─── Service Card ────────────────────────────────────────── */
 function ServiceCard() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>
         Pintura completa de apartamento 80m²
       </p>
 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
         <SmallAvatar letter="M" bg="#2A2A2A" />
-        <span style={{ fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>Marina Costa</span>
+        <span style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0" }}>Marina Costa</span>
         <VerifiedBadge />
         <span style={{ fontSize: "13px", color: "#888888" }}>· Pintora</span>
       </div>
@@ -86,7 +86,7 @@ function ServiceCard() {
       </p>
 
       <div style={{ height: "6px", backgroundColor: "#2A2A2A", borderRadius: "999px", overflow: "hidden", marginBottom: "8px" }}>
-        <div style={{ width: "50%", height: "100%", backgroundColor: "#FFFFFF", borderRadius: "999px" }} />
+        <div style={{ width: "50%", height: "100%", backgroundColor: "#FFD11A", borderRadius: "999px" }} />
       </div>
       <p style={{ fontSize: "12px", color: "#888888" }}>2 de 4 etapas concluídas</p>
     </div>
@@ -100,7 +100,7 @@ function StagesSection() {
       <SectionLabel text="Etapas do serviço" />
       <div style={{ position: "relative" }}>
         {/* Vertical connector */}
-        <div style={{ position: "absolute", left: "15px", top: "16px", bottom: "16px", width: "2px", backgroundColor: "#222222", zIndex: 0 }} />
+        <div style={{ position: "absolute", left: "15px", top: "16px", bottom: "16px", width: "2px", backgroundColor: "#2E2E2E", zIndex: 0 }} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <StageComplete
@@ -132,11 +132,11 @@ function StageComplete({ n, title, date, payBadge, photos, review }: {
   n: number; title: string; date: string; payBadge: string; photos: number; review: string;
 }) {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
         <StepCircle type="done" label={String(n)} />
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{title}</p>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{title}</p>
           <p style={{ fontSize: "12px", color: "#555555" }}>{date}</p>
         </div>
         <GreenBadge label={payBadge} />
@@ -146,7 +146,7 @@ function StageComplete({ n, title, date, payBadge, photos, review }: {
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${photos}, 1fr)`, gap: "6px", marginBottom: "10px" }}>
         {Array.from({ length: photos }).map((_, i) => (
           <div key={i} style={{ height: "70px", backgroundColor: "#1A1A1A", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: "11px", color: "#333333", fontWeight: 500, letterSpacing: "0.06em" }}>FOTO</span>
+            <span style={{ fontSize: "11px", color: "#3A3A3A", fontWeight: 500, letterSpacing: "0.06em" }}>FOTO</span>
           </div>
         ))}
       </div>
@@ -159,11 +159,11 @@ function StageComplete({ n, title, date, payBadge, photos, review }: {
 /* ─── Stage: Active ───────────────────────────────────────── */
 function StageActive() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
         <StepCircle type="active" label="3" />
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Aplicação de tinta</p>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>Aplicação de tinta</p>
           <p style={{ fontSize: "12px", color: "#555555" }}>Previsão: 24 mai 2026</p>
         </div>
         <span style={{ backgroundColor: "#3A3A1A", color: "#FFB800", fontSize: "11px", fontWeight: 500, padding: "3px 8px", borderRadius: "999px", whiteSpace: "nowrap" }}>
@@ -174,7 +174,7 @@ function StageActive() {
       {/* No photos yet */}
       <div style={{
         backgroundColor: "#1A1A1A",
-        border: "1px dashed #333333",
+        border: "1px dashed #3A3A3A",
         borderRadius: "8px",
         padding: "16px",
         textAlign: "center",
@@ -185,15 +185,15 @@ function StageActive() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <button style={{
-          width: "100%", height: "42px", backgroundColor: "#FFFFFF", color: "#0E0E0E", border: "none",
+          width: "100%", height: "42px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none",
           borderRadius: "999px", fontSize: "14px", fontWeight: 500,
           fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer",
         }}>
           Aprovar etapa
         </button>
         <button style={{
-          width: "100%", height: "42px", backgroundColor: "transparent", color: "#FFFFFF",
-          border: "1px solid #333333", borderRadius: "999px", fontSize: "14px", fontWeight: 400,
+          width: "100%", height: "42px", backgroundColor: "transparent", color: "#F0F0F0",
+          border: "1px solid #3A3A3A", borderRadius: "999px", fontSize: "14px", fontWeight: 400,
           fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer",
         }}>
           Solicitar correção
@@ -206,7 +206,7 @@ function StageActive() {
 /* ─── Stage: Pending ──────────────────────────────────────── */
 function StagePending() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", position: "relative", zIndex: 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <StepCircle type="pending" label="4" />
         <div style={{ flex: 1 }}>
@@ -224,9 +224,9 @@ function StagePending() {
 /* ─── Step Circle ─────────────────────────────────────────── */
 function StepCircle({ type, label }: { type: "done" | "active" | "pending"; label: string }) {
   const styles: Record<string, { bg: string; border: string; color: string }> = {
-    done:    { bg: "#FFFFFF",  border: "#FFFFFF",  color: "#0E0E0E" },
+    done:    { bg: "#FFD11A",  border: "#FFD11A",  color: "#0F0F0F" },
     active:  { bg: "#3A3A1A", border: "#FFB800",  color: "#FFB800" },
-    pending: { bg: "#1A1A1A", border: "#222222",  color: "#333333" },
+    pending: { bg: "#1A1A1A", border: "#2E2E2E",  color: "#3A3A3A" },
   };
   const s = styles[type];
   return (
@@ -236,7 +236,7 @@ function StepCircle({ type, label }: { type: "done" | "active" | "pending"; labe
       display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
     }}>
       {type === "done"
-        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0E0E0E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
         : <span style={{ fontSize: "13px", fontWeight: 500, color: s.color }}>{label}</span>
       }
     </div>
@@ -254,16 +254,16 @@ function Updates() {
   return (
     <div>
       <SectionLabel text="Atualizações" />
-      <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", overflow: "hidden" }}>
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", overflow: "hidden" }}>
         {UPDATE_ITEMS.map(({ text, time }, i) => (
           <div
             key={i}
             style={{
               display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px",
-              borderBottom: i < UPDATE_ITEMS.length - 1 ? "1px solid #222222" : "none",
+              borderBottom: i < UPDATE_ITEMS.length - 1 ? "1px solid #2E2E2E" : "none",
             }}
           >
-            <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#333333", flexShrink: 0 }} />
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#3A3A3A", flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
               <span style={{ fontSize: "13px", color: "#888888" }}>{text}</span>
             </div>
@@ -278,17 +278,17 @@ function Updates() {
 /* ─── Quick Contact ───────────────────────────────────────── */
 function QuickContact() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <SmallAvatar letter="M" bg="#2A2A2A" />
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Marina Costa</span>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>Marina Costa</span>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
           {["Mensagem", "Ligar"].map((label) => (
             <button key={label} style={{
               height: "34px", padding: "0 14px", borderRadius: "999px",
-              backgroundColor: "transparent", color: "#FFFFFF", border: "1px solid #333333",
+              backgroundColor: "transparent", color: "#F0F0F0", border: "1px solid #3A3A3A",
               fontSize: "13px", fontWeight: 400, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer",
             }}>
               {label}
@@ -338,18 +338,18 @@ const NAV_ITEMS = [
 
 function BottomNav({ active }: { active: string }) {
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0E0E0E", borderTop: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0F0F0F", borderTop: "1px solid #2E2E2E", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
       {NAV_ITEMS.map(({ label, href, icon, special }) => {
         const isActive = label === active;
         return (
-          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#FFFFFF" : "#555555", minWidth: "48px" }}>
+          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#F0F0F0" : "#555555", minWidth: "48px" }}>
             {special ? (
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFD11A", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}
@@ -376,7 +376,7 @@ function SectionLabel({ text }: { text: string }) {
 function SmallAvatar({ letter, bg }: { letter: string; bg: string }) {
   return (
     <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-      <span style={{ fontSize: "12px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "12px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function FeedPage() {
   return (
-    <div style={{ backgroundColor: "#0E0E0E", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
+    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
       <Navbar />
       <main style={{ paddingTop: "64px", paddingBottom: "88px" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
@@ -34,8 +34,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -55,7 +55,7 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "48px",
             }}
           >
@@ -65,18 +65,18 @@ function BottomNav({ active }: { active: string }) {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "#FFD11A",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: "-2px",
                 }}
               >
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}
@@ -145,24 +145,28 @@ function Navbar() {
         right: 0,
         zIndex: 50,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 20px",
       }}
     >
-      <span
-        style={{
-          fontWeight: 500,
-          fontSize: "20px",
-          letterSpacing: "-0.03em",
-          color: "#FFFFFF",
-        }}
-      >
-        Ísis AI
-      </span>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" width="32" height="32" alt="" style={{ display: "block" }} />
+        <span
+          style={{
+            fontWeight: 500,
+            fontSize: "20px",
+            letterSpacing: "-0.03em",
+            color: "#F0F0F0",
+          }}
+        >
+          Bico AI
+        </span>
+      </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <Link
@@ -206,15 +210,15 @@ function SearchBar() {
           style={{
             width: "100%",
             height: "48px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "999px",
             paddingLeft: "46px",
             paddingRight: "16px",
             fontSize: "14px",
             fontWeight: 400,
             fontFamily: "var(--font-inter), Inter, sans-serif",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             outline: "none",
           }}
         />
@@ -248,9 +252,9 @@ function Filters() {
               height: "34px",
               padding: "0 16px",
               borderRadius: "999px",
-              border: active ? "none" : "1px solid #222222",
-              backgroundColor: active ? "#FFFFFF" : "transparent",
-              color: active ? "#0E0E0E" : "#888888",
+              border: active ? "none" : "1px solid #2E2E2E",
+              backgroundColor: active ? "#FFD11A" : "transparent",
+              color: active ? "#0F0F0F" : "#888888",
               fontSize: "13px",
               fontWeight: active ? 500 : 400,
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -271,7 +275,7 @@ function Section() {
   return (
     <section>
       <div style={{ marginBottom: "20px" }}>
-        <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF", lineHeight: 1.3 }}>
+        <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.3 }}>
           Perto de você
         </h2>
         <p style={{ fontSize: "13px", fontWeight: 400, color: "#555555", marginTop: "2px" }}>
@@ -331,8 +335,8 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
   return (
     <article
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "16px",
         padding: "20px",
       }}
@@ -342,7 +346,7 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
         <Avatar letter={avatarLetter} size={42} bg={avatarBg} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>{name}</span>
+            <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{name}</span>
             {verified && <VerifiedBadge />}
           </div>
           <p style={{ fontSize: "12px", color: "#555555", marginTop: "1px" }}>{meta}</p>
@@ -356,7 +360,7 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
       </div>
 
       {/* Body */}
-      <p style={{ fontSize: "14px", fontWeight: 400, color: "#FFFFFF", lineHeight: 1.65, marginBottom: "14px" }}>
+      <p style={{ fontSize: "14px", fontWeight: 400, color: "#F0F0F0", lineHeight: 1.65, marginBottom: "14px" }}>
         {body}
       </p>
 
@@ -380,12 +384,12 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
       </div>
 
       {/* Price */}
-      <p style={{ fontSize: "13px", fontWeight: 500, color: "#FFFFFF", marginBottom: "16px" }}>
+      <p style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0", marginBottom: "16px" }}>
         {price}
       </p>
 
       {/* Divider */}
-      <div style={{ height: "1px", backgroundColor: "#222222", marginBottom: "14px" }} />
+      <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "14px" }} />
 
       {/* Actions */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
@@ -399,8 +403,8 @@ function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, pr
             height: "36px",
             padding: "0 18px",
             borderRadius: "999px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             fontSize: "13px",
             fontWeight: 500,
@@ -457,7 +461,7 @@ function Avatar({ letter, size, bg = "#2A2A2A" }: { letter: string; size: number
         flexShrink: 0,
       }}
     >
-      <span style={{ fontSize: size * 0.4, fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: size * 0.4, fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }

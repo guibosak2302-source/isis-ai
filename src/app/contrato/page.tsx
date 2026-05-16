@@ -4,7 +4,7 @@ export default function ContratoPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -49,8 +49,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -60,12 +60,12 @@ function Header() {
       <Link
         href="/chat"
         aria-label="Voltar"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}
       >
         <ArrowLeftIcon />
       </Link>
 
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Contrato Ísis AI</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Contrato Bico AI</span>
 
       <button
         aria-label="Baixar contrato"
@@ -82,8 +82,8 @@ function AIBanner() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         padding: "16px",
         display: "flex",
@@ -97,8 +97,8 @@ function AIBanner() {
           <StarIcon />
         </div>
         <div>
-          <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>
-            Gerado pela Ísis AI
+          <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>
+            Gerado pela Bico AI
           </p>
           <p style={{ fontSize: "13px", color: "#555555" }}>
             Contrato baseado no serviço acordado no chat
@@ -149,8 +149,8 @@ function Card({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "10px",
         padding: "16px",
       }}
@@ -173,7 +173,7 @@ function PartySection({ label, content }: { label: string; content: React.ReactN
 function ContratanteCard() {
   return (
     <Card>
-      <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>Guilherme Bosak</p>
+      <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>Guilherme Bosak</p>
       <p style={{ fontSize: "13px", color: "#888888", marginBottom: "4px" }}>CPF: ***.456.789-**</p>
       <p style={{ fontSize: "13px", color: "#555555" }}>Taubaté, SP</p>
     </Card>
@@ -197,10 +197,10 @@ function PrestadorCard() {
             flexShrink: 0,
           }}
         >
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>M</span>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>M</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>Marina Costa</span>
+          <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Marina Costa</span>
           <VerifiedBadge />
         </div>
       </div>
@@ -216,7 +216,7 @@ function ServiceSection() {
     <div>
       <SectionLabel text="Serviço contratado" />
       <Card>
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", marginBottom: "8px" }}>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", marginBottom: "8px" }}>
           Pintura completa de apartamento 80m²
         </p>
         <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.65, marginBottom: "10px" }}>
@@ -248,8 +248,8 @@ function StagesSection() {
           <div
             key={n}
             style={{
-              backgroundColor: "#161616",
-              border: "1px solid #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "14px 16px",
               display: "flex",
@@ -269,13 +269,13 @@ function StagesSection() {
                 flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>{n}</span>
+              <span style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0" }}>{n}</span>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: "14px", color: "#FFFFFF", marginBottom: "2px" }}>{label}</p>
+              <p style={{ fontSize: "14px", color: "#F0F0F0", marginBottom: "2px" }}>{label}</p>
               <p style={{ fontSize: "12px", color: "#555555" }}>{condition}</p>
             </div>
-            <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", flexShrink: 0 }}>{value}</p>
+            <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", flexShrink: 0 }}>{value}</p>
           </div>
         ))}
       </div>
@@ -287,32 +287,32 @@ function StagesSection() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "14px 16px",
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "10px",
         }}
       >
         <span style={{ fontSize: "14px", color: "#888888" }}>Valor total</span>
-        <span style={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF" }}>R$ 3.200</span>
+        <span style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0" }}>R$ 3.200</span>
       </div>
     </div>
   );
 }
 
-/* ─── Ísis Pay ────────────────────────────────────────────── */
+/* ─── Bico Pay ────────────────────────────────────────────── */
 function IsisPay() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         padding: "16px",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
         <LockIcon />
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>Protegido pelo Ísis Pay</p>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Protegido pelo Bico Pay</p>
       </div>
       <p style={{ fontSize: "13px", color: "#555555", lineHeight: 1.65, marginBottom: "12px" }}>
         O valor fica guardado na plataforma e é liberado conforme cada etapa for aprovada por você.
@@ -339,15 +339,15 @@ function PrazoCard() {
   return (
     <Card>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-        <p style={{ fontSize: "14px", color: "#FFFFFF" }}>Data de início</p>
-        <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>15 mai 2026</p>
+        <p style={{ fontSize: "14px", color: "#F0F0F0" }}>Data de início</p>
+        <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>15 mai 2026</p>
       </div>
-      <div style={{ height: "1px", backgroundColor: "#222222", marginBottom: "8px" }} />
+      <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "8px" }} />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-        <p style={{ fontSize: "14px", color: "#FFFFFF" }}>Prazo de conclusão</p>
-        <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>30 mai 2026</p>
+        <p style={{ fontSize: "14px", color: "#F0F0F0" }}>Prazo de conclusão</p>
+        <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>30 mai 2026</p>
       </div>
-      <div style={{ height: "1px", backgroundColor: "#222222", marginBottom: "8px" }} />
+      <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "8px" }} />
       <p style={{ fontSize: "13px", color: "#555555", textAlign: "right" }}>15 dias corridos</p>
     </Card>
   );
@@ -362,8 +362,8 @@ function FooterActions() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         padding: "16px",
         zIndex: 50,
       }}
@@ -374,8 +374,8 @@ function FooterActions() {
             flex: 1,
             height: "48px",
             backgroundColor: "transparent",
-            color: "#FFFFFF",
-            border: "1px solid #333333",
+            color: "#F0F0F0",
+            border: "1px solid #3A3A3A",
             borderRadius: "999px",
             fontSize: "14px",
             fontWeight: 400,
@@ -390,8 +390,8 @@ function FooterActions() {
           style={{
             flex: 1,
             height: "48px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "14px",

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function PerfilPage() {
   return (
-    <div style={{ backgroundColor: "#0E0E0E", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif", paddingBottom: "80px" }}>
+    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif", paddingBottom: "80px" }}>
       <Header />
       <CoverAndAvatar />
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
@@ -27,8 +27,8 @@ function Header() {
         top: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -48,14 +48,14 @@ function Header() {
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "#FFFFFF",
+          color: "#F0F0F0",
           textDecoration: "none",
         }}
       >
         <ArrowLeftIcon />
       </Link>
 
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Perfil</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Perfil</span>
 
       <button
         aria-label="Mais opções"
@@ -91,14 +91,14 @@ function CoverAndAvatar() {
             height: "80px",
             borderRadius: "50%",
             backgroundColor: "#2A2A2A",
-            border: "3px solid #0E0E0E",
+            border: "3px solid #0F0F0F",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
           }}
         >
-          <span style={{ fontSize: "28px", fontWeight: 500, color: "#FFFFFF" }}>M</span>
+          <span style={{ fontSize: "28px", fontWeight: 500, color: "#F0F0F0" }}>M</span>
         </div>
         <div style={{ paddingBottom: "4px" }}>
           <VerifiedBadge />
@@ -112,7 +112,7 @@ function CoverAndAvatar() {
 function ProfileInfo() {
   return (
     <div style={{ marginBottom: "24px" }}>
-      <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>
+      <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>
         Marina Costa
       </h1>
       <p style={{ fontSize: "14px", color: "#888888", marginBottom: "8px" }}>
@@ -125,7 +125,7 @@ function ProfileInfo() {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
-        <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>4.9 ★</span>
+        <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>4.9 ★</span>
         <span style={{ fontSize: "13px", color: "#555555" }}>128 serviços realizados</span>
       </div>
 
@@ -134,8 +134,8 @@ function ProfileInfo() {
           style={{
             flex: 1,
             height: "44px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "14px",
@@ -152,8 +152,8 @@ function ProfileInfo() {
             flex: 1,
             height: "44px",
             backgroundColor: "transparent",
-            color: "#FFFFFF",
-            border: "1px solid #333333",
+            color: "#F0F0F0",
+            border: "1px solid #3A3A3A",
             borderRadius: "999px",
             fontSize: "14px",
             fontWeight: 400,
@@ -187,14 +187,14 @@ function Stats() {
           key={label}
           style={{
             flex: 1,
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "10px",
             padding: "14px 10px",
             textAlign: "center",
           }}
         >
-          <p style={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>{value}</p>
+          <p style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>{value}</p>
           <p style={{ fontSize: "12px", color: "#555555" }}>{label}</p>
         </div>
       ))}
@@ -206,7 +206,7 @@ function Stats() {
 function About() {
   return (
     <div style={{ marginBottom: "28px" }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>Sobre</h2>
+      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>Sobre</h2>
       <p style={{ fontSize: "14px", color: "#888888", lineHeight: 1.7 }}>
         Especialista em pintura residencial e comercial. Trabalho com tintas de primeira linha, acabamento impecável e prazo garantido. Atendo Taubaté e região do Vale do Paraíba.
       </p>
@@ -218,14 +218,14 @@ function About() {
 function Portfolio() {
   return (
     <div style={{ marginBottom: "28px" }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>Portfólio</h2>
+      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>Portfólio</h2>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
             style={{
               backgroundColor: "#1A1A1A",
-              border: "1px solid #222222",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               height: "120px",
               display: "flex",
@@ -233,7 +233,7 @@ function Portfolio() {
               justifyContent: "center",
             }}
           >
-            <span style={{ fontSize: "12px", color: "#333333", fontWeight: 500, letterSpacing: "0.08em" }}>FOTO</span>
+            <span style={{ fontSize: "12px", color: "#3A3A3A", fontWeight: 500, letterSpacing: "0.08em" }}>FOTO</span>
           </div>
         ))}
       </div>
@@ -260,14 +260,14 @@ function Reviews() {
 
   return (
     <div style={{ marginBottom: "28px" }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "12px" }}>Avaliações</h2>
+      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "12px" }}>Avaliações</h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {data.map(({ letter, bg, name, comment }) => (
           <div
             key={name}
             style={{
-              backgroundColor: "#161616",
-              border: "1px solid #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px solid #2E2E2E",
               borderRadius: "12px",
               padding: "16px",
             }}
@@ -275,7 +275,7 @@ function Reviews() {
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
               <SmallAvatar letter={letter} bg={bg} />
               <div>
-                <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{name}</p>
+                <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{name}</p>
                 <p style={{ fontSize: "13px", color: "#F59E0B", letterSpacing: "0.05em" }}>★★★★★</p>
               </div>
             </div>
@@ -304,8 +304,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -325,11 +325,11 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "56px",
             }}
           >
-            <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+            <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
             <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
           </Link>
         );
@@ -353,7 +353,7 @@ function SmallAvatar({ letter, bg }: { letter: string; bg: string }) {
         flexShrink: 0,
       }}
     >
-      <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }

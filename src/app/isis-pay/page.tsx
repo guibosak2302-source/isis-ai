@@ -4,7 +4,7 @@ export default function IsisPayPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -39,8 +39,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -50,11 +50,11 @@ function Header() {
       <Link
         href="/assinatura"
         aria-label="Voltar"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}
       >
         <ArrowLeftIcon />
       </Link>
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Ísis Pay</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Bico Pay</span>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px" }}>
         <LockIconSm color="#888888" />
       </div>
@@ -67,8 +67,8 @@ function MainValueCard() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "16px",
         padding: "24px 20px",
         display: "flex",
@@ -80,7 +80,7 @@ function MainValueCard() {
     >
       <LockIconLg />
       <p style={{ fontSize: "13px", color: "#888888" }}>Valor protegido</p>
-      <p style={{ fontSize: "36px", fontWeight: 500, color: "#FFFFFF", lineHeight: 1.1 }}>
+      <p style={{ fontSize: "36px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.1 }}>
         R$ 3.200,00
       </p>
       <span
@@ -93,7 +93,7 @@ function MainValueCard() {
           borderRadius: "999px",
         }}
       >
-        Ísis Pay ativo
+        Bico Pay ativo
       </span>
       <p style={{ fontSize: "13px", color: "#555555", lineHeight: 1.65, maxWidth: "320px" }}>
         O valor está guardado com segurança e será liberado conforme você aprovar cada etapa.
@@ -133,8 +133,8 @@ function PaymentMethod() {
           <div
             key={label}
             style={{
-              backgroundColor: "#161616",
-              border: `1px solid ${active ? "#FFFFFF" : "#222222"}`,
+              backgroundColor: "#1A1A1A",
+              border: `1px solid ${active ? "#FFD11A" : "#2E2E2E"}`,
               borderRadius: "10px",
               padding: "14px 16px",
               display: "flex",
@@ -143,9 +143,9 @@ function PaymentMethod() {
               cursor: "pointer",
             }}
           >
-            <span style={{ color: active ? "#FFFFFF" : "#555555", display: "flex", flexShrink: 0 }}>{icon}</span>
+            <span style={{ color: active ? "#F0F0F0" : "#555555", display: "flex", flexShrink: 0 }}>{icon}</span>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: "14px", color: active ? "#FFFFFF" : "#888888" }}>{label}</p>
+              <p style={{ fontSize: "14px", color: active ? "#F0F0F0" : "#888888" }}>{label}</p>
               <p style={{ fontSize: "12px", color: "#555555" }}>{sub}</p>
             </div>
             {active && (
@@ -186,7 +186,7 @@ const STAGES = [
     n: 3,
     label: "Aplicação de tinta",
     value: "R$ 1.200,00",
-    badgeBg: "#333333",
+    badgeBg: "#3A3A3A",
     badgeColor: "#888888",
     badgeLabel: "Aguardando",
     sub: "Aguardando conclusão da etapa 2",
@@ -196,7 +196,7 @@ const STAGES = [
     n: 4,
     label: "Acabamento final",
     value: "R$ 500,00",
-    badgeBg: "#333333",
+    badgeBg: "#3A3A3A",
     badgeColor: "#888888",
     badgeLabel: "Aguardando",
     sub: "Aguardando conclusão da etapa 3",
@@ -217,7 +217,7 @@ function StagesSection() {
             top: "32px",
             bottom: "32px",
             width: "2px",
-            backgroundColor: "#222222",
+            backgroundColor: "#2E2E2E",
             zIndex: 0,
           }}
         />
@@ -227,8 +227,8 @@ function StagesSection() {
             <div
               key={n}
               style={{
-                backgroundColor: "#161616",
-                border: "1px solid #222222",
+                backgroundColor: "#1A1A1A",
+                border: "1px solid #2E2E2E",
                 borderRadius: "10px",
                 padding: "14px 16px",
                 display: "flex",
@@ -245,20 +245,20 @@ function StagesSection() {
                   height: "32px",
                   borderRadius: "50%",
                   backgroundColor: n === 1 ? "#1A3A1A" : "#2A2A2A",
-                  border: n === 1 ? "1px solid #4CAF50" : "1px solid #333333",
+                  border: n === 1 ? "1px solid #4CAF50" : "1px solid #3A3A3A",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                 }}
               >
-                <span style={{ fontSize: "13px", fontWeight: 500, color: n === 1 ? "#4CAF50" : "#FFFFFF" }}>{n}</span>
+                <span style={{ fontSize: "13px", fontWeight: 500, color: n === 1 ? "#4CAF50" : "#F0F0F0" }}>{n}</span>
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginBottom: "4px" }}>
-                  <p style={{ fontSize: "14px", color: "#FFFFFF" }}>{label}</p>
-                  <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", flexShrink: 0 }}>{value}</p>
+                  <p style={{ fontSize: "14px", color: "#F0F0F0" }}>{label}</p>
+                  <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", flexShrink: 0 }}>{value}</p>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
                   <span
@@ -279,8 +279,8 @@ function StagesSection() {
                         height: "30px",
                         padding: "0 14px",
                         borderRadius: "999px",
-                        backgroundColor: "#FFFFFF",
-                        color: "#0E0E0E",
+                        backgroundColor: "#FFD11A",
+                        color: "#0F0F0F",
                         border: "none",
                         fontSize: "12px",
                         fontWeight: 500,
@@ -317,8 +317,8 @@ function TransactionHistory() {
       <SectionLabel text="Transações" />
       <div
         style={{
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "12px",
           overflow: "hidden",
         }}
@@ -331,7 +331,7 @@ function TransactionHistory() {
               alignItems: "center",
               gap: "12px",
               padding: "14px 16px",
-              borderBottom: i < TRANSACTIONS.length - 1 ? "1px solid #222222" : "none",
+              borderBottom: i < TRANSACTIONS.length - 1 ? "1px solid #2E2E2E" : "none",
             }}
           >
             <div
@@ -339,7 +339,7 @@ function TransactionHistory() {
                 width: "34px",
                 height: "34px",
                 borderRadius: "50%",
-                backgroundColor: "#222222",
+                backgroundColor: "#2E2E2E",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -352,7 +352,7 @@ function TransactionHistory() {
               <p style={{ fontSize: "13px", color: "#888888", marginBottom: "2px" }}>{label}</p>
               <p style={{ fontSize: "12px", color: "#555555" }}>{date}</p>
             </div>
-            <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", flexShrink: 0 }}>{value}</p>
+            <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", flexShrink: 0 }}>{value}</p>
           </div>
         ))}
       </div>
@@ -371,8 +371,8 @@ function SecurityCard() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         padding: "16px",
         display: "flex",
@@ -399,8 +399,8 @@ function FooterAction() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         padding: "16px 16px 20px",
         zIndex: 50,
       }}
@@ -410,8 +410,8 @@ function FooterAction() {
           style={{
             width: "100%",
             height: "52px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "15px",
@@ -424,7 +424,7 @@ function FooterAction() {
           Pagar R$ 3.200,00 com Pix
         </button>
         <p style={{ fontSize: "12px", color: "#555555", textAlign: "center" }}>
-          Pagamento seguro · Ísis Pay
+          Pagamento seguro · Bico Pay
         </p>
       </div>
     </div>
@@ -517,7 +517,7 @@ function CheckCircleIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="10" fill="#FFFFFF" />
-      <path d="M8 12l3 3 5-5" stroke="#0E0E0E" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 12l3 3 5-5" stroke="#0F0F0F" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

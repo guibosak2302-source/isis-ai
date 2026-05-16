@@ -4,7 +4,7 @@ export default function MeuPerfilPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingBottom: "80px",
@@ -35,8 +35,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -44,7 +44,7 @@ function Header() {
       }}
     >
       <div style={{ width: "36px" }} />
-      <span style={{ fontSize: "17px", fontWeight: 500, color: "#FFFFFF" }}>Meu perfil</span>
+      <span style={{ fontSize: "17px", fontWeight: 500, color: "#F0F0F0" }}>Meu perfil</span>
       <Link
         href="/configuracoes"
         aria-label="Configurações"
@@ -80,13 +80,13 @@ function CoverAndAvatar() {
               height: "80px",
               borderRadius: "50%",
               backgroundColor: "#2A2A2A",
-              border: "3px solid #0E0E0E",
+              border: "3px solid #0F0F0F",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <span style={{ fontSize: "28px", fontWeight: 500, color: "#FFFFFF" }}>G</span>
+            <span style={{ fontSize: "28px", fontWeight: 500, color: "#F0F0F0" }}>G</span>
           </div>
           {/* Edit button */}
           <button
@@ -98,8 +98,8 @@ function CoverAndAvatar() {
               width: "26px",
               height: "26px",
               borderRadius: "50%",
-              backgroundColor: "#FFFFFF",
-              border: "2px solid #0E0E0E",
+              backgroundColor: "#FFD11A",
+              border: "2px solid #0F0F0F",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -113,7 +113,7 @@ function CoverAndAvatar() {
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
           <div>
-            <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>
+            <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>
               Guilherme
             </h1>
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -127,8 +127,8 @@ function CoverAndAvatar() {
               padding: "0 16px",
               borderRadius: "999px",
               backgroundColor: "transparent",
-              color: "#FFFFFF",
-              border: "1px solid #333333",
+              color: "#F0F0F0",
+              border: "1px solid #3A3A3A",
               fontSize: "13px",
               fontWeight: 400,
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -157,14 +157,14 @@ function Stats() {
           key={label}
           style={{
             flex: 1,
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "10px",
             padding: "14px 10px",
             textAlign: "center",
           }}
         >
-          <p style={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF", marginBottom: "4px" }}>{value}</p>
+          <p style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>{value}</p>
           <p style={{ fontSize: "12px", color: "#555555" }}>{label}</p>
         </div>
       ))}
@@ -177,8 +177,8 @@ function ProviderCard() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         padding: "16px",
         marginBottom: "24px",
@@ -186,7 +186,7 @@ function ProviderCard() {
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
         <StarIcon />
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>Ofereça seus serviços na Ísis</p>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Ofereça seus serviços na Ísis</p>
       </div>
       <p style={{ fontSize: "13px", color: "#555555", marginBottom: "14px", lineHeight: 1.6 }}>
         Cadastre seus serviços e comece a receber pedidos
@@ -195,8 +195,8 @@ function ProviderCard() {
         style={{
           width: "100%",
           height: "42px",
-          backgroundColor: "#FFFFFF",
-          color: "#0E0E0E",
+          backgroundColor: "#FFD11A",
+          color: "#0F0F0F",
           border: "none",
           borderRadius: "999px",
           fontSize: "14px",
@@ -215,11 +215,11 @@ function ProviderCard() {
 function MyPosts() {
   return (
     <div style={{ marginBottom: "24px" }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "16px" }}>Meus posts</h2>
+      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "16px" }}>Meus posts</h2>
       <div
         style={{
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "12px",
           padding: "28px 16px",
           display: "flex",
@@ -238,8 +238,8 @@ function MyPosts() {
             padding: "0 20px",
             borderRadius: "999px",
             backgroundColor: "transparent",
-            color: "#FFFFFF",
-            border: "1px solid #333333",
+            color: "#F0F0F0",
+            border: "1px solid #3A3A3A",
             fontSize: "13px",
             fontWeight: 400,
             fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -260,11 +260,11 @@ function MyPosts() {
 function History() {
   return (
     <div style={{ marginBottom: "24px" }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "16px" }}>Histórico</h2>
+      <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "16px" }}>Histórico</h2>
       <div
         style={{
-          backgroundColor: "#161616",
-          border: "1px solid #222222",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid #2E2E2E",
           borderRadius: "12px",
           padding: "28px 16px",
           display: "flex",
@@ -282,8 +282,8 @@ function History() {
             height: "36px",
             padding: "0 20px",
             borderRadius: "999px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             fontSize: "13px",
             fontWeight: 500,
@@ -314,8 +314,8 @@ function SettingsList() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "12px",
         overflow: "hidden",
         marginBottom: "24px",
@@ -330,13 +330,13 @@ function SettingsList() {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "16px",
-              borderBottom: isLast ? "none" : "1px solid #222222",
+              borderBottom: isLast ? "none" : "1px solid #2E2E2E",
               cursor: "pointer",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <span style={{ color: danger ? "#FF4444" : "#888888", display: "flex" }}>{icon}</span>
-              <span style={{ fontSize: "15px", color: danger ? "#FF4444" : "#FFFFFF" }}>{label}</span>
+              <span style={{ fontSize: "15px", color: danger ? "#FF4444" : "#F0F0F0" }}>{label}</span>
             </div>
             {!danger && <ChevronIcon />}
           </div>
@@ -373,8 +373,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -394,7 +394,7 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "48px",
             }}
           >
@@ -404,18 +404,18 @@ function BottomNav({ active }: { active: string }) {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "#FFD11A",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: "-2px",
                 }}
               >
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}
@@ -438,7 +438,7 @@ function GearIcon() {
 
 function CameraSmallIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0E0E0E" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
       <circle cx="12" cy="13" r="4" />
     </svg>
@@ -464,7 +464,7 @@ function StarIcon() {
 
 function PostEmptyIcon() {
   return (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#333333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="3" />
       <line x1="8" y1="9" x2="16" y2="9" />
       <line x1="8" y1="13" x2="14" y2="13" />
@@ -474,7 +474,7 @@ function PostEmptyIcon() {
 
 function ListEmptyIcon() {
   return (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#333333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <line x1="8" y1="6" x2="21" y2="6" />
       <line x1="8" y1="12" x2="21" y2="12" />
       <line x1="8" y1="18" x2="21" y2="18" />

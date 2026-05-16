@@ -4,7 +4,7 @@ export default function CadastroPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingBottom: "40px",
@@ -35,8 +35,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -52,14 +52,14 @@ function Header() {
           justifyContent: "center",
           width: "36px",
           height: "36px",
-          color: "#FFFFFF",
+          color: "#F0F0F0",
           textDecoration: "none",
         }}
       >
         <ArrowLeftIcon />
       </Link>
 
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Criar conta</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Criar conta</span>
 
       {/* Spacer to keep title centered */}
       <div style={{ width: "36px" }} />
@@ -71,7 +71,7 @@ function Header() {
 function TypeSelector() {
   return (
     <div style={{ marginTop: "24px", marginBottom: "28px" }}>
-      <p style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "14px" }}>
+      <p style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "14px" }}>
         Você é:
       </p>
       <div style={{ display: "flex", gap: "12px" }}>
@@ -79,15 +79,15 @@ function TypeSelector() {
         <div
           style={{
             flex: 1,
-            backgroundColor: "#161616",
-            border: "1px solid #FFFFFF",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #FFD11A",
             borderRadius: "12px",
             padding: "16px",
             cursor: "pointer",
           }}
         >
           <PersonIcon />
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", marginTop: "10px", marginBottom: "4px" }}>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginTop: "10px", marginBottom: "4px" }}>
             Pessoa física
           </p>
           <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.5 }}>
@@ -99,15 +99,15 @@ function TypeSelector() {
         <div
           style={{
             flex: 1,
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "12px",
             padding: "16px",
             cursor: "pointer",
           }}
         >
           <BuildingIcon />
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", marginTop: "10px", marginBottom: "4px" }}>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginTop: "10px", marginBottom: "4px" }}>
             Empresa
           </p>
           <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.5 }}>
@@ -153,12 +153,12 @@ function Form() {
             style={{
               width: "100%",
               height: "52px",
-              backgroundColor: "#161616",
-              border: "1px solid #222222",
+              backgroundColor: "#1A1A1A",
+              border: "1px solid #2E2E2E",
               borderRadius: "10px",
               padding: "0 16px",
               fontSize: "15px",
-              color: "#FFFFFF",
+              color: "#F0F0F0",
               fontFamily: "var(--font-inter), Inter, sans-serif",
               outline: "none",
               boxSizing: "border-box",
@@ -196,13 +196,13 @@ function LocationField() {
           style={{
             width: "100%",
             height: "52px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "10px",
             paddingLeft: "42px",
             paddingRight: "16px",
             fontSize: "15px",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             fontFamily: "var(--font-inter), Inter, sans-serif",
             outline: "none",
             boxSizing: "border-box",
@@ -223,7 +223,7 @@ function ProfilePhoto() {
           height: "80px",
           borderRadius: "50%",
           backgroundColor: "#2A2A2A",
-          border: "1px dashed #333333",
+          border: "1px dashed #3A3A3A",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -249,18 +249,18 @@ function TermsRow() {
           width: "18px",
           height: "18px",
           marginTop: "1px",
-          accentColor: "#FFFFFF",
+          accentColor: "#FFD11A",
           flexShrink: 0,
           cursor: "pointer",
         }}
       />
       <label htmlFor="terms" style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6, cursor: "pointer" }}>
         Concordo com os{" "}
-        <span style={{ color: "#FFFFFF", textDecoration: "underline", cursor: "pointer" }}>
+        <span style={{ color: "#F0F0F0", textDecoration: "underline", cursor: "pointer" }}>
           Termos de Uso
         </span>{" "}
         e{" "}
-        <span style={{ color: "#FFFFFF", textDecoration: "underline", cursor: "pointer" }}>
+        <span style={{ color: "#F0F0F0", textDecoration: "underline", cursor: "pointer" }}>
           Política de Privacidade
         </span>
       </label>
@@ -275,8 +275,8 @@ function SubmitButton() {
       style={{
         width: "100%",
         height: "52px",
-        backgroundColor: "#FFFFFF",
-        color: "#0E0E0E",
+        backgroundColor: "#FFD11A",
+        color: "#0F0F0F",
         border: "none",
         borderRadius: "999px",
         fontSize: "15px",
@@ -298,7 +298,7 @@ function Footer() {
       Já tem conta?{" "}
       <Link
         href="/"
-        style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 500 }}
+        style={{ color: "#F0F0F0", textDecoration: "none", fontWeight: 500 }}
       >
         Entrar
       </Link>

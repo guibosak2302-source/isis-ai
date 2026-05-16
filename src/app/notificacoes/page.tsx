@@ -4,7 +4,7 @@ export default function NotificacoesPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -34,7 +34,7 @@ export default function NotificacoesPage() {
             unread
             href="/etapas"
             icon={<IconBox color="#1A3A1A" stroke="#4CAF50"><PayIcon /></IconBox>}
-            title="Ísis Pay: etapa 1 concluída"
+            title="Bico Pay: etapa 1 concluída"
             body="Marina marcou a etapa Limpeza e preparo como concluída. Aprove para liberar R$ 800."
             time="há 1h"
           />
@@ -67,7 +67,7 @@ export default function NotificacoesPage() {
             href="/isis-pay"
             icon={<IconBox color="#1A3A1A" stroke="#4CAF50"><PayIcon /></IconBox>}
             title="Pagamento confirmado"
-            body="R$ 3.200 depositado com sucesso no Ísis Pay."
+            body="R$ 3.200 depositado com sucesso no Bico Pay."
             time="há 3 dias"
           />
           <NotifItem
@@ -95,15 +95,15 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 16px",
       }}
     >
-      <span style={{ fontSize: "17px", fontWeight: 500, color: "#FFFFFF" }}>Notificações</span>
+      <span style={{ fontSize: "17px", fontWeight: 500, color: "#F0F0F0" }}>Notificações</span>
       <button
         style={{
           background: "none",
@@ -160,9 +160,9 @@ function NotifItem({ unread, href, icon, title, body, time }: NotifItemProps) {
         alignItems: "flex-start",
         gap: "12px",
         padding: "14px 16px",
-        backgroundColor: unread ? "#161616" : "transparent",
+        backgroundColor: unread ? "#1A1A1A" : "transparent",
         borderLeft: unread ? "3px solid #FFFFFF" : "3px solid transparent",
-        borderBottom: "1px solid #222222",
+        borderBottom: "1px solid #2E2E2E",
         cursor: href ? "pointer" : "default",
         position: "relative",
       }}
@@ -180,14 +180,14 @@ function NotifItem({ unread, href, icon, title, body, time }: NotifItemProps) {
               height: "8px",
               borderRadius: "50%",
               backgroundColor: "#3B82F6",
-              border: "1.5px solid #0E0E0E",
+              border: "1.5px solid #0F0F0F",
             }}
           />
         )}
       </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: "14px", fontWeight: unread ? 500 : 400, color: unread ? "#FFFFFF" : "#888888", marginBottom: "3px" }}>
+        <p style={{ fontSize: "14px", fontWeight: unread ? 500 : 400, color: unread ? "#F0F0F0" : "#888888", marginBottom: "3px" }}>
           {title}
         </p>
         <p style={{ fontSize: "13px", color: unread ? "#888888" : "#555555", lineHeight: 1.5, marginBottom: "5px" }}>
@@ -222,12 +222,12 @@ function AvatarIcon({ letter, bg }: { letter: string; bg: string }) {
         justifyContent: "center",
       }}
     >
-      <span style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF" }}>{letter}</span>
+      <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
     </div>
   );
 }
 
-function IconBox({ children, color = "#222222", stroke: _stroke }: { children: React.ReactNode; color?: string; stroke?: string }) {
+function IconBox({ children, color = "#2E2E2E", stroke: _stroke }: { children: React.ReactNode; color?: string; stroke?: string }) {
   return (
     <div
       style={{
@@ -263,8 +263,8 @@ function BottomNav({ active }: { active: string }) {
         left: 0,
         right: 0,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -284,17 +284,17 @@ function BottomNav({ active }: { active: string }) {
               alignItems: "center",
               gap: "3px",
               textDecoration: "none",
-              color: isActive ? "#FFFFFF" : "#555555",
+              color: isActive ? "#F0F0F0" : "#555555",
               minWidth: "48px",
             }}
           >
             {special ? (
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFD11A", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}

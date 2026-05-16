@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ísis AI",
+  title: "Bico AI",
   description: "Resolve rápido, sempre perto de você.",
 };
 

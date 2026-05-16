@@ -5,7 +5,7 @@ export default function LoginPage() {
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -15,19 +15,22 @@ export default function LoginPage() {
     >
       {/* Wordmark + Slogan */}
       <div style={{ textAlign: "center", marginBottom: "48px" }}>
-        <h1
-          style={{
-            fontFamily: "var(--font-inter), Inter, sans-serif",
-            fontWeight: 500,
-            fontSize: "52px",
-            letterSpacing: "-0.03em",
-            color: "#FFFFFF",
-            lineHeight: 1,
-            marginBottom: "12px",
-          }}
-        >
-          Ísis AI
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" width="56" height="56" alt="" style={{ display: "block" }} />
+          <h1
+            style={{
+              fontFamily: "var(--font-inter), Inter, sans-serif",
+              fontWeight: 500,
+              fontSize: "52px",
+              letterSpacing: "-0.03em",
+              color: "#F0F0F0",
+              lineHeight: 1,
+            }}
+          >
+            Bico AI
+          </h1>
+        </div>
         <p
           style={{
             fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -49,8 +52,8 @@ export default function LoginPage() {
           style={{
             width: "100%",
             height: "52px",
-            backgroundColor: "#FFFFFF",
-            color: "#0E0E0E",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "15px",
@@ -74,8 +77,8 @@ export default function LoginPage() {
             width: "100%",
             height: "52px",
             backgroundColor: "transparent",
-            color: "#FFFFFF",
-            border: "1px solid #333333",
+            color: "#F0F0F0",
+            border: "1px solid #3A3A3A",
             borderRadius: "999px",
             fontSize: "15px",
             fontWeight: 400,
@@ -100,10 +103,10 @@ export default function LoginPage() {
             marginBottom: "20px",
           }}
         >
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#333333" }} />
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#3A3A3A" }} />
           <span
             style={{
-              color: "#333333",
+              color: "#3A3A3A",
               fontSize: "12px",
               fontFamily: "var(--font-inter), Inter, sans-serif",
               fontWeight: 400,
@@ -111,7 +114,7 @@ export default function LoginPage() {
           >
             ou
           </span>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#333333" }} />
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#3A3A3A" }} />
         </div>
 
         {/* Continuar com Google */}
@@ -119,9 +122,9 @@ export default function LoginPage() {
           style={{
             width: "100%",
             height: "52px",
-            backgroundColor: "#161616",
-            color: "#FFFFFF",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            color: "#F0F0F0",
+            border: "1px solid #2E2E2E",
             borderRadius: "999px",
             fontSize: "15px",
             fontWeight: 400,
@@ -142,7 +145,7 @@ export default function LoginPage() {
       <p
         style={{
           marginTop: "32px",
-          color: "#333333",
+          color: "#3A3A3A",
           fontSize: "12px",
           fontFamily: "var(--font-inter), Inter, sans-serif",
           fontWeight: 400,

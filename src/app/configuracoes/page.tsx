@@ -4,7 +4,7 @@ export default function ConfiguracoesPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         paddingTop: "56px",
@@ -32,7 +32,7 @@ export default function ConfiguracoesPage() {
         </Section>
 
         <Section label="Pagamentos">
-          <Item icon={<LockIcon />}   label="Ísis Pay"            sub="saldo e transações"      href="/isis-pay" />
+          <Item icon={<LockIcon />}   label="Bico Pay"            sub="saldo e transações"      href="/isis-pay" />
           <Item icon={<CardIcon />}   label="Métodos de pagamento" sub="cartões e Pix" />
           <Item icon={<BankIcon />}   label="Dados bancários"     sub="para receber pagamentos" />
           <Item icon={<ReceiptIcon />} label="Extrato"            sub="histórico financeiro" last />
@@ -85,18 +85,18 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "56px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 16px",
       }}
     >
-      <Link href="/meu-perfil" aria-label="Voltar" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#FFFFFF", textDecoration: "none" }}>
+      <Link href="/meu-perfil" aria-label="Voltar" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none" }}>
         <ArrowLeftIcon />
       </Link>
-      <span style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>Configurações</span>
+      <span style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Configurações</span>
       <div style={{ width: "36px" }} />
     </header>
   );
@@ -105,12 +105,12 @@ function Header() {
 /* ─── Profile Card ────────────────────────────────────────── */
 function ProfileCard() {
   return (
-    <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", padding: "16px", display: "flex", alignItems: "center", gap: "14px" }}>
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", display: "flex", alignItems: "center", gap: "14px" }}>
       <div style={{ width: "56px", height: "56px", borderRadius: "50%", backgroundColor: "#2A2A2A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <span style={{ fontSize: "22px", fontWeight: 500, color: "#FFFFFF" }}>G</span>
+        <span style={{ fontSize: "22px", fontWeight: 500, color: "#F0F0F0" }}>G</span>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF", marginBottom: "2px" }}>Guilherme Bosak</p>
+        <p style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>Guilherme Bosak</p>
         <p style={{ fontSize: "13px", color: "#888888", marginBottom: "2px" }}>guibosak@email.com</p>
         <p style={{ fontSize: "12px", color: "#555555" }}>Taubaté, SP</p>
       </div>
@@ -122,8 +122,8 @@ function ProfileCard() {
           padding: "0 14px",
           borderRadius: "999px",
           backgroundColor: "transparent",
-          color: "#FFFFFF",
-          border: "1px solid #333333",
+          color: "#F0F0F0",
+          border: "1px solid #3A3A3A",
           fontSize: "12px",
           fontFamily: "var(--font-inter), Inter, sans-serif",
           display: "flex",
@@ -144,7 +144,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
       <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 500, padding: "16px 16px 8px" }}>
         {label}
       </p>
-      <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", overflow: "hidden", marginLeft: "16px", marginRight: "16px" }}>
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", overflow: "hidden", marginLeft: "16px", marginRight: "16px" }}>
         {children}
       </div>
     </div>
@@ -170,13 +170,13 @@ function Item({ icon, label, sub, href, valueRight, noChevron, last }: ItemProps
         alignItems: "center",
         gap: "12px",
         padding: "15px 16px",
-        borderBottom: last ? "none" : "1px solid #222222",
+        borderBottom: last ? "none" : "1px solid #2E2E2E",
         cursor: href ? "pointer" : "default",
       }}
     >
       <span style={{ color: "#888888", display: "flex", flexShrink: 0 }}>{icon}</span>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: "15px", color: "#FFFFFF" }}>{label}</p>
+        <p style={{ fontSize: "15px", color: "#F0F0F0" }}>{label}</p>
         {sub && <p style={{ fontSize: "13px", color: "#555555", marginTop: "1px" }}>{sub}</p>}
       </div>
       {valueRight && <span style={{ fontSize: "13px", color: "#555555" }}>{valueRight}</span>}
@@ -197,11 +197,11 @@ function ToggleItem({ icon, label, active, last }: { icon: React.ReactNode; labe
         alignItems: "center",
         gap: "12px",
         padding: "15px 16px",
-        borderBottom: last ? "none" : "1px solid #222222",
+        borderBottom: last ? "none" : "1px solid #2E2E2E",
       }}
     >
       <span style={{ color: "#888888", display: "flex", flexShrink: 0 }}>{icon}</span>
-      <span style={{ flex: 1, fontSize: "15px", color: "#FFFFFF" }}>{label}</span>
+      <span style={{ flex: 1, fontSize: "15px", color: "#F0F0F0" }}>{label}</span>
       <Toggle active={active} />
     </div>
   );
@@ -214,8 +214,8 @@ function DangerZone() {
       <p style={{ fontSize: "11px", color: "#FF4444", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 500, padding: "16px 16px 8px" }}>
         Zona de Perigo
       </p>
-      <div style={{ backgroundColor: "#161616", border: "1px solid #222222", borderRadius: "12px", overflow: "hidden", marginLeft: "16px", marginRight: "16px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "15px 16px", borderBottom: "1px solid #222222", cursor: "pointer" }}>
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", overflow: "hidden", marginLeft: "16px", marginRight: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "15px 16px", borderBottom: "1px solid #2E2E2E", cursor: "pointer" }}>
           <span style={{ color: "#FF4444", display: "flex" }}><PauseIcon /></span>
           <span style={{ flex: 1, fontSize: "15px", color: "#FF4444" }}>Desativar conta</span>
           <ChevronIcon color="#FF4444" />
@@ -251,7 +251,7 @@ function Footer() {
       >
         Sair da conta
       </button>
-      <p style={{ fontSize: "12px", color: "#333333" }}>Ísis AI · MVP v1.0 · 2026</p>
+      <p style={{ fontSize: "12px", color: "#3A3A3A" }}>Bico AI · MVP v1.0 · 2026</p>
     </div>
   );
 }
@@ -259,8 +259,8 @@ function Footer() {
 /* ─── Toggle ──────────────────────────────────────────────── */
 function Toggle({ active }: { active: boolean }) {
   return (
-    <div style={{ width: "44px", height: "24px", borderRadius: "999px", backgroundColor: active ? "#FFFFFF" : "#333333", position: "relative", cursor: "pointer", flexShrink: 0 }}>
-      <div style={{ position: "absolute", top: "3px", left: active ? "23px" : "3px", width: "18px", height: "18px", borderRadius: "50%", backgroundColor: active ? "#0E0E0E" : "#888888" }} />
+    <div style={{ width: "44px", height: "24px", borderRadius: "999px", backgroundColor: active ? "#FFD11A" : "#3A3A3A", position: "relative", cursor: "pointer", flexShrink: 0 }}>
+      <div style={{ position: "absolute", top: "3px", left: active ? "23px" : "3px", width: "18px", height: "18px", borderRadius: "50%", backgroundColor: active ? "#0F0F0F" : "#888888" }} />
     </div>
   );
 }
@@ -276,18 +276,18 @@ const NAV_ITEMS = [
 
 function BottomNav({ active }: { active: string }) {
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0E0E0E", borderTop: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: "64px", backgroundColor: "#0F0F0F", borderTop: "1px solid #2E2E2E", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "0 8px", zIndex: 50 }}>
       {NAV_ITEMS.map(({ label, href, icon, special }) => {
         const isActive = label === active;
         return (
-          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#FFFFFF" : "#555555", minWidth: "48px" }}>
+          <Link key={label} href={href} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", textDecoration: "none", color: isActive ? "#F0F0F0" : "#555555", minWidth: "48px" }}>
             {special ? (
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
-                <span style={{ color: "#0E0E0E" }}>{icon}</span>
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#FFD11A", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "-2px" }}>
+                <span style={{ color: "#0F0F0F" }}>{icon}</span>
               </div>
             ) : (
               <>
-                <span style={{ color: isActive ? "#FFFFFF" : "#555555" }}>{icon}</span>
+                <span style={{ color: isActive ? "#F0F0F0" : "#555555" }}>{icon}</span>
                 <span style={{ fontSize: "11px", fontWeight: isActive ? 500 : 400 }}>{label}</span>
               </>
             )}

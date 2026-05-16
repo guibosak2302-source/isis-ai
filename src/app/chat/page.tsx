@@ -4,7 +4,7 @@ export default function ChatPage() {
   return (
     <div
       style={{
-        backgroundColor: "#0E0E0E",
+        backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
         display: "flex",
@@ -38,8 +38,8 @@ function Header() {
         right: 0,
         zIndex: 50,
         height: "64px",
-        backgroundColor: "#0E0E0E",
-        borderBottom: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderBottom: "1px solid #2E2E2E",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -55,7 +55,7 @@ function Header() {
           justifyContent: "center",
           width: "36px",
           height: "36px",
-          color: "#FFFFFF",
+          color: "#F0F0F0",
           textDecoration: "none",
           flexShrink: 0,
         }}
@@ -77,10 +77,10 @@ function Header() {
             flexShrink: 0,
           }}
         >
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>M</span>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>M</span>
         </div>
         <div>
-          <p style={{ fontSize: "15px", fontWeight: 500, color: "#FFFFFF", lineHeight: 1.2 }}>Marina Costa</p>
+          <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.2 }}>Marina Costa</p>
           <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.2 }}>Pintora</p>
         </div>
       </div>
@@ -110,8 +110,8 @@ function ContextBanner() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "10px",
         padding: "12px 14px",
         marginBottom: "20px",
@@ -125,7 +125,7 @@ function ContextBanner() {
         <p style={{ fontSize: "11px", color: "#555555", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Serviço solicitado
         </p>
-        <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           Pintura de apartamento 80m²
         </p>
       </div>
@@ -136,8 +136,8 @@ function ContextBanner() {
           padding: "0 14px",
           borderRadius: "999px",
           backgroundColor: "transparent",
-          color: "#FFFFFF",
-          border: "1px solid #333333",
+          color: "#F0F0F0",
+          border: "1px solid #3A3A3A",
           fontSize: "12px",
           fontWeight: 400,
           fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -176,8 +176,8 @@ function Messages() {
             <div
               style={{
                 maxWidth: "78%",
-                backgroundColor: received ? "#161616" : "#FFFFFF",
-                border: received ? "1px solid #222222" : "none",
+                backgroundColor: received ? "#1A1A1A" : "#FFD11A",
+                border: received ? "1px solid #2E2E2E" : "none",
                 borderRadius: received ? "4px 12px 12px 12px" : "12px 4px 12px 12px",
                 padding: "10px 14px",
               }}
@@ -185,7 +185,7 @@ function Messages() {
               <p
                 style={{
                   fontSize: "14px",
-                  color: received ? "#FFFFFF" : "#0E0E0E",
+                  color: received ? "#F0F0F0" : "#0F0F0F",
                   lineHeight: 1.6,
                   margin: 0,
                 }}
@@ -206,8 +206,8 @@ function ActionBanner() {
   return (
     <div
       style={{
-        backgroundColor: "#161616",
-        border: "1px solid #222222",
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
         borderRadius: "10px",
         padding: "14px",
         display: "flex",
@@ -222,7 +222,7 @@ function ActionBanner() {
             width: "36px",
             height: "36px",
             borderRadius: "8px",
-            backgroundColor: "#222222",
+            backgroundColor: "#2E2E2E",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -232,7 +232,7 @@ function ActionBanner() {
           <DocumentIcon />
         </div>
         <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", marginBottom: "2px" }}>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>
             Gerar contrato com IA
           </p>
           <p style={{ fontSize: "12px", color: "#555555" }}>Formalize o serviço acordado</p>
@@ -245,8 +245,8 @@ function ActionBanner() {
           height: "34px",
           padding: "0 16px",
           borderRadius: "999px",
-          backgroundColor: "#FFFFFF",
-          color: "#0E0E0E",
+          backgroundColor: "#FFD11A",
+          color: "#0F0F0F",
           border: "none",
           fontSize: "13px",
           fontWeight: 500,
@@ -273,8 +273,8 @@ function ChatInput() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#0E0E0E",
-        borderTop: "1px solid #222222",
+        backgroundColor: "#0F0F0F",
+        borderTop: "1px solid #2E2E2E",
         padding: "12px 16px",
         zIndex: 50,
       }}
@@ -286,12 +286,12 @@ function ChatInput() {
           style={{
             flex: 1,
             height: "48px",
-            backgroundColor: "#161616",
-            border: "1px solid #222222",
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
             borderRadius: "999px",
             padding: "0 18px",
             fontSize: "14px",
-            color: "#FFFFFF",
+            color: "#F0F0F0",
             fontFamily: "var(--font-inter), Inter, sans-serif",
             outline: "none",
           }}
@@ -302,7 +302,7 @@ function ChatInput() {
             width: "48px",
             height: "48px",
             borderRadius: "50%",
-            backgroundColor: "#FFFFFF",
+            backgroundColor: "#FFD11A",
             border: "none",
             cursor: "pointer",
             display: "flex",
@@ -351,7 +351,7 @@ function DocumentIcon() {
 
 function SendIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E0E0E" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="22" y1="2" x2="11" y2="13" />
       <polygon points="22 2 15 22 11 13 2 9 22 2" />
     </svg>
