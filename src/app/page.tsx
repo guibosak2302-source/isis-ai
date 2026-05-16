@@ -72,7 +72,7 @@ export default function LoginPage() {
 
         {/* Criar conta */}
         <Link
-          href="/cadastro"
+          href="/onboarding"
           style={{
             width: "100%",
             height: "52px",
