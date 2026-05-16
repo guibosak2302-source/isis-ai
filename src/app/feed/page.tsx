@@ -165,12 +165,13 @@ function Navbar() {
       </span>
 
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <button
+        <Link
+          href="/notificacoes"
           aria-label="Notificações"
-          style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
+          style={{ display: "flex", alignItems: "center", padding: "4px", color: "inherit", textDecoration: "none" }}
         >
           <BellIcon />
-        </button>
+        </Link>
         <Avatar letter="G" size={34} />
       </div>
     </header>
