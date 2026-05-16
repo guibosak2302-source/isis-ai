@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+
 export default function PerfilPage() {
   return (
     <div style={{ backgroundColor: "#0E0E0E", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif", paddingBottom: "80px" }}>
@@ -145,7 +146,8 @@ function ProfileInfo() {
         >
           Contratar
         </button>
-        <button
+        <Link
+          href="/chat"
           style={{
             flex: 1,
             height: "44px",
@@ -157,10 +159,14 @@ function ProfileInfo() {
             fontWeight: 400,
             fontFamily: "var(--font-inter), Inter, sans-serif",
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
           }}
         >
           Mensagem
-        </button>
+        </Link>
       </div>
     </div>
   );
