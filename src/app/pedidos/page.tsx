@@ -182,7 +182,7 @@ function CardEmAndamento() {
       </div>
 
       <Divider />
-      <OutlineButton label="Ver detalhes" />
+      <OutlineButton label="Ver detalhes" href="/etapas" />
     </article>
   );
 }
@@ -319,7 +319,25 @@ function Divider() {
   return <div style={{ height: "1px", backgroundColor: "#222222", marginBottom: "14px" }} />;
 }
 
-function OutlineButton({ label }: { label: string }) {
+function OutlineButton({ label, href }: { label: string; href?: string }) {
+  const style = {
+    height: "38px",
+    padding: "0 18px",
+    borderRadius: "999px",
+    backgroundColor: "transparent",
+    color: "#FFFFFF",
+    border: "1px solid #333333",
+    fontSize: "13px",
+    fontWeight: 400 as const,
+    fontFamily: "var(--font-inter), Inter, sans-serif",
+    cursor: "pointer",
+    display: "inline-flex" as const,
+    alignItems: "center" as const,
+    textDecoration: "none",
+  };
+  if (href) {
+    return <Link href={href} style={style}>{label}</Link>;
+  }
   return (
     <button
       style={{
