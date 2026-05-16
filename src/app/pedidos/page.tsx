@@ -260,7 +260,29 @@ function CardConcluido({ title, avatarLetter, avatarBg, provider, verified, date
       </div>
 
       <Divider />
-      <OutlineButton label="Ver contrato" />
+      <div style={{ display: "flex", gap: "8px" }}>
+        <OutlineButton label="Ver contrato" />
+        <Link
+          href="/avaliacao"
+          style={{
+            height: "38px",
+            padding: "0 18px",
+            borderRadius: "999px",
+            backgroundColor: "#FFFFFF",
+            color: "#0E0E0E",
+            border: "none",
+            fontSize: "13px",
+            fontWeight: 500,
+            fontFamily: "var(--font-inter), Inter, sans-serif",
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            textDecoration: "none",
+          }}
+        >
+          Avaliar
+        </Link>
+      </div>
     </article>
   );
 }
