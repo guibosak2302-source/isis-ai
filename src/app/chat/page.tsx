@@ -238,7 +238,8 @@ function ActionBanner() {
           <p style={{ fontSize: "12px", color: "#555555" }}>Formalize o serviço acordado</p>
         </div>
       </div>
-      <button
+      <Link
+        href="/contrato"
         style={{
           flexShrink: 0,
           height: "34px",
@@ -252,10 +253,13 @@ function ActionBanner() {
           fontFamily: "var(--font-inter), Inter, sans-serif",
           cursor: "pointer",
           whiteSpace: "nowrap",
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
         }}
       >
         Gerar agora
-      </button>
+      </Link>
     </div>
   );
 }
