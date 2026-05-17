@@ -1,6 +1,66 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase";
+
+interface Profile {
+  id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  city: string | null;
+  score: number | null;
+  seal: string | null;
+  verified: boolean | null;
+}
+
+interface Post {
+  id: string;
+  title: string | null;
+  description: string | null;
+  category: string | null;
+  city: string | null;
+  budget_min: number | null;
+  created_at: string;
+  profiles: Profile | null;
+}
+
+function relativeTime(iso: string): string {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (diff < 60) return "agora";
+  if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `há ${Math.floor(diff / 3600)}h`;
+  return `há ${Math.floor(diff / 86400)}d`;
+}
 
 export default function FeedPage() {
+  const [posts, setPosts] = useState<Post[] | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("posts")
+        .select(`
+          *,
+          profiles (
+            id,
+            full_name,
+            avatar_url,
+            city,
+            score,
+            seal,
+            verified
+          )
+        `)
+        .eq("status", "aberto")
+        .order("created_at", { ascending: false })
+        .limit(20);
+      setPosts((data as Post[]) ?? []);
+    }
+    load();
+  }, []);
+
   return (
     <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
       <Navbar />
@@ -8,7 +68,27 @@ export default function FeedPage() {
         <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
           <SearchBar />
           <Filters />
-          <Section />
+
+          <div style={{ marginBottom: "20px" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.3 }}>
+              Perto de você
+            </h2>
+            <p style={{ fontSize: "13px", fontWeight: 400, color: "#555555", marginTop: "2px" }}>
+              Taubaté, SP · 2km
+            </p>
+          </div>
+
+          {posts === null ? (
+            <LoadingSkeleton />
+          ) : posts.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {posts.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </div>
+          )}
         </div>
       </main>
       <BottomNav active="Feed" />
@@ -16,13 +96,227 @@ export default function FeedPage() {
   );
 }
 
+/* ─── Loading Skeleton ────────────────────────────────────── */
+function LoadingSkeleton() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          style={{
+            backgroundColor: "#1A1A1A",
+            border: "1px solid #2E2E2E",
+            borderRadius: "16px",
+            padding: "20px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
+            <div style={{ width: 42, height: 42, borderRadius: "50%", backgroundColor: "#2A2A2A" }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ width: "40%", height: 14, borderRadius: 4, backgroundColor: "#2A2A2A", marginBottom: 6 }} />
+              <div style={{ width: "60%", height: 11, borderRadius: 4, backgroundColor: "#222222" }} />
+            </div>
+          </div>
+          <div style={{ width: "100%", height: 12, borderRadius: 4, backgroundColor: "#222222", marginBottom: 8 }} />
+          <div style={{ width: "80%", height: 12, borderRadius: 4, backgroundColor: "#222222", marginBottom: 8 }} />
+          <div style={{ width: "50%", height: 12, borderRadius: 4, backgroundColor: "#222222" }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Empty State ─────────────────────────────────────────── */
+function EmptyState() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: "60px",
+        gap: "12px",
+        textAlign: "center",
+      }}
+    >
+      <EmptyIcon />
+      <p style={{ fontSize: "16px", fontWeight: 500, color: "#888888" }}>Nenhum pedido ainda</p>
+      <p style={{ fontSize: "13px", color: "#555555" }}>Seja o primeiro a postar!</p>
+      <Link
+        href="/novo-pedido"
+        style={{
+          marginTop: "8px",
+          height: "44px",
+          padding: "0 28px",
+          borderRadius: "999px",
+          backgroundColor: "#FFD11A",
+          color: "#0F0F0F",
+          fontSize: "14px",
+          fontWeight: 500,
+          fontFamily: "var(--font-inter), Inter, sans-serif",
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+        }}
+      >
+        Criar pedido
+      </Link>
+    </div>
+  );
+}
+
+/* ─── PostCard ────────────────────────────────────────────── */
+function PostCard({ post }: { post: Post }) {
+  const profile = post.profiles;
+  const name = profile?.full_name ?? "Usuário";
+  const initial = name.charAt(0).toUpperCase();
+  const seal = profile?.seal ?? "bronze";
+  const verified = profile?.verified ?? false;
+  const location = post.city ?? profile?.city ?? "";
+  const tags: string[] = [post.category, location].filter(Boolean) as string[];
+  const time = relativeTime(post.created_at);
+
+  const sealColor: Record<string, string> = {
+    bronze: "#CD7F32",
+    prata: "#A8A9AD",
+    ouro: "#FFD11A",
+  };
+
+  return (
+    <article
+      style={{
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
+        borderRadius: "16px",
+        padding: "20px",
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
+        <Avatar letter={initial} size={42} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{name}</span>
+            {verified && <VerifiedBadge />}
+            {verified && (
+              <span
+                style={{
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  color: sealColor[seal] ?? "#CD7F32",
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                  border: `1px solid ${sealColor[seal] ?? "#CD7F32"}40`,
+                  borderRadius: "4px",
+                  padding: "1px 5px",
+                  textTransform: "capitalize",
+                }}
+              >
+                {seal}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: "12px", color: "#555555", marginTop: "1px" }}>
+            {[post.category, location, time].filter(Boolean).join(" · ")}
+          </p>
+        </div>
+        <button
+          aria-label="Mais opções"
+          style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: "#555555" }}
+        >
+          <DotsIcon />
+        </button>
+      </div>
+
+      {/* Body */}
+      <p style={{ fontSize: "14px", fontWeight: 400, color: "#F0F0F0", lineHeight: 1.65, marginBottom: "14px" }}>
+        {post.description ?? post.title ?? ""}
+      </p>
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "16px" }}>
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              style={{
+                fontSize: "12px",
+                color: "#888888",
+                backgroundColor: "#1E1E1E",
+                border: "1px solid #2A2A2A",
+                borderRadius: "999px",
+                padding: "3px 10px",
+              }}
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Price */}
+      {post.budget_min != null && (
+        <p style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0", marginBottom: "16px" }}>
+          A partir de R$ {post.budget_min.toLocaleString("pt-BR")}
+        </p>
+      )}
+
+      {/* Divider */}
+      <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "14px" }} />
+
+      {/* Actions */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+        <Link
+          href="/chat"
+          style={{
+            height: "36px",
+            padding: "0 18px",
+            borderRadius: "999px",
+            backgroundColor: "#FFD11A",
+            color: "#0F0F0F",
+            fontSize: "13px",
+            fontWeight: 500,
+            fontFamily: "var(--font-inter), Inter, sans-serif",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            textDecoration: "none",
+          }}
+        >
+          Responder
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+/* ─── Avatar ──────────────────────────────────────────────── */
+function Avatar({ letter, size, bg = "#2A2A2A" }: { letter: string; size: number; bg?: string }) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        backgroundColor: bg,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      <span style={{ fontSize: size * 0.4, fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
+    </div>
+  );
+}
+
 /* ─── Bottom Nav ──────────────────────────────────────────── */
 const NAV_ITEMS = [
-  { label: "Feed",    href: "/feed",        icon: <HomeNavIcon /> },
-  { label: "Buscar",  href: "/busca",        icon: <SearchNavIcon2 /> },
-  { label: "Criar",   href: "/criar-post",  icon: <CreateNavIcon />, special: true },
-  { label: "Pedidos", href: "/pedidos",     icon: <ClipboardNavIcon /> },
-  { label: "Perfil",  href: "/meu-perfil",  icon: <UserNavIcon /> },
+  { label: "Feed",    href: "/feed",       icon: <HomeNavIcon /> },
+  { label: "Buscar",  href: "/busca",      icon: <SearchNavIcon2 /> },
+  { label: "Criar",   href: "/criar-post", icon: <CreateNavIcon />, special: true },
+  { label: "Pedidos", href: "/pedidos",    icon: <ClipboardNavIcon /> },
+  { label: "Perfil",  href: "/meu-perfil", icon: <UserNavIcon /> },
 ];
 
 function BottomNav({ active }: { active: string }) {
@@ -87,53 +381,6 @@ function BottomNav({ active }: { active: string }) {
   );
 }
 
-function HomeNavIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  );
-}
-
-function SearchNavIcon2() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
-
-function CreateNavIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
-}
-
-function ClipboardNavIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-      <rect x="9" y="3" width="6" height="4" rx="1" ry="1" />
-      <line x1="9" y1="12" x2="15" y2="12" />
-      <line x1="9" y1="16" x2="13" y2="16" />
-    </svg>
-  );
-}
-
-function UserNavIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
 /* ─── Navbar ─────────────────────────────────────────────── */
 function Navbar() {
   return (
@@ -156,18 +403,10 @@ function Navbar() {
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" width="32" height="32" alt="" style={{ display: "block" }} />
-        <span
-          style={{
-            fontWeight: 500,
-            fontSize: "20px",
-            letterSpacing: "-0.03em",
-            color: "#F0F0F0",
-          }}
-        >
+        <span style={{ fontWeight: 500, fontSize: "20px", letterSpacing: "-0.03em", color: "#F0F0F0" }}>
           Bico AI
         </span>
       </div>
-
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <Link
           href="/notificacoes"
@@ -176,7 +415,7 @@ function Navbar() {
         >
           <BellIcon />
         </Link>
-        <Avatar letter="G" size={34} />
+        <Avatar letter="B" size={34} />
       </div>
     </header>
   );
@@ -186,22 +425,8 @@ function Navbar() {
 function SearchBar() {
   return (
     <div style={{ marginTop: "20px", marginBottom: "16px" }}>
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            left: "16px",
-            display: "flex",
-            alignItems: "center",
-            pointerEvents: "none",
-          }}
-        >
+      <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        <span style={{ position: "absolute", left: "16px", display: "flex", alignItems: "center", pointerEvents: "none" }}>
           <SearchIcon />
         </span>
         <input
@@ -270,203 +495,16 @@ function Filters() {
   );
 }
 
-/* ─── Section ─────────────────────────────────────────────── */
-function Section() {
-  return (
-    <section>
-      <div style={{ marginBottom: "20px" }}>
-        <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.3 }}>
-          Perto de você
-        </h2>
-        <p style={{ fontSize: "13px", fontWeight: 400, color: "#555555", marginTop: "2px" }}>
-          Taubaté, SP · 2km
-        </p>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <PostCard
-          avatarLetter="M"
-          avatarBg="#2A2A2A"
-          name="Marina Costa"
-          verified
-          meta="Pintora · Reformas · há 12 min"
-          body="Disponível esta semana para pintura de apartamentos até 80m². Faço orçamento na hora, sem compromisso. Materiais inclusos ou por conta do cliente, você escolhe."
-          tags={["Pintura", "Reformas", "Taubaté"]}
-          price="A partir de R$ 350"
-          stats={{ replies: 4, interested: 18 }}
-          replyLabel="Responder"
-          interestLabel="Tenho interesse"
-        />
-
-        <PostCard
-          avatarLetter="R"
-          avatarBg="#1E3A2A"
-          name="Ricardo Alves"
-          verified={false}
-          meta="Eletricista · há 38 min"
-          body="Instalações elétricas residenciais e comerciais. Atendo emergências no mesmo dia. CREA ativo, trabalho com nota."
-          tags={["Elétrica", "Emergência", "Taubaté"]}
-          price="A partir de R$ 120/h"
-          stats={{ replies: 7, interested: 31 }}
-          replyLabel="Responder"
-          interestLabel="Tenho interesse"
-        />
-      </div>
-    </section>
-  );
-}
-
-/* ─── PostCard ────────────────────────────────────────────── */
-interface PostCardProps {
-  avatarLetter: string;
-  avatarBg: string;
-  name: string;
-  verified: boolean;
-  meta: string;
-  body: string;
-  tags: string[];
-  price: string;
-  stats: { replies: number; interested: number };
-  replyLabel: string;
-  interestLabel: string;
-}
-
-function PostCard({ avatarLetter, avatarBg, name, verified, meta, body, tags, price, stats, replyLabel, interestLabel }: PostCardProps) {
-  return (
-    <article
-      style={{
-        backgroundColor: "#1A1A1A",
-        border: "1px solid #2E2E2E",
-        borderRadius: "16px",
-        padding: "20px",
-      }}
-    >
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
-        <Avatar letter={avatarLetter} size={42} bg={avatarBg} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{name}</span>
-            {verified && <VerifiedBadge />}
-          </div>
-          <p style={{ fontSize: "12px", color: "#555555", marginTop: "1px" }}>{meta}</p>
-        </div>
-        <button
-          aria-label="Mais opções"
-          style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: "#555555" }}
-        >
-          <DotsIcon />
-        </button>
-      </div>
-
-      {/* Body */}
-      <p style={{ fontSize: "14px", fontWeight: 400, color: "#F0F0F0", lineHeight: 1.65, marginBottom: "14px" }}>
-        {body}
-      </p>
-
-      {/* Tags */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "16px" }}>
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            style={{
-              fontSize: "12px",
-              color: "#888888",
-              backgroundColor: "#1E1E1E",
-              border: "1px solid #2A2A2A",
-              borderRadius: "999px",
-              padding: "3px 10px",
-            }}
-          >
-            #{tag}
-          </span>
-        ))}
-      </div>
-
-      {/* Price */}
-      <p style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0", marginBottom: "16px" }}>
-        {price}
-      </p>
-
-      {/* Divider */}
-      <div style={{ height: "1px", backgroundColor: "#2E2E2E", marginBottom: "14px" }} />
-
-      {/* Actions */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-        <div style={{ display: "flex", gap: "16px" }}>
-          <StatButton icon={<ReplyIcon />} count={stats.replies} label={replyLabel} />
-          <StatButton icon={<StarIcon />} count={stats.interested} label={`${stats.interested} interesse`} />
-        </div>
-        <Link
-          href="/perfil"
-          style={{
-            height: "36px",
-            padding: "0 18px",
-            borderRadius: "999px",
-            backgroundColor: "#FFD11A",
-            color: "#0F0F0F",
-            border: "none",
-            fontSize: "13px",
-            fontWeight: 500,
-            fontFamily: "var(--font-inter), Inter, sans-serif",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            textDecoration: "none",
-          }}
-        >
-          {interestLabel}
-        </Link>
-      </div>
-    </article>
-  );
-}
-
-/* ─── Stat button ─────────────────────────────────────────── */
-function StatButton({ icon, count, label }: { icon: React.ReactNode; count: number; label: string }) {
-  return (
-    <button
-      aria-label={label}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "5px",
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        color: "#555555",
-        fontSize: "13px",
-        fontFamily: "var(--font-inter), Inter, sans-serif",
-        padding: 0,
-      }}
-    >
-      {icon}
-      <span>{count}</span>
-    </button>
-  );
-}
-
-/* ─── Avatar ──────────────────────────────────────────────── */
-function Avatar({ letter, size, bg = "#2A2A2A" }: { letter: string; size: number; bg?: string }) {
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        backgroundColor: bg,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}
-    >
-      <span style={{ fontSize: size * 0.4, fontWeight: 500, color: "#F0F0F0" }}>{letter}</span>
-    </div>
-  );
-}
-
 /* ─── Icons ───────────────────────────────────────────────── */
+function EmptyIcon() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
 function BellIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -487,8 +525,8 @@ function SearchIcon() {
 
 function VerifiedBadge() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="#3B82F6">
-      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#3B82F6" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M9 12l2 2 4-4" stroke="#FFFFFF" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -504,18 +542,49 @@ function DotsIcon() {
   );
 }
 
-function ReplyIcon() {
+function HomeNavIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
   );
 }
 
-function StarIcon() {
+function SearchNavIcon2() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function CreateNavIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+function ClipboardNavIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" ry="1" />
+      <line x1="9" y1="12" x2="15" y2="12" />
+      <line x1="9" y1="16" x2="13" y2="16" />
+    </svg>
+  );
+}
+
+function UserNavIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
