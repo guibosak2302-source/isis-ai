@@ -184,3 +184,14 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- TABELA DE CONVITES
+create table public.convites (
+  id uuid default gen_random_uuid() primary key,
+  email_indicado text not null unique,
+  indicado_por uuid references public.profiles(id) on delete set null,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+create policy "Inserir convite" on public.convites for insert with check (true);
+alter table public.convites enable row level security;
