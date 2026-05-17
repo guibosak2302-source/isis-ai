@@ -16,40 +16,65 @@ export default function CadastroPage() {
   const [city, setCity] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailConfirmacao, setEmailConfirmacao] = useState(false);
 
   async function handleSignUp() {
     setError("");
-    if (senha !== confirmaSenha) {
-      setError("As senhas não coincidem");
-      return;
-    }
-    if (senha.length < 8) {
-      setError("A senha deve ter pelo menos 8 caracteres");
-      return;
-    }
+
+    if (!nome.trim()) { setError("Informe seu nome completo"); return; }
+    if (!email.trim()) { setError("Informe seu email"); return; }
+    if (!senha) { setError("Informe uma senha"); return; }
+    if (senha.length < 6) { setError("A senha deve ter pelo menos 6 caracteres"); return; }
+    if (senha !== confirmaSenha) { setError("As senhas não coincidem"); return; }
+
     setLoading(true);
     const supabase = createClient();
     const { data, error: authError } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password: senha,
-      options: { data: { full_name: nome, phone: telefone } },
+      options: { data: { full_name: nome.trim(), phone: telefone } },
     });
+
     if (authError) {
       setLoading(false);
-      setError(authError.message);
+      const msg = authError.message.toLowerCase();
+      console.error("[cadastro] signUp error:", authError.message);
+      if (msg.includes("already registered") || msg.includes("already exists") || msg.includes("duplicate") || msg.includes("unique")) {
+        setError("Este email já está cadastrado. Tente fazer login.");
+      } else if (msg.includes("password") && (msg.includes("6") || msg.includes("characters") || msg.includes("short"))) {
+        setError("A senha deve ter pelo menos 6 caracteres");
+      } else if (msg.includes("invalid") && msg.includes("email")) {
+        setError("Email inválido. Verifique e tente novamente.");
+      } else if (msg.includes("rate limit") || msg.includes("too many")) {
+        setError("Muitas tentativas. Aguarde alguns minutos e tente novamente.");
+      } else {
+        setError("Erro ao criar conta. Verifique os dados e tente novamente.");
+      }
       return;
     }
+
     if (data.user) {
-      await supabase.from("profiles").upsert({
+      const { error: upsertError } = await supabase.from("profiles").upsert({
         id: data.user.id,
-        full_name: nome,
+        full_name: nome.trim(),
         phone: telefone,
         type: accountType,
         city,
         state: "SP",
       });
+      if (upsertError) {
+        console.error("[cadastro] profiles upsert error:", upsertError.message);
+      }
     }
+
     setLoading(false);
+
+    // Se o Supabase exige confirmação de email, session fica null
+    if (!data.session) {
+      setEmailConfirmacao(true);
+      return;
+    }
+
     router.push("/onboarding");
   }
 
@@ -69,7 +94,7 @@ export default function CadastroPage() {
         {/* Fields */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "20px" }}>
           <Field label="Nome completo" placeholder="Seu nome completo" type="text" autoComplete="name" value={nome} onChange={setNome} />
-          <Field label="CPF" placeholder="000.000.000-00" type="text" autoComplete="off" value="" onChange={() => {}} />
+          {/* CPF — opcional, coletado apenas para exibição futura */}
           <Field label="Email" placeholder="seu@email.com" type="email" autoComplete="email" value={email} onChange={setEmail} />
           <Field label="Telefone (WhatsApp)" placeholder="(11) 90000-0000" type="tel" autoComplete="tel" value={telefone} onChange={setTelefone} />
           <Field label="Senha" placeholder="Mínimo 8 caracteres" type="password" autoComplete="new-password" value={senha} onChange={setSenha} />
@@ -80,6 +105,16 @@ export default function CadastroPage() {
         <ProfilePhoto />
         <TermsRow />
 
+        {/* Confirmação de email */}
+        {emailConfirmacao && (
+          <div style={{ backgroundColor: "#1A2E1A", border: "1px solid #2E5E2E", borderRadius: "12px", padding: "16px", marginBottom: "16px", textAlign: "center" }}>
+            <p style={{ fontSize: "14px", color: "#6FCF97", fontFamily: "var(--font-inter), Inter, sans-serif", lineHeight: 1.6 }}>
+              ✉️ Confirme seu email para ativar a conta.<br />
+              Enviamos um link para <strong>{email}</strong>.
+            </p>
+          </div>
+        )}
+
         {/* Error */}
         {error && (
           <p style={{ fontSize: "13px", color: "#E24B4A", marginBottom: "12px", textAlign: "center", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
@@ -89,27 +124,27 @@ export default function CadastroPage() {
 
         <button
           onClick={handleSignUp}
-          disabled={loading}
+          disabled={loading || emailConfirmacao}
           style={{
             width: "100%",
             height: "52px",
-            backgroundColor: loading ? "#3A3A3A" : "#FFD11A",
-            color: loading ? "#888888" : "#0F0F0F",
+            backgroundColor: loading || emailConfirmacao ? "#3A3A3A" : "#FFD11A",
+            color: loading || emailConfirmacao ? "#888888" : "#0F0F0F",
             border: "none",
             borderRadius: "999px",
             fontSize: "15px",
             fontWeight: 500,
             fontFamily: "var(--font-inter), Inter, sans-serif",
-            cursor: loading ? "not-allowed" : "pointer",
+            cursor: loading || emailConfirmacao ? "not-allowed" : "pointer",
             marginBottom: "24px",
           }}
         >
-          {loading ? "Criando conta…" : "Criar minha conta"}
+          {loading ? "Criando conta…" : emailConfirmacao ? "Aguardando confirmação…" : "Criar minha conta"}
         </button>
 
         <p style={{ textAlign: "center", fontSize: "14px", color: "#888888" }}>
           Já tem conta?{" "}
-          <Link href="/" style={{ color: "#F0F0F0", textDecoration: "none", fontWeight: 500 }}>
+          <Link href="/login" style={{ color: "#F0F0F0", textDecoration: "none", fontWeight: 500 }}>
             Entrar
           </Link>
         </p>
