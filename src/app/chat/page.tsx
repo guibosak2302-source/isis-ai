@@ -1,440 +1,239 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase";
+import { Suspense } from "react";
 
-export default function ChatPage() {
+interface Mensagem {
+  id: string;
+  chat_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+}
+
+interface OtherUser {
+  id: string;
+  full_name: string | null;
+}
+
+function ChatInner() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const postId = params.get("post_id");
+  const prestadorId = params.get("prestador_id");
+
+  const [userId, setUserId] = useState<string | null>(null);
+  const [chatId, setChatId] = useState<string | null>(null);
+  const [otherUser, setOtherUser] = useState<OtherUser | null>(null);
+  const [mensagens, setMensagens] = useState<Mensagem[]>([]);
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [ready, setReady] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function init() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.replace("/"); return; }
+      setUserId(user.id);
+
+      if (!postId || !prestadorId) { setReady(true); return; }
+
+      // Determine contratante: fetch post owner
+      const { data: post } = await supabase
+        .from("posts")
+        .select("user_id")
+        .eq("id", postId)
+        .single();
+
+      if (!post) { setReady(true); return; }
+
+      const contratanteId = post.user_id as string;
+      const otherUserId = user.id === contratanteId ? prestadorId : contratanteId;
+
+      // Fetch other user profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .eq("id", otherUserId)
+        .single();
+      setOtherUser(profile);
+
+      // Find or create chat
+      let { data: existing } = await supabase
+        .from("chats")
+        .select("id")
+        .eq("post_id", postId)
+        .eq("contratante_id", contratanteId)
+        .eq("prestador_id", prestadorId)
+        .maybeSingle();
+
+      if (!existing) {
+        const { data: created } = await supabase
+          .from("chats")
+          .insert({ post_id: postId, contratante_id: contratanteId, prestador_id: prestadorId, status: "ativo" })
+          .select("id")
+          .single();
+        existing = created;
+      }
+
+      if (!existing) { setReady(true); return; }
+      setChatId(existing.id);
+
+      // Load existing messages
+      const { data: msgs } = await supabase
+        .from("mensagens")
+        .select("*")
+        .eq("chat_id", existing.id)
+        .order("created_at", { ascending: true });
+      setMensagens((msgs as Mensagem[]) ?? []);
+      setReady(true);
+    }
+    init();
+  }, [router, postId, prestadorId]);
+
+  // Realtime subscription
+  useEffect(() => {
+    if (!chatId) return;
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`chat-${chatId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "mensagens", filter: `chat_id=eq.${chatId}` },
+        (payload) => {
+          setMensagens((prev) => {
+            const msg = payload.new as Mensagem;
+            if (prev.find((m) => m.id === msg.id)) return prev;
+            return [...prev, msg];
+          });
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [chatId]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [mensagens]);
+
+  async function sendMessage() {
+    if (!text.trim() || !chatId || !userId || sending) return;
+    const content = text.trim();
+    setText("");
+    setSending(true);
+    const supabase = createClient();
+    await supabase.from("mensagens").insert({
+      chat_id: chatId,
+      sender_id: userId,
+      content,
+      type: "texto",
+    });
+    setSending(false);
+  }
+
+  const otherName = otherUser?.full_name ?? "Usuário";
+  const otherInitial = otherName.charAt(0).toUpperCase();
+
   return (
-    <div
-      style={{
-        backgroundColor: "#0F0F0F",
-        minHeight: "100vh",
-        fontFamily: "var(--font-inter), Inter, sans-serif",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Header />
+    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif", display: "flex", flexDirection: "column" }}>
+      {/* Header */}
+      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, height: "60px", backgroundColor: "#0F0F0F", borderBottom: "1px solid #2E2E2E", display: "flex", alignItems: "center", gap: "12px", padding: "0 16px" }}>
+        <Link href="/conversas" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", color: "#F0F0F0", textDecoration: "none", flexShrink: 0 }}>
+          <ArrowLeftIcon />
+        </Link>
+        <div style={{ width: 38, height: 38, borderRadius: "50%", backgroundColor: "#2A2A2A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{otherInitial}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{otherName}</p>
+          <p style={{ fontSize: "11px", color: "#1D9E75" }}>online</p>
+        </div>
+      </header>
 
-      {/* Scrollable area between fixed header and fixed footer */}
-      <div style={{ flex: 1, overflowY: "auto", paddingTop: "64px", paddingBottom: "148px" }}>
-        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "16px" }}>
-          <ContextBanner />
-          <Messages />
-          <ActionBanner />
-          <Gap h={10} />
-          <ScheduleBanner />
+      {/* Messages */}
+      <div style={{ flex: 1, overflowY: "auto", paddingTop: "72px", paddingBottom: "80px" }}>
+        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {!ready ? (
+            <p style={{ textAlign: "center", color: "#555555", fontSize: "13px", marginTop: "40px" }}>Carregando…</p>
+          ) : mensagens.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#555555", fontSize: "13px", marginTop: "40px" }}>Nenhuma mensagem ainda. Diga olá!</p>
+          ) : (
+            mensagens.map((m) => {
+              const isMe = m.sender_id === userId;
+              return (
+                <div key={m.id} style={{ display: "flex", justifyContent: isMe ? "flex-end" : "flex-start" }}>
+                  <div
+                    style={{
+                      maxWidth: "75%",
+                      backgroundColor: isMe ? "#FFD11A" : "#1A1A1A",
+                      color: isMe ? "#0F0F0F" : "#F0F0F0",
+                      border: isMe ? "none" : "1px solid #2E2E2E",
+                      borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                      padding: "10px 14px",
+                      fontSize: "14px",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {m.content}
+                  </div>
+                </div>
+              );
+            })
+          )}
+          <div ref={bottomRef} />
         </div>
       </div>
 
-      <ChatInput />
-    </div>
-  );
-}
-
-/* ─── Header ──────────────────────────────────────────────── */
-function Header() {
-  return (
-    <header
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        height: "64px",
-        backgroundColor: "#0F0F0F",
-        borderBottom: "1px solid #2E2E2E",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 16px",
-      }}
-    >
-      <Link
-        href="/perfil"
-        aria-label="Voltar"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "36px",
-          height: "36px",
-          color: "#F0F0F0",
-          textDecoration: "none",
-          flexShrink: 0,
-        }}
-      >
-        <ArrowLeftIcon />
-      </Link>
-
-      {/* Center: avatar + name */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <div
+      {/* Input */}
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, backgroundColor: "#0F0F0F", borderTop: "1px solid #2E2E2E", padding: "10px 16px", display: "flex", gap: "10px", alignItems: "flex-end", zIndex: 50 }}>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+          placeholder="Digite uma mensagem…"
+          rows={1}
           style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            backgroundColor: "#2A2A2A",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>M</span>
-        </div>
-        <div>
-          <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.2 }}>Marina Costa</p>
-          <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.2 }}>Pintora</p>
-        </div>
-      </div>
-
-      <button
-        aria-label="Informações"
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "36px",
-          height: "36px",
-          flexShrink: 0,
-        }}
-      >
-        <InfoIcon />
-      </button>
-    </header>
-  );
-}
-
-/* ─── Context Banner ──────────────────────────────────────── */
-function ContextBanner() {
-  return (
-    <div
-      style={{
-        backgroundColor: "#1A1A1A",
-        border: "1px solid #2E2E2E",
-        borderRadius: "10px",
-        padding: "12px 14px",
-        marginBottom: "20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "12px",
-      }}
-    >
-      <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: "11px", color: "#555555", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          Serviço solicitado
-        </p>
-        <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-          Pintura de apartamento 80m²
-        </p>
-      </div>
-      <button
-        style={{
-          flexShrink: 0,
-          height: "32px",
-          padding: "0 14px",
-          borderRadius: "999px",
-          backgroundColor: "transparent",
-          color: "#F0F0F0",
-          border: "1px solid #3A3A3A",
-          fontSize: "12px",
-          fontWeight: 400,
-          fontFamily: "var(--font-inter), Inter, sans-serif",
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Ver proposta
-      </button>
-    </div>
-  );
-}
-
-/* ─── Messages ────────────────────────────────────────────── */
-const MESSAGES = [
-  { from: "marina", text: "Olá! Vi seu post sobre pintura. Posso fazer uma visita técnica ainda essa semana sem custo.", time: "14:02" },
-  { from: "user",   text: "Oi Marina! Que ótimo. Tenho disponibilidade quinta ou sexta.", time: "14:05" },
-  { from: "marina", text: "Quinta às 14h fica bom para mim. Confirma o endereço?", time: "14:07" },
-  { from: "user",   text: "Rua das Flores, 123 - Taubaté. Apartamento 42.", time: "14:09" },
-];
-
-function Messages() {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "20px" }}>
-      {MESSAGES.map((msg, i) => {
-        const received = msg.from === "marina";
-        return (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: received ? "flex-start" : "flex-end",
-            }}
-          >
-            <div
-              style={{
-                maxWidth: "78%",
-                backgroundColor: received ? "#1A1A1A" : "#FFD11A",
-                border: received ? "1px solid #2E2E2E" : "none",
-                borderRadius: received ? "4px 12px 12px 12px" : "12px 4px 12px 12px",
-                padding: "10px 14px",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "14px",
-                  color: received ? "#F0F0F0" : "#0F0F0F",
-                  lineHeight: 1.6,
-                  margin: 0,
-                }}
-              >
-                {msg.text}
-              </p>
-            </div>
-            <span style={{ fontSize: "11px", color: "#555555", marginTop: "4px" }}>{msg.time}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ─── Action Banner ───────────────────────────────────────── */
-function ActionBanner() {
-  return (
-    <div
-      style={{
-        backgroundColor: "#1A1A1A",
-        border: "1px solid #2E2E2E",
-        borderRadius: "10px",
-        padding: "14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "12px",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
-        <div
-          style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "8px",
-            backgroundColor: "#2E2E2E",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <DocumentIcon />
-        </div>
-        <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>
-            Gerar contrato com IA
-          </p>
-          <p style={{ fontSize: "12px", color: "#555555" }}>Formalize o serviço acordado</p>
-        </div>
-      </div>
-      <Link
-        href="/contrato"
-        style={{
-          flexShrink: 0,
-          height: "34px",
-          padding: "0 16px",
-          borderRadius: "999px",
-          backgroundColor: "#FFD11A",
-          color: "#0F0F0F",
-          border: "none",
-          fontSize: "13px",
-          fontWeight: 500,
-          fontFamily: "var(--font-inter), Inter, sans-serif",
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-          display: "flex",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        Gerar agora
-      </Link>
-    </div>
-  );
-}
-
-/* ─── Schedule Banner ────────────────────────────────────── */
-function ScheduleBanner() {
-  return (
-    <div
-      style={{
-        backgroundColor: "#1A1A1A",
-        border: "1px solid #2E2E2E",
-        borderRadius: "10px",
-        padding: "14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "12px",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
-        <div
-          style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "8px",
-            backgroundColor: "#2E2E2E",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <CalendarIcon />
-        </div>
-        <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginBottom: "2px" }}>
-            Agendar visita técnica
-          </p>
-          <p style={{ fontSize: "12px", color: "#555555" }}>Escolha data e horário com Carlos</p>
-        </div>
-      </div>
-      <Link
-        href="/agendamento"
-        style={{
-          flexShrink: 0,
-          height: "34px",
-          padding: "0 16px",
-          borderRadius: "999px",
-          backgroundColor: "transparent",
-          color: "#FFD11A",
-          border: "1px solid #FFD11A",
-          fontSize: "13px",
-          fontWeight: 500,
-          fontFamily: "var(--font-inter), Inter, sans-serif",
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-          display: "flex",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        Agendar
-      </Link>
-    </div>
-  );
-}
-
-/* ─── Gap ─────────────────────────────────────────────────── */
-function Gap({ h }: { h: number }) {
-  return <div style={{ height: `${h}px` }} />;
-}
-
-/* ─── Chat Input ──────────────────────────────────────────── */
-function ChatInput() {
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "#0F0F0F",
-        borderTop: "1px solid #2E2E2E",
-        padding: "12px 16px",
-        zIndex: 50,
-      }}
-    >
-      <div style={{ maxWidth: "600px", margin: "0 auto", display: "flex", alignItems: "center", gap: "10px" }}>
-        <input
-          type="text"
-          placeholder="Digite uma mensagem..."
-          style={{
-            flex: 1,
-            height: "48px",
-            backgroundColor: "#1A1A1A",
-            border: "1px solid #2E2E2E",
-            borderRadius: "999px",
-            padding: "0 18px",
-            fontSize: "14px",
-            color: "#F0F0F0",
-            fontFamily: "var(--font-inter), Inter, sans-serif",
-            outline: "none",
+            flex: 1, backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "20px",
+            padding: "10px 16px", fontSize: "14px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif",
+            outline: "none", resize: "none", lineHeight: 1.5, maxHeight: "120px", overflowY: "auto",
           }}
         />
         <button
-          aria-label="Enviar"
+          onClick={sendMessage}
+          disabled={!text.trim() || sending}
           style={{
-            width: "48px",
-            height: "48px",
-            borderRadius: "50%",
-            backgroundColor: "#FFD11A",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
+            width: "42px", height: "42px", borderRadius: "50%", flexShrink: 0,
+            backgroundColor: text.trim() ? "#FFD11A" : "#2A2A2A",
+            border: "none", cursor: text.trim() ? "pointer" : "default",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "background-color 0.15s",
           }}
         >
-          <SendIcon />
+          <SendIcon active={!!text.trim()} />
         </button>
       </div>
     </div>
   );
 }
 
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }} />}>
+      <ChatInner />
+    </Suspense>
+  );
+}
+
 /* ─── Icons ───────────────────────────────────────────────── */
 function ArrowLeftIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 12H5M12 5l-7 7 7 7" />
-    </svg>
-  );
+  return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>;
 }
-
-function InfoIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="16" x2="12" y2="12" />
-      <line x1="12" y1="8" x2="12.01" y2="8" />
-    </svg>
-  );
-}
-
-function DocumentIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-  );
-}
-
-function SendIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="22" y1="2" x2="11" y2="13" />
-      <polygon points="22 2 15 22 11 13 2 9 22 2" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
+function SendIcon({ active }: { active: boolean }) {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#0F0F0F" : "#555555"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>;
 }
