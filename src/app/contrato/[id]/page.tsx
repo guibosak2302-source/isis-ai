@@ -186,6 +186,12 @@ export default function ContratoPage() {
 
         {/* Actions */}
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <Link
+            href={`/pagamento/${contrato.id}`}
+            style={{ width: "100%", height: "50px", backgroundColor: "#1A1A1A", color: "#FFD11A", border: "1px solid #FFD11A40", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", textDecoration: "none" }}
+          >
+            <PixIcon /> Pagar com Pix
+          </Link>
           <button
             onClick={gerarPDF}
             disabled={downloadingPdf}
@@ -246,6 +252,9 @@ function PartyCard({ label, name }: { label: string; name: string }) {
 
 function ArrowLeftIcon() {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>;
+}
+function PixIcon() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg>;
 }
 function DownloadIcon() {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>;
