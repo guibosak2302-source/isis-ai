@@ -7,16 +7,5 @@
   "background_color": "#0F0F0F",
   "theme_color": "#FFD11A",
   "orientation": "portrait",
-  "icons": [
-    {
-      "src": "/Logo_sem_fundo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/Logo_sem_fundo.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "icons": []
 }

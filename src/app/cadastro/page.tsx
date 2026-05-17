@@ -91,8 +91,7 @@ export default function CadastroPage() {
       {/* Logo */}
       <div style={{ textAlign: "center", marginBottom: "36px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/Logo_sem_fundo.png" width="48" height="48" alt="" style={{ display: "block" }} />
+          <DuckLogo />
           <h1
             style={{
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -181,6 +180,19 @@ export default function CadastroPage() {
         </Link>
       </p>
     </main>
+  );
+}
+
+function DuckLogo() {
+  return (
+    <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="32" cy="40" rx="18" ry="14" fill="#FFD11A" />
+      <circle cx="44" cy="24" r="10" fill="#FFD11A" />
+      <circle cx="47" cy="21" r="2" fill="#0F0F0F" />
+      <circle cx="47.8" cy="20.2" r="0.6" fill="#fff" />
+      <path d="M54 24 L60 22 L60 26 Z" fill="#FF9900" />
+      <ellipse cx="26" cy="41" rx="8" ry="5" fill="#F0B800" transform="rotate(-15 26 41)" />
+    </svg>
   );
 }
 

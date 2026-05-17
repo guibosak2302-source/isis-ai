@@ -26,15 +26,11 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Bico AI",
   },
-  icons: {
-    apple: "/Logo_sem_fundo.png",
-  },
   openGraph: {
     title: "Bico AI",
     description: "Resolve rápido, sempre perto de você.",
     url: BASE_URL,
     type: "website",
-    images: [{ url: "/Logo_sem_fundo.png" }],
   },
   twitter: {
     card: "summary_large_image",
