@@ -10,10 +10,17 @@ const inter = Inter({
   weight: ["400", "500"],
 });
 
+const BASE_URL = "https://bicoai.com.br";
+
 export const metadata: Metadata = {
-  title: "Bico AI",
-  description: "Resolve rápido, sempre perto de você.",
+  title: "Bico AI — Resolve rápido, sempre perto de você",
+  description:
+    "Encontre prestadores de serviço perto de você ou ofereça seus serviços. Contrato digital, pagamento seguro via Pix.",
   manifest: "/manifest.json",
+  metadataBase: new URL(BASE_URL),
+  alternates: {
+    canonical: BASE_URL,
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -21,6 +28,18 @@ export const metadata: Metadata = {
   },
   icons: {
     apple: "/logo.png",
+  },
+  openGraph: {
+    title: "Bico AI",
+    description: "Resolve rápido, sempre perto de você.",
+    url: BASE_URL,
+    type: "website",
+    images: [{ url: "/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bico AI",
+    description: "Resolve rápido, sempre perto de você.",
   },
 };
 
