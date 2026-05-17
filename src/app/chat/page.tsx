@@ -32,6 +32,9 @@ function ChatInner() {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [ready, setReady] = useState(false);
+  const [isContratante, setIsContratante] = useState(false);
+  const [candidaturaId, setCandidaturaId] = useState<string | null>(null);
+  const [generatingContract, setGeneratingContract] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,7 +56,21 @@ function ChatInner() {
       if (!post) { setReady(true); return; }
 
       const contratanteId = post.user_id as string;
-      const otherUserId = user.id === contratanteId ? prestadorId : contratanteId;
+      const userIsContratante = user.id === contratanteId;
+      setIsContratante(userIsContratante);
+      const otherUserId = userIsContratante ? prestadorId : contratanteId;
+
+      // Check for an accepted candidatura
+      if (userIsContratante) {
+        const { data: cand } = await supabase
+          .from("candidaturas")
+          .select("id")
+          .eq("post_id", postId)
+          .eq("prestador_id", prestadorId)
+          .eq("status", "aceito")
+          .maybeSingle();
+        if (cand) setCandidaturaId(cand.id);
+      }
 
       // Fetch other user profile
       const { data: profile } = await supabase
@@ -137,6 +154,24 @@ function ChatInner() {
     setSending(false);
   }
 
+  async function gerarContrato() {
+    if (!chatId || !postId || !candidaturaId || generatingContract) return;
+    setGeneratingContract(true);
+    try {
+      const res = await fetch("/api/gerar-contrato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, post_id: postId, candidatura_id: candidaturaId }),
+      });
+      const json = await res.json() as { contrato?: { id: string }; error?: string };
+      if (json.contrato) {
+        router.push(`/contrato/${json.contrato.id}`);
+      }
+    } finally {
+      setGeneratingContract(false);
+    }
+  }
+
   const otherName = otherUser?.full_name ?? "Usuário";
   const otherInitial = otherName.charAt(0).toUpperCase();
 
@@ -154,6 +189,23 @@ function ChatInner() {
           <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{otherName}</p>
           <p style={{ fontSize: "11px", color: "#1D9E75" }}>online</p>
         </div>
+        {isContratante && candidaturaId && (
+          <button
+            onClick={gerarContrato}
+            disabled={generatingContract}
+            style={{
+              height: "32px", padding: "0 12px", borderRadius: "999px", flexShrink: 0,
+              backgroundColor: generatingContract ? "#3A3A3A" : "#FFD11A",
+              color: generatingContract ? "#888888" : "#0F0F0F",
+              border: "none", fontSize: "12px", fontWeight: 600,
+              fontFamily: "var(--font-inter), Inter, sans-serif",
+              cursor: generatingContract ? "not-allowed" : "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {generatingContract ? "Gerando…" : "Gerar Contrato"}
+          </button>
+        )}
       </header>
 
       {/* Messages */}
