@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import jsPDF from "jspdf";
 
 interface Contrato {
   id: string;
@@ -30,6 +31,7 @@ export default function ContratoPage() {
   const id = params.id as string;
   const [contrato, setContrato] = useState<Contrato | null>(null);
   const [loading, setLoading] = useState(true);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -52,6 +54,50 @@ export default function ContratoPage() {
     }
     load();
   }, [id, router]);
+
+  async function gerarPDF() {
+    if (!contrato || downloadingPdf) return;
+    setDownloadingPdf(true);
+
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("CONTRATO DE PRESTAÇÃO DE SERVIÇO", 105, 20, { align: "center" });
+
+    // Separator line
+    doc.setLineWidth(0.5);
+    doc.line(20, 25, 190, 25);
+
+    // Contract body
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    const linhas = doc.splitTextToSize(contrato.descricao ?? "", 170);
+    doc.text(linhas, 20, 35);
+
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor(128, 128, 128);
+    doc.text("Gerado por Bico AI — bico.ai", 105, 285, { align: "center" });
+
+    doc.save(`contrato-${contrato.id}.pdf`);
+
+    // Update status in DB — use 'aguardando_assinatura' (valid schema value)
+    const supabase = createClient();
+    const { data: updated } = await supabase
+      .from("contratos")
+      .update({ status: "aguardando_assinatura" })
+      .eq("id", contrato.id)
+      .select("status")
+      .single();
+
+    if (updated) {
+      setContrato((prev) => prev ? { ...prev, status: updated.status } : prev);
+    }
+
+    setDownloadingPdf(false);
+  }
 
   if (loading) {
     return (
@@ -84,7 +130,7 @@ export default function ContratoPage() {
       </header>
 
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "72px 16px 0" }}>
-        {/* Status + meta */}
+        {/* Status + date */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
           <span style={{ fontSize: "12px", fontWeight: 600, color: status.color, backgroundColor: `${status.color}18`, border: `1px solid ${status.color}40`, borderRadius: "6px", padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             {status.label}
@@ -119,10 +165,20 @@ export default function ContratoPage() {
         {/* Actions */}
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <button
-            onClick={() => alert("Funcionalidade de PDF em breve.")}
-            style={{ width: "100%", height: "50px", backgroundColor: "transparent", color: "#F0F0F0", border: "1px solid #3A3A3A", borderRadius: "999px", fontSize: "14px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
+            onClick={gerarPDF}
+            disabled={downloadingPdf}
+            style={{
+              width: "100%", height: "50px", backgroundColor: "transparent",
+              color: downloadingPdf ? "#555555" : "#F0F0F0",
+              border: `1px solid ${downloadingPdf ? "#2A2A2A" : "#3A3A3A"}`,
+              borderRadius: "999px", fontSize: "14px", fontWeight: 500,
+              fontFamily: "var(--font-inter), Inter, sans-serif",
+              cursor: downloadingPdf ? "not-allowed" : "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+            }}
           >
-            <DownloadIcon /> Baixar PDF
+            <DownloadIcon />
+            {downloadingPdf ? "Gerando PDF…" : "Baixar PDF"}
           </button>
           <button
             onClick={() => alert("Assinatura digital em breve.")}
