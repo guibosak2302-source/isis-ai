@@ -19,7 +19,14 @@ export default function LoginPage() {
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (authError) {
-      setError("Email ou senha incorretos");
+      const msg = authError.message.toLowerCase();
+      if (msg.includes("invalid") || msg.includes("credentials") || msg.includes("password")) {
+        setError("Email ou senha incorretos");
+      } else if (msg.includes("email not confirmed") || msg.includes("confirm")) {
+        setError("Confirme seu email antes de entrar");
+      } else {
+        setError("Erro ao entrar. Tente novamente.");
+      }
     } else {
       router.push("/feed");
     }
