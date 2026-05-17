@@ -282,19 +282,8 @@ export default function LoginPage() {
 
 function DuckLogo() {
   return (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* body */}
-      <ellipse cx="32" cy="40" rx="18" ry="14" fill="#FFD11A" />
-      {/* head */}
-      <circle cx="44" cy="24" r="10" fill="#FFD11A" />
-      {/* eye */}
-      <circle cx="47" cy="21" r="2" fill="#0F0F0F" />
-      <circle cx="47.8" cy="20.2" r="0.6" fill="#fff" />
-      {/* beak */}
-      <path d="M54 24 L60 22 L60 26 Z" fill="#FF9900" />
-      {/* wing */}
-      <ellipse cx="26" cy="41" rx="8" ry="5" fill="#F0B800" transform="rotate(-15 26 41)" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/logo.svg" alt="Bico AI" width={64} height={64} style={{ display: "block" }} />
   );
 }
 
