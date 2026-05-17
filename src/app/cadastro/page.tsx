@@ -46,6 +46,7 @@ export default function CadastroPage() {
         phone: telefone,
         type: accountType,
         city,
+        state: "SP",
       });
     }
     setLoading(false);
