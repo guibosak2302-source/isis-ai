@@ -12,6 +12,8 @@ export default function CadastroPage() {
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmaSenha, setConfirmaSenha] = useState("");
+  const [accountType, setAccountType] = useState<"contratante" | "prestador">("contratante");
+  const [city, setCity] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +29,11 @@ export default function CadastroPage() {
     }
     setLoading(true);
     const supabase = createClient();
-    const { data, error: authError } = await supabase.auth.signUp({ email, password: senha });
+    const { data, error: authError } = await supabase.auth.signUp({
+      email,
+      password: senha,
+      options: { data: { full_name: nome, phone: telefone } },
+    });
     if (authError) {
       setLoading(false);
       setError(authError.message);
@@ -38,7 +44,8 @@ export default function CadastroPage() {
         id: data.user.id,
         full_name: nome,
         phone: telefone,
-        updated_at: new Date().toISOString(),
+        type: accountType,
+        city,
       });
     }
     setLoading(false);
@@ -56,7 +63,7 @@ export default function CadastroPage() {
     >
       <Header />
       <div style={{ maxWidth: "480px", margin: "0 auto", padding: "0 20px", paddingTop: "72px" }}>
-        <TypeSelector />
+        <TypeSelector accountType={accountType} setAccountType={setAccountType} />
 
         {/* Fields */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "20px" }}>
@@ -68,7 +75,7 @@ export default function CadastroPage() {
           <Field label="Confirmar senha" placeholder="Repita a senha" type="password" autoComplete="new-password" value={confirmaSenha} onChange={setConfirmaSenha} />
         </div>
 
-        <LocationField />
+        <LocationField city={city} setCity={setCity} />
         <ProfilePhoto />
         <TermsRow />
 
@@ -139,18 +146,44 @@ function Header() {
 }
 
 /* ─── Type Selector ───────────────────────────────────────── */
-function TypeSelector() {
+function TypeSelector({
+  accountType,
+  setAccountType,
+}: {
+  accountType: "contratante" | "prestador";
+  setAccountType: (v: "contratante" | "prestador") => void;
+}) {
   return (
     <div style={{ marginTop: "24px", marginBottom: "28px" }}>
       <p style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0", marginBottom: "14px" }}>Você é:</p>
       <div style={{ display: "flex", gap: "12px" }}>
-        <div style={{ flex: 1, backgroundColor: "#1A1A1A", border: "1px solid #FFD11A", borderRadius: "12px", padding: "16px", cursor: "pointer" }}>
-          <PersonIcon />
+        <div
+          onClick={() => setAccountType("contratante")}
+          style={{
+            flex: 1,
+            backgroundColor: "#1A1A1A",
+            border: `1px solid ${accountType === "contratante" ? "#FFD11A" : "#2E2E2E"}`,
+            borderRadius: "12px",
+            padding: "16px",
+            cursor: "pointer",
+          }}
+        >
+          <PersonIcon active={accountType === "contratante"} />
           <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginTop: "10px", marginBottom: "4px" }}>Pessoa física</p>
           <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.5 }}>Quero contratar ou oferecer serviços</p>
         </div>
-        <div style={{ flex: 1, backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", cursor: "pointer" }}>
-          <BuildingIcon />
+        <div
+          onClick={() => setAccountType("prestador")}
+          style={{
+            flex: 1,
+            backgroundColor: "#1A1A1A",
+            border: `1px solid ${accountType === "prestador" ? "#FFD11A" : "#2E2E2E"}`,
+            borderRadius: "12px",
+            padding: "16px",
+            cursor: "pointer",
+          }}
+        >
+          <BuildingIcon active={accountType === "prestador"} />
           <p style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0", marginTop: "10px", marginBottom: "4px" }}>Empresa</p>
           <p style={{ fontSize: "12px", color: "#888888", lineHeight: 1.5 }}>Represento um negócio</p>
         </div>
@@ -194,7 +227,7 @@ function Field({ label, placeholder, type, autoComplete, value, onChange }: {
 }
 
 /* ─── Location Field ──────────────────────────────────────── */
-function LocationField() {
+function LocationField({ city, setCity }: { city: string; setCity: (v: string) => void }) {
   return (
     <div style={{ marginBottom: "28px" }}>
       <label style={{ display: "block", fontSize: "12px", color: "#888888", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -207,6 +240,8 @@ function LocationField() {
         <input
           type="text"
           placeholder="Cidade, bairro ou região"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
           style={{ width: "100%", height: "52px", backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "10px", paddingLeft: "42px", paddingRight: "16px", fontSize: "15px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
         />
       </div>
@@ -249,16 +284,16 @@ function ArrowLeftIcon() {
     </svg>
   );
 }
-function PersonIcon() {
+function PersonIcon({ active }: { active: boolean }) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={active ? "#FFD11A" : "#888888"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
-function BuildingIcon() {
+function BuildingIcon({ active }: { active: boolean }) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={active ? "#FFD11A" : "#555555"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /><rect x="13" y="13" width="3" height="3" /><rect x="13" y="17" width="3" height="2" />
     </svg>
   );
