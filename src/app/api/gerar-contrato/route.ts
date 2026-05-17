@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
+import { notificarWhatsApp } from "@/lib/notificar";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerClient(
@@ -93,6 +94,13 @@ O contrato deve ter: identificação das partes, objeto do contrato, valor e for
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
+
+  // Notify both parties about the generated contract
+  const titulo = post.title ?? "serviço";
+  void Promise.all([
+    notificarWhatsApp(post.user_id as string, `📄 Bico AI: Um contrato foi gerado para o serviço '${titulo}'. Acesse para assinar.`),
+    notificarWhatsApp(candidatura.prestador_id as string, `📄 Bico AI: Um contrato foi gerado para o serviço '${titulo}'. Acesse para assinar.`),
+  ]).catch(() => {});
 
   return NextResponse.json({ contrato });
 }

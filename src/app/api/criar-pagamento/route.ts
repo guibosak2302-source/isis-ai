@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
+import { notificarWhatsApp } from "@/lib/notificar";
 
 const ASAAS = "https://sandbox.asaas.com/api/v3";
 const asaasHeaders = () => ({ access_token: process.env.ASAAS_TOKEN ?? "" });
@@ -107,6 +108,12 @@ export async function POST(request: NextRequest) {
     if (dbError) {
       return NextResponse.json({ error: dbError.message }, { status: 500 });
     }
+
+    // Notify prestador that a payment was initiated
+    void notificarWhatsApp(
+      contrato.prestador_id as string,
+      `💰 Bico AI: Você recebeu um pagamento de R$ ${valor.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}. Acesse o app para conferir.`
+    ).catch(() => {});
 
     return NextResponse.json({
       id: pagamento.id,

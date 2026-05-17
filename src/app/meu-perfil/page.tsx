@@ -12,13 +12,15 @@ interface Profile {
   score: number | null;
   seal: string | null;
   type: string | null;
+  phone: string | null;
+  notificacoes_whatsapp: boolean | null;
 }
 
 export default function MeuPerfilPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
-  const [profile, setProfile] = useState<Profile>({ full_name: null, city: null, state: null, score: null, seal: null, type: null });
+  const [profile, setProfile] = useState<Profile>({ full_name: null, city: null, state: null, score: null, seal: null, type: null, phone: null, notificacoes_whatsapp: null });
 
   useEffect(() => {
     async function load() {
@@ -29,7 +31,7 @@ export default function MeuPerfilPage() {
       setUserId(user.id);
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, city, state, score, seal, type")
+        .select("full_name, city, state, score, seal, type, phone, notificacoes_whatsapp")
         .eq("id", user.id)
         .single();
       if (data) setProfile(data as Profile);
@@ -64,6 +66,13 @@ export default function MeuPerfilPage() {
           <ScoreCard score={profile.score ?? 0} seal={profile.seal} userId={userId} />
         )}
         {userId && <AvaliacoesRecebidas userId={userId} />}
+        {userId && (
+          <NotificacoesWhatsApp
+            userId={userId}
+            phone={profile.phone}
+            ativo={profile.notificacoes_whatsapp ?? false}
+          />
+        )}
         <ProviderCard />
         <MyPosts />
         <History />
@@ -399,6 +408,128 @@ function MedalIcon({ color }: { color: string }) {
   );
 }
 
+/* ─── Notificações WhatsApp ───────────────────────────────── */
+function NotificacoesWhatsApp({ userId, phone, ativo }: { userId: string; phone: string | null; ativo: boolean }) {
+  const [telefone, setTelefone] = useState(phone ?? "");
+  const [habilitado, setHabilitado] = useState(ativo);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  async function salvar() {
+    setSaving(true);
+    setSaved(false);
+    const supabase = createClient();
+    await supabase
+      .from("profiles")
+      .update({ phone: telefone.trim() || null, notificacoes_whatsapp: habilitado })
+      .eq("id", userId);
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  }
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#1A1A1A",
+        border: "1px solid #2E2E2E",
+        borderRadius: "14px",
+        padding: "18px 16px",
+        marginBottom: "20px",
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+        <WhatsAppIcon />
+        <div>
+          <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Notificações WhatsApp</p>
+          <p style={{ fontSize: "12px", color: "#555555" }}>Receba alertas no seu WhatsApp</p>
+        </div>
+      </div>
+
+      {/* Phone input */}
+      <label style={{ display: "block", fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>
+        Número com DDD
+      </label>
+      <input
+        type="tel"
+        placeholder="Ex: 5511999999999"
+        value={telefone}
+        onChange={(e) => setTelefone(e.target.value)}
+        style={{
+          width: "100%",
+          height: "46px",
+          backgroundColor: "#0F0F0F",
+          border: "1px solid #2E2E2E",
+          borderRadius: "10px",
+          padding: "0 14px",
+          fontSize: "14px",
+          color: "#F0F0F0",
+          fontFamily: "var(--font-inter), Inter, sans-serif",
+          outline: "none",
+          boxSizing: "border-box",
+          marginBottom: "14px",
+        }}
+      />
+
+      {/* Toggle */}
+      <div
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}
+      >
+        <span style={{ fontSize: "14px", color: "#C0C0C0" }}>Ativar notificações</span>
+        <button
+          onClick={() => setHabilitado((v) => !v)}
+          style={{
+            width: "46px",
+            height: "26px",
+            borderRadius: "999px",
+            border: "none",
+            backgroundColor: habilitado ? "#FFD11A" : "#3A3A3A",
+            position: "relative",
+            cursor: "pointer",
+            transition: "background-color 0.2s",
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              position: "absolute",
+              top: "3px",
+              left: habilitado ? "23px" : "3px",
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+              backgroundColor: "#F0F0F0",
+              transition: "left 0.2s",
+            }}
+          />
+        </button>
+      </div>
+
+      {/* Save button */}
+      <button
+        onClick={salvar}
+        disabled={saving}
+        style={{
+          width: "100%",
+          height: "42px",
+          backgroundColor: saved ? "#1D9E75" : saving ? "#3A3A3A" : "#FFD11A",
+          color: saved ? "#F0F0F0" : saving ? "#888888" : "#0F0F0F",
+          border: "none",
+          borderRadius: "999px",
+          fontSize: "14px",
+          fontWeight: 500,
+          fontFamily: "var(--font-inter), Inter, sans-serif",
+          cursor: saving ? "not-allowed" : "pointer",
+          transition: "background-color 0.2s",
+        }}
+      >
+        {saved ? "Salvo ✓" : saving ? "Salvando…" : "Salvar configurações"}
+      </button>
+    </div>
+  );
+}
+
 /* ─── Stats ───────────────────────────────────────────────── */
 function Stats() {
   const items = [
@@ -687,6 +818,14 @@ function BottomNav({ active }: { active: string }) {
 }
 
 /* ─── Icons ───────────────────────────────────────────────── */
+function WhatsAppIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25D366" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </svg>
+  );
+}
+
 function GearIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

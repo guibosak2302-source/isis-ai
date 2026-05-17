@@ -18,6 +18,7 @@ interface Profile {
 
 interface Post {
   id: string;
+  user_id: string;
   title: string | null;
   description: string | null;
   category: string | null;
@@ -125,6 +126,19 @@ export default function FeedPage() {
       setModal((m) => m && ({ ...m, sending: false, error: "Erro ao enviar. Tente novamente." }));
       return;
     }
+
+    // Notify the post owner (contratante) about the new candidatura
+    const postTitle = modal.post.title ?? "seu pedido";
+    void fetch("/api/notificar-whatsapp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: modal.post.user_id,
+        mensagem: `🔔 Bico AI: Você recebeu uma nova proposta para seu pedido '${postTitle}'! Acesse o app para ver.`,
+        tipo: "nova_candidatura",
+      }),
+    });
+
     setModal(null);
   }
 

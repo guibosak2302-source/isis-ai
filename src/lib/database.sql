@@ -14,12 +14,14 @@ create table public.profiles (
   verified boolean default false,
   latitude numeric,
   longitude numeric,
+  notificacoes_whatsapp boolean default false,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
 -- Migração: adicionar coordenadas em perfis existentes
 -- alter table public.profiles add column if not exists latitude numeric;
 -- alter table public.profiles add column if not exists longitude numeric;
+-- alter table public.profiles add column if not exists notificacoes_whatsapp boolean default false;
 
 -- TABELA DE POSTS
 create table public.posts (
