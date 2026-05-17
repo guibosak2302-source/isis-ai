@@ -17,6 +17,7 @@ interface Mensagem {
 interface OtherUser {
   id: string;
   full_name: string | null;
+  phone: string | null;
 }
 
 function ChatInner() {
@@ -26,6 +27,7 @@ function ChatInner() {
   const prestadorId = params.get("prestador_id");
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [meuNome, setMeuNome] = useState<string>("alguém");
   const [chatId, setChatId] = useState<string | null>(null);
   const [otherUser, setOtherUser] = useState<OtherUser | null>(null);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
@@ -43,6 +45,8 @@ function ChatInner() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.replace("/"); return; }
       setUserId(user.id);
+      const { data: myProfile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
+      if (myProfile?.full_name) setMeuNome(myProfile.full_name);
 
       if (!postId || !prestadorId) { setReady(true); return; }
 
@@ -75,10 +79,10 @@ function ChatInner() {
       // Fetch other user profile
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, full_name")
+        .select("id, full_name, phone")
         .eq("id", otherUserId)
         .single();
-      setOtherUser(profile);
+      setOtherUser(profile as OtherUser);
 
       // Find or create chat
       let { data: existing } = await supabase
@@ -152,6 +156,19 @@ function ChatInner() {
       type: "texto",
     });
     setSending(false);
+
+    // Notify the other user about the new message
+    if (otherUser?.id) {
+      void fetch("/api/notificar-whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: otherUser.id,
+          mensagem: `💬 Bico AI: Você tem uma nova mensagem de ${meuNome}. Acesse o app para responder.`,
+          tipo: "nova_mensagem",
+        }),
+      });
+    }
   }
 
   async function gerarContrato() {

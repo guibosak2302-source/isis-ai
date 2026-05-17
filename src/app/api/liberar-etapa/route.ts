@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
 import { recalcularScore } from "@/lib/scoreCalculator";
+import { notificarWhatsApp } from "@/lib/notificar";
 
 const ASAAS = "https://sandbox.asaas.com/api/v3";
 const asaasHeaders = () => ({ access_token: process.env.ASAAS_TOKEN ?? "" });
@@ -134,8 +135,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: dbError.message }, { status: 500 });
   }
 
-  // Recalculate prestador score asynchronously — don't block the response
+  // Notify prestador about released payment and recalculate score
   if (contrato.prestador?.id) {
+    void notificarWhatsApp(
+      contrato.prestador.id,
+      `💰 Bico AI: Você recebeu um pagamento de R$ ${valorEtapa.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} referente à etapa ${etapa_index + 1}. Acesse o app para conferir.`
+    ).catch(() => {});
     void recalcularScore(contrato.prestador.id).catch((e) =>
       console.warn("Score recalculation failed:", e)
     );

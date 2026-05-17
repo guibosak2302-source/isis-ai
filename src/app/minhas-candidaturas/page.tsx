@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase";
 
 interface Candidatura {
   id: string;
+  prestador_id: string;
   descricao: string | null;
   valor: number | null;
   status: string;
@@ -38,7 +39,7 @@ export default function MinhasCandidaturasPage() {
         .select(`
           id, title, description, created_at,
           candidaturas (
-            id, descricao, valor, status, created_at,
+            id, prestador_id, descricao, valor, status, created_at,
             profiles ( full_name )
           )
         `)
@@ -50,7 +51,7 @@ export default function MinhasCandidaturasPage() {
     load();
   }, [router]);
 
-  async function updateStatus(candidaturaId: string, status: "aceito" | "recusado") {
+  async function updateStatus(candidaturaId: string, status: "aceito" | "recusado", prestadorId: string) {
     const supabase = createClient();
     await supabase.from("candidaturas").update({ status }).eq("id", candidaturaId);
     setPosts((prev) =>
@@ -61,6 +62,18 @@ export default function MinhasCandidaturasPage() {
         ),
       })) ?? null
     );
+
+    if (status === "aceito") {
+      void fetch("/api/notificar-whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: prestadorId,
+          mensagem: "✅ Bico AI: Sua proposta foi aceita! Acesse o app para iniciar o contrato.",
+          tipo: "candidatura_aceita",
+        }),
+      });
+    }
   }
 
   const selected = posts?.find((p) => p.id === selectedPost) ?? null;
@@ -88,7 +101,7 @@ export default function MinhasCandidaturasPage() {
         {posts === null ? (
           <LoadingSkeleton />
         ) : selected ? (
-          <ProposalList post={selected} onUpdateStatus={updateStatus} />
+          <ProposalList post={selected} onUpdateStatus={(id, status, prestadorId) => updateStatus(id, status, prestadorId)} />
         ) : posts.length === 0 ? (
           <EmptyState />
         ) : (
@@ -140,7 +153,7 @@ function PostList({ posts, onSelect }: { posts: Post[]; onSelect: (id: string) =
 }
 
 /* ─── Proposal List ───────────────────────────────────────── */
-function ProposalList({ post, onUpdateStatus }: { post: Post; onUpdateStatus: (id: string, status: "aceito" | "recusado") => void }) {
+function ProposalList({ post, onUpdateStatus }: { post: Post; onUpdateStatus: (id: string, status: "aceito" | "recusado", prestadorId: string) => void }) {
   if (post.candidaturas.length === 0) {
     return (
       <div style={{ textAlign: "center", paddingTop: "60px" }}>
@@ -188,13 +201,13 @@ function ProposalList({ post, onUpdateStatus }: { post: Post; onUpdateStatus: (i
             {isPending && (
               <div style={{ display: "flex", gap: "8px" }}>
                 <button
-                  onClick={() => onUpdateStatus(c.id, "recusado")}
+                  onClick={() => onUpdateStatus(c.id, "recusado", c.prestador_id)}
                   style={{ flex: 1, height: "38px", backgroundColor: "transparent", color: "#888888", border: "1px solid #2E2E2E", borderRadius: "999px", fontSize: "13px", fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
                 >
                   Recusar
                 </button>
                 <button
-                  onClick={() => onUpdateStatus(c.id, "aceito")}
+                  onClick={() => onUpdateStatus(c.id, "aceito", c.prestador_id)}
                   style={{ flex: 1, height: "38px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "13px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
                 >
                   Aceitar
