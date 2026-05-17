@@ -32,7 +32,7 @@ export default function MinhasCandidaturasPage() {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
 
       const { data } = await supabase
         .from("posts")

@@ -43,7 +43,7 @@ function ChatInner() {
     async function init() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
       setUserId(user.id);
       const { data: myProfile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
       if (myProfile?.full_name) setMeuNome(myProfile.full_name);

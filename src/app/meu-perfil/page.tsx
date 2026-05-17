@@ -26,7 +26,7 @@ export default function MeuPerfilPage() {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/"); return; }
+      if (!user) { router.replace("/login"); return; }
       setEmail(user.email ?? "");
       setUserId(user.id);
       const { data } = await supabase
