@@ -6,6 +6,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import jsPDF from "jspdf";
 
+type SignState = "idle" | "loading" | "done" | "error";
+
 interface Contrato {
   id: string;
   descricao: string | null;
@@ -32,6 +34,7 @@ export default function ContratoPage() {
   const [contrato, setContrato] = useState<Contrato | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [signState, setSignState] = useState<SignState>("idle");
 
   useEffect(() => {
     async function load() {
@@ -97,6 +100,25 @@ export default function ContratoPage() {
     }
 
     setDownloadingPdf(false);
+  }
+
+  async function handleAssinar() {
+    if (!contrato || signState === "loading") return;
+    setSignState("loading");
+    try {
+      const res = await fetch("/api/assinar-contrato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contrato_id: contrato.id }),
+      });
+      const json = await res.json() as { link?: string; error?: string };
+      if (!res.ok || !json.link) throw new Error(json.error ?? "Erro desconhecido");
+      window.open(json.link, "_blank", "noopener,noreferrer");
+      setContrato((prev) => prev ? { ...prev, status: "aguardando_assinatura" } : prev);
+      setSignState("done");
+    } catch {
+      setSignState("error");
+    }
   }
 
   if (loading) {
@@ -181,11 +203,26 @@ export default function ContratoPage() {
             {downloadingPdf ? "Gerando PDF…" : "Baixar PDF"}
           </button>
           <button
-            onClick={() => alert("Assinatura digital em breve.")}
-            style={{ width: "100%", height: "50px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
+            onClick={handleAssinar}
+            disabled={signState === "loading" || signState === "done"}
+            style={{
+              width: "100%", height: "50px",
+              backgroundColor: signState === "done" ? "#1D9E75" : signState === "loading" ? "#3A3A3A" : "#FFD11A",
+              color: signState === "loading" ? "#888888" : signState === "done" ? "#FFFFFF" : "#0F0F0F",
+              border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600,
+              fontFamily: "var(--font-inter), Inter, sans-serif",
+              cursor: signState === "loading" || signState === "done" ? "not-allowed" : "pointer",
+            }}
           >
-            Assinar contrato
+            {signState === "loading" ? "Enviando para assinatura…"
+              : signState === "done" ? "✓ Contrato enviado para assinatura!"
+              : "Assinar contrato"}
           </button>
+          {signState === "error" && (
+            <p style={{ fontSize: "12px", color: "#E24B4A", textAlign: "center", marginTop: "4px" }}>
+              Erro ao enviar. Verifique o token do Clicksign e tente novamente.
+            </p>
+          )}
         </div>
       </div>
     </div>
