@@ -90,10 +90,18 @@ create table public.pagamentos (
   asaas_id text,
   pix_qrcode text,
   pix_copia_cola text,
+  etapas jsonb,
+  etapa_atual integer default 0,
+  valor_liberado numeric default 0,
   paid_at timestamp with time zone,
   released_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+
+-- Migração: adicionar colunas de etapas em instâncias existentes
+-- alter table public.pagamentos add column if not exists etapas jsonb;
+-- alter table public.pagamentos add column if not exists etapa_atual integer default 0;
+-- alter table public.pagamentos add column if not exists valor_liberado numeric default 0;
 
 -- TABELA DE AVALIAÇÕES
 create table public.avaliacoes (
@@ -139,6 +147,12 @@ create policy "Criar contrato" on public.contratos for insert with check (auth.u
 create policy "Atualizar contrato" on public.contratos for update using (auth.uid() = contratante_id or auth.uid() = prestador_id);
 create policy "Partes veem pagamentos" on public.pagamentos for select using (
   exists (select 1 from public.contratos where id = contrato_id and (contratante_id = auth.uid() or prestador_id = auth.uid()))
+);
+create policy "Contratante insere pagamento" on public.pagamentos for insert with check (
+  exists (select 1 from public.contratos where id = contrato_id and contratante_id = auth.uid())
+);
+create policy "Contratante atualiza pagamento" on public.pagamentos for update using (
+  exists (select 1 from public.contratos where id = contrato_id and contratante_id = auth.uid())
 );
 create policy "Avaliações públicas" on public.avaliacoes for select using (true);
 create policy "Criar avaliação" on public.avaliacoes for insert with check (auth.uid() = avaliador_id);

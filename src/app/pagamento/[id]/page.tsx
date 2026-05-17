@@ -245,6 +245,14 @@ export default function PagamentoPage() {
                 )}
               </div>
             )}
+
+            {/* Ver etapas */}
+            <Link
+              href={`/pagamento/etapas/${pagamento.id}`}
+              style={{ width: "100%", height: "46px", backgroundColor: "transparent", color: "#888888", border: "1px solid #2E2E2E", borderRadius: "999px", fontSize: "13px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", textDecoration: "none", marginTop: "4px" }}
+            >
+              <StepsIcon /> Ver etapas de liberação
+            </Link>
           </>
         )}
       </div>
@@ -263,4 +271,7 @@ function PixIcon() {
       <path d="M2 12l10 5 10-5" />
     </svg>
   );
+}
+function StepsIcon() {
+  return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>;
 }
