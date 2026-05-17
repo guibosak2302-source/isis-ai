@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import BuscaLocalizacao from "@/components/BuscaLocalizacao";
 
 interface Profile {
   id: string;
@@ -23,6 +24,8 @@ interface Post {
   city: string | null;
   budget_min: number | null;
   created_at: string;
+  latitude: number | null;
+  longitude: number | null;
   profiles: Profile | null;
 }
 
@@ -42,11 +45,25 @@ function relativeTime(iso: string): string {
   return `há ${Math.floor(diff / 86400)}d`;
 }
 
+function haversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const toRad = (d: number) => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 export default function FeedPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [userId, setUserId] = useState<string | null | undefined>(undefined);
   const [modal, setModal] = useState<ModalState | null>(null);
+  const [filterCity, setFilterCity] = useState("");
+  const [userLat, setUserLat] = useState<number | null>(null);
+  const [userLng, setUserLng] = useState<number | null>(null);
+  const [locationLabel, setLocationLabel] = useState("");
+  const [geoLoading, setGeoLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -58,7 +75,7 @@ export default function FeedPage() {
           .select(`*, profiles (id, full_name, avatar_url, city, score, seal, verified)`)
           .eq("status", "aberto")
           .order("created_at", { ascending: false })
-          .limit(20),
+          .limit(50),
       ]);
       setUserId(user?.id ?? null);
       setPosts((data as Post[]) ?? []);
@@ -111,28 +128,92 @@ export default function FeedPage() {
     setModal(null);
   }
 
+  function pegarLocalizacao() {
+    if (!navigator.geolocation) return;
+    setGeoLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLat(pos.coords.latitude);
+        setUserLng(pos.coords.longitude);
+        setLocationLabel("Sua localização");
+        setFilterCity(""); // show all posts but with distances
+        setGeoLoading(false);
+      },
+      () => setGeoLoading(false)
+    );
+  }
+
+  const filteredPosts = useMemo(() => {
+    if (!posts) return null;
+    if (!filterCity) return posts;
+    const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    return posts.filter((p) => p.city && norm(p.city).includes(norm(filterCity)));
+  }, [posts, filterCity]);
+
   return (
     <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
       <Navbar />
       <main style={{ paddingTop: "64px", paddingBottom: "88px" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
-          <SearchBar />
+          {/* Location filter */}
+          <div style={{ marginTop: "20px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
+              <div style={{ flex: 1 }}>
+                <BuscaLocalizacao
+                  placeholder="Filtrar por cidade ou bairro…"
+                  height={46}
+                  onSelect={(place) => {
+                    setFilterCity(place.city || place.label);
+                    setUserLat(place.lat);
+                    setUserLng(place.lng);
+                    setLocationLabel(place.label);
+                  }}
+                />
+              </div>
+              <button
+                onClick={pegarLocalizacao}
+                disabled={geoLoading}
+                title="Usar minha localização"
+                style={{ flexShrink: 0, height: "46px", padding: "0 14px", backgroundColor: geoLoading ? "#1A1A1A" : userLat ? "#FFD11A20" : "#1A1A1A", border: `1px solid ${userLat ? "#FFD11A60" : "#2E2E2E"}`, borderRadius: "10px", cursor: geoLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+              >
+                {geoLoading ? <SpinnerIcon /> : <LocateIcon active={!!userLat} />}
+                <span style={{ fontSize: "12px", color: userLat ? "#FFD11A" : "#888888", fontFamily: "var(--font-inter), Inter, sans-serif", whiteSpace: "nowrap" }}>Perto de mim</span>
+              </button>
+            </div>
+            {(locationLabel || filterCity) && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px" }}>
+                <span style={{ fontSize: "12px", color: "#FFD11A" }}>📍 {locationLabel || filterCity}</span>
+                <button onClick={() => { setFilterCity(""); setLocationLabel(""); setUserLat(null); setUserLng(null); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#555555", fontFamily: "var(--font-inter), Inter, sans-serif", padding: "0" }}>Limpar</button>
+              </div>
+            )}
+          </div>
+
           <Filters />
 
           <div style={{ marginBottom: "20px" }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.3 }}>Perto de você</h2>
-            <p style={{ fontSize: "13px", fontWeight: 400, color: "#555555", marginTop: "2px" }}>Taubaté, SP · 2km</p>
+            <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0", lineHeight: 1.3 }}>
+              {filterCity ? `Pedidos em ${filterCity}` : "Perto de você"}
+            </h2>
+            {filteredPosts && (
+              <p style={{ fontSize: "13px", color: "#555555", marginTop: "2px" }}>
+                {filteredPosts.length} pedido{filteredPosts.length !== 1 ? "s" : ""} encontrado{filteredPosts.length !== 1 ? "s" : ""}
+              </p>
+            )}
           </div>
 
-          {posts === null ? (
+          {filteredPosts === null ? (
             <LoadingSkeleton />
-          ) : posts.length === 0 ? (
+          ) : filteredPosts.length === 0 ? (
             <EmptyState />
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} onResponder={() => openModal(post)} />
-              ))}
+              {filteredPosts.map((post) => {
+                const distKm =
+                  userLat != null && userLng != null && post.latitude != null && post.longitude != null
+                    ? haversine(userLat, userLng, post.latitude, post.longitude)
+                    : undefined;
+                return <PostCard key={post.id} post={post} onResponder={() => openModal(post)} distKm={distKm} />;
+              })}
             </div>
           )}
         </div>
@@ -290,7 +371,7 @@ function EmptyState() {
 }
 
 /* ─── PostCard ────────────────────────────────────────────── */
-function PostCard({ post, onResponder }: { post: Post; onResponder: () => void }) {
+function PostCard({ post, onResponder, distKm }: { post: Post; onResponder: () => void; distKm?: number }) {
   const profile = post.profiles;
   const name = profile?.full_name ?? "Usuário";
   const initial = name.charAt(0).toUpperCase();
@@ -320,7 +401,7 @@ function PostCard({ post, onResponder }: { post: Post; onResponder: () => void }
             )}
           </div>
           <p style={{ fontSize: "12px", color: "#555555", marginTop: "1px" }}>
-            {[post.category, location, time].filter(Boolean).join(" · ")}
+            {[post.category, location, distKm != null ? `${distKm < 1 ? "<1" : distKm.toFixed(1)} km` : null, time].filter(Boolean).join(" · ")}
           </p>
         </div>
         <button aria-label="Mais opções" style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: "#555555" }}>
@@ -460,6 +541,12 @@ function Filters() {
 }
 
 /* ─── Icons ───────────────────────────────────────────────── */
+function LocateIcon({ active }: { active: boolean }) {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#FFD11A" : "#888888"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>;
+}
+function SpinnerIcon() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888888" strokeWidth="2" strokeLinecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" style={{ animation: "spin 1s linear infinite", transformOrigin: "center" }} /></svg>;
+}
 function EmptyIcon() {
   return <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
 }
