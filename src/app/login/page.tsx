@@ -11,25 +11,38 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailNaoConfirmado, setEmailNaoConfirmado] = useState(false);
+  const [reenvioLoading, setReenvioLoading] = useState(false);
+  const [reenvioOk, setReenvioOk] = useState(false);
 
   async function handleLogin() {
     setError("");
+    setEmailNaoConfirmado(false);
     setLoading(true);
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (authError) {
       const msg = authError.message.toLowerCase();
-      if (msg.includes("invalid") || msg.includes("credentials") || msg.includes("password")) {
+      if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
+        setEmailNaoConfirmado(true);
+      } else if (msg.includes("invalid") || msg.includes("credentials") || msg.includes("password")) {
         setError("Email ou senha incorretos");
-      } else if (msg.includes("email not confirmed") || msg.includes("confirm")) {
-        setError("Confirme seu email antes de entrar");
       } else {
         setError("Erro ao entrar. Tente novamente.");
       }
     } else {
       router.push("/feed");
     }
+  }
+
+  async function handleReenviarConfirmacao() {
+    if (!email) { setError("Informe seu email acima para reenviar."); return; }
+    setReenvioLoading(true);
+    const supabase = createClient();
+    await supabase.auth.resend({ type: "signup", email });
+    setReenvioLoading(false);
+    setReenvioOk(true);
   }
 
   async function handleGoogle() {
@@ -131,6 +144,28 @@ export default function LoginPage() {
             marginBottom: "12px",
           }}
         />
+
+        {/* Email não confirmado */}
+        {emailNaoConfirmado && (
+          <div style={{ backgroundColor: "#1A1800", border: "1px solid #4A3C00", borderRadius: "12px", padding: "14px 16px", marginBottom: "12px" }}>
+            <p style={{ fontSize: "13px", color: "#FFD11A", fontFamily: "var(--font-inter), Inter, sans-serif", lineHeight: 1.6, marginBottom: "10px" }}>
+              Confirme seu email antes de entrar. Verifique sua caixa de entrada.
+            </p>
+            {reenvioOk ? (
+              <p style={{ fontSize: "13px", color: "#6FCF97", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
+                ✓ Email de confirmação reenviado!
+              </p>
+            ) : (
+              <button
+                onClick={handleReenviarConfirmacao}
+                disabled={reenvioLoading}
+                style={{ fontSize: "13px", color: "#FFD11A", background: "none", border: "none", padding: 0, cursor: reenvioLoading ? "not-allowed" : "pointer", fontFamily: "var(--font-inter), Inter, sans-serif", textDecoration: "underline" }}
+              >
+                {reenvioLoading ? "Reenviando…" : "Reenviar email de confirmação"}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Error */}
         {error && (
