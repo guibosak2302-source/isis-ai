@@ -9,12 +9,16 @@ interface Profile {
   full_name: string | null;
   city: string | null;
   state: string | null;
+  score: number | null;
+  seal: string | null;
+  type: string | null;
 }
 
 export default function MeuPerfilPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [profile, setProfile] = useState<Profile>({ full_name: null, city: null, state: null });
+  const [userId, setUserId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile>({ full_name: null, city: null, state: null, score: null, seal: null, type: null });
 
   useEffect(() => {
     async function load() {
@@ -22,12 +26,13 @@ export default function MeuPerfilPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/"); return; }
       setEmail(user.email ?? "");
+      setUserId(user.id);
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, city, state")
+        .select("full_name, city, state, score, seal, type")
         .eq("id", user.id)
         .single();
-      if (data) setProfile(data);
+      if (data) setProfile(data as Profile);
     }
     load();
   }, [router]);
@@ -55,6 +60,9 @@ export default function MeuPerfilPage() {
       <CoverAndAvatar initial={initial} name={displayName} location={location} />
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
         <Stats />
+        {profile.type === "prestador" && (
+          <ScoreCard score={profile.score ?? 0} seal={profile.seal} userId={userId} />
+        )}
         <ProviderCard />
         <MyPosts />
         <History />
@@ -179,6 +187,112 @@ function CoverAndAvatar({ initial, name, location }: { initial: string; name: st
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─── Score Card ──────────────────────────────────────────── */
+const SEAL_CONFIG: Record<string, { label: string; color: string }> = {
+  bronze: { label: "Bronze",  color: "#CD7F32" },
+  prata:  { label: "Prata",   color: "#A8A9AD" },
+  ouro:   { label: "Ouro",    color: "#FFD11A" },
+};
+
+const SCORE_TIPS = [
+  { icon: "★", text: "Receba avaliações dos contratantes (+40 pts × nota)" },
+  { icon: "✓", text: "Conclua contratos com sucesso (+30 pts cada)" },
+  { icon: "⚡", text: "Tenha candidaturas aceitas (+20 pts cada)" },
+  { icon: "💰", text: "Receba pagamentos liberados (+10 pts cada)" },
+];
+
+function ScoreCard({ score, seal, userId }: { score: number; seal: string | null; userId: string | null }) {
+  const [recalculating, setRecalculating] = useState(false);
+  const [currentScore, setCurrentScore] = useState(score);
+  const [currentSeal, setCurrentSeal] = useState(seal);
+
+  async function handleRecalcular() {
+    if (!userId || recalculating) return;
+    setRecalculating(true);
+    try {
+      const res = await fetch("/api/calcular-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prestador_id: userId }),
+      });
+      const json = await res.json() as { score?: number; seal?: string | null };
+      if (json.score !== undefined) setCurrentScore(json.score);
+      if (json.seal !== undefined) setCurrentSeal(json.seal ?? null);
+    } catch { /* silent */ }
+    setRecalculating(false);
+  }
+
+  const pct = Math.min(Math.max((currentScore / 1000) * 100, 0), 100);
+  const sealCfg = currentSeal ? (SEAL_CONFIG[currentSeal] ?? null) : null;
+
+  return (
+    <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "14px", padding: "18px 16px", marginBottom: "20px" }}>
+      {/* Header row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
+        <div>
+          <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Bico Score</p>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
+            <span style={{ fontSize: "32px", fontWeight: 700, color: "#FFD11A", lineHeight: 1 }}>{currentScore}</span>
+            <span style={{ fontSize: "14px", color: "#555555" }}>/1000</span>
+          </div>
+        </div>
+        {sealCfg && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+            <MedalIcon color={sealCfg.color} />
+            <span style={{ fontSize: "11px", fontWeight: 600, color: sealCfg.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              {sealCfg.label}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ height: "8px", borderRadius: "999px", backgroundColor: "#2E2E2E", overflow: "hidden", marginBottom: "6px" }}>
+        <div style={{ height: "100%", width: `${pct}%`, backgroundColor: "#FFD11A", borderRadius: "999px", transition: "width 0.5s ease" }} />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "18px" }}>
+        <span style={{ fontSize: "11px", color: "#555555" }}>0</span>
+        {!sealCfg && currentScore < 200 && <span style={{ fontSize: "11px", color: "#CD7F32" }}>Bronze: 200</span>}
+        {sealCfg?.label === "Bronze" && <span style={{ fontSize: "11px", color: "#A8A9AD" }}>Prata: 500</span>}
+        {sealCfg?.label === "Prata" && <span style={{ fontSize: "11px", color: "#FFD11A" }}>Ouro: 800</span>}
+        <span style={{ fontSize: "11px", color: "#555555" }}>1000</span>
+      </div>
+
+      {/* Tips */}
+      <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "10px" }}>Como aumentar seu score</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+        {SCORE_TIPS.map((tip) => (
+          <div key={tip.text} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+            <span style={{ fontSize: "14px", flexShrink: 0, lineHeight: 1.4 }}>{tip.icon}</span>
+            <span style={{ fontSize: "12px", color: "#888888", lineHeight: 1.5 }}>{tip.text}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Recalcular */}
+      <button
+        onClick={handleRecalcular}
+        disabled={recalculating}
+        style={{ width: "100%", height: "38px", backgroundColor: "transparent", color: recalculating ? "#555555" : "#FFD11A", border: `1px solid ${recalculating ? "#2A2A2A" : "#FFD11A40"}`, borderRadius: "999px", fontSize: "12px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: recalculating ? "not-allowed" : "pointer" }}
+      >
+        {recalculating ? "Calculando…" : "Atualizar score"}
+      </button>
+    </div>
+  );
+}
+
+function MedalIcon({ color }: { color: string }) {
+  return (
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="14" r="7" />
+      <path d="M9 3h6l2 5H7z" />
+      <polyline points="7 8 5 3 9 3" />
+      <polyline points="17 8 19 3 15 3" />
+      <text x="12" y="18" textAnchor="middle" fontSize="7" fill={color} stroke="none" fontWeight="bold">★</text>
+    </svg>
   );
 }
 

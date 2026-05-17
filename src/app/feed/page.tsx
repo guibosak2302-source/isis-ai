@@ -309,7 +309,7 @@ function PostCard({ post, onResponder }: { post: Post; onResponder: () => void }
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>{name}</span>
             {verified && <VerifiedBadge />}
-            {verified && (
+            {seal && (
               <span style={{
                 fontSize: "10px", fontWeight: 700, color: sealColor[seal] ?? "#CD7F32",
                 backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${sealColor[seal] ?? "#CD7F32"}40`,
