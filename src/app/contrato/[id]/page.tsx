@@ -6,6 +6,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import jsPDF from "jspdf";
 
+type SignState = "idle" | "loading" | "done" | "error";
+
 interface Contrato {
   id: string;
   descricao: string | null;
@@ -32,6 +34,7 @@ export default function ContratoPage() {
   const [contrato, setContrato] = useState<Contrato | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [signState, setSignState] = useState<SignState>("idle");
 
   useEffect(() => {
     async function load() {
@@ -97,6 +100,46 @@ export default function ContratoPage() {
     }
 
     setDownloadingPdf(false);
+  }
+
+  async function handleAssinar() {
+    if (!contrato || signState === "loading") return;
+    setSignState("loading");
+
+    // Generate PDF base64 client-side
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("CONTRATO DE PRESTAÇÃO DE SERVIÇO", 105, 20, { align: "center" });
+    doc.setLineWidth(0.5);
+    doc.line(20, 25, 190, 25);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    const linhas = doc.splitTextToSize(contrato.descricao ?? "", 170);
+    doc.text(linhas, 20, 35);
+    doc.setFontSize(9);
+    doc.setTextColor(128, 128, 128);
+    doc.text("Gerado por Bico AI — bico.ai", 105, 285, { align: "center" });
+
+    // Extract raw base64 (strip data URI prefix)
+    const dataUri = doc.output("datauristring") as string;
+    const pdfBase64 = dataUri.split(",")[1];
+
+    try {
+      const res = await fetch("/api/assinar-contrato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contrato_id: contrato.id, pdf_base64: pdfBase64 }),
+      });
+      const json = await res.json() as { link?: string; error?: string };
+      if (!res.ok || !json.link) throw new Error(json.error ?? "Erro desconhecido");
+
+      window.open(json.link, "_blank", "noopener,noreferrer");
+      setContrato((prev) => prev ? { ...prev, status: "aguardando_assinatura" } : prev);
+      setSignState("done");
+    } catch {
+      setSignState("error");
+    }
   }
 
   if (loading) {
@@ -181,11 +224,26 @@ export default function ContratoPage() {
             {downloadingPdf ? "Gerando PDF…" : "Baixar PDF"}
           </button>
           <button
-            onClick={() => alert("Assinatura digital em breve.")}
-            style={{ width: "100%", height: "50px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
+            onClick={handleAssinar}
+            disabled={signState === "loading" || signState === "done"}
+            style={{
+              width: "100%", height: "50px",
+              backgroundColor: signState === "done" ? "#1D9E75" : signState === "loading" ? "#3A3A3A" : "#FFD11A",
+              color: signState === "loading" ? "#888888" : signState === "done" ? "#FFFFFF" : "#0F0F0F",
+              border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600,
+              fontFamily: "var(--font-inter), Inter, sans-serif",
+              cursor: signState === "loading" || signState === "done" ? "not-allowed" : "pointer",
+            }}
           >
-            Assinar contrato
+            {signState === "loading" ? "Enviando para assinatura…"
+              : signState === "done" ? "✓ Contrato enviado para assinatura!"
+              : "Assinar contrato"}
           </button>
+          {signState === "error" && (
+            <p style={{ fontSize: "12px", color: "#E24B4A", textAlign: "center", marginTop: "4px" }}>
+              Erro ao enviar. Verifique o token do Clicksign e tente novamente.
+            </p>
+          )}
         </div>
       </div>
     </div>
