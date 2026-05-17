@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     title: "Bico AI",
   },
   icons: {
-    apple: "/logo.png",
+    apple: "/Logo_sem_fundo.png",
   },
   openGraph: {
     title: "Bico AI",
     description: "Resolve rápido, sempre perto de você.",
     url: BASE_URL,
     type: "website",
-    images: [{ url: "/logo.png" }],
+    images: [{ url: "/Logo_sem_fundo.png" }],
   },
   twitter: {
     card: "summary_large_image",
