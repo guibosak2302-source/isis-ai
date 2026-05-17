@@ -28,7 +28,10 @@ export default function CadastroPage() {
     const { data, error: authError } = await supabase.auth.signUp({
       email: email.trim().toLowerCase(),
       password: senha,
-      options: { data: { full_name: nome.trim() } },
+      options: {
+        data: { full_name: nome.trim() },
+        emailRedirectTo: undefined,
+      },
     });
 
     if (authError) {
@@ -37,25 +40,33 @@ export default function CadastroPage() {
       console.error("[cadastro]", authError.message);
       if (msg.includes("already registered") || msg.includes("already exists") || msg.includes("duplicate")) {
         setError("Email já cadastrado. Tente fazer login.");
-      } else if (msg.includes("password")) {
+      } else if (msg.includes("password") || msg.includes("6 characters")) {
         setError("A senha deve ter pelo menos 6 caracteres");
       } else if (msg.includes("invalid") && msg.includes("email")) {
         setError("Email inválido");
       } else {
-        setError("Erro ao criar conta. Tente novamente.");
+        setError(authError.message);
       }
       return;
     }
 
-    if (data.user) {
+    const user = data.user;
+    if (user) {
       await supabase.from("profiles").upsert({
-        id: data.user.id,
+        id: user.id,
         full_name: nome.trim(),
         email: email.trim().toLowerCase(),
       });
     }
 
     setLoading(false);
+
+    // Se email não confirmado o user foi criado — segue para onboarding
+    if (!data.session && !user) {
+      setError("Verifique seu email para confirmar o cadastro.");
+      return;
+    }
+
     router.push("/onboarding");
   }
 
