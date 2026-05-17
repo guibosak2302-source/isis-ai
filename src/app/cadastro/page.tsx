@@ -59,15 +59,21 @@ export default function CadastroPage() {
       });
     }
 
+    // Tenta login automático para contornar confirmação de email obrigatória
+    const { error: loginError } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password: senha,
+    });
+
     setLoading(false);
 
-    // Se email não confirmado o user foi criado — segue para onboarding
-    if (!data.session && !user) {
-      setError("Verifique seu email para confirmar o cadastro.");
+    if (!loginError) {
+      router.push("/onboarding");
       return;
     }
 
-    router.push("/onboarding");
+    // Login falhou (email não confirmado) — informa o usuário
+    setError("Conta criada! Verifique seu email para confirmar e depois faça login.");
   }
 
   return (
