@@ -24,15 +24,15 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const protectedRoutes = ['/feed', '/chat', '/perfil', '/pedidos', '/contrato', '/isis-pay', '/candidatos', '/score', '/agendamento', '/novo-pedido', '/busca-ia', '/etapas', '/avaliacao', '/meu-perfil', '/notificacoes', '/busca', '/configuracoes', '/criar-post']
+  const protectedRoutes = ['/feed', '/chat', '/perfil', '/pedidos', '/contrato', '/isis-pay', '/candidatos', '/score', '/agendamento', '/novo-pedido', '/busca-ia', '/etapas', '/avaliacao', '/meu-perfil', '/notificacoes', '/busca', '/configuracoes', '/criar-post', '/onboarding', '/minhas-candidaturas', '/conversas', '/pagamento']
 
   const isProtected = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))
 
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (request.nextUrl.pathname === '/' && user) {
+  if ((request.nextUrl.pathname === '/' || request.nextUrl.pathname === '/login') && user) {
     return NextResponse.redirect(new URL('/feed', request.url))
   }
 
