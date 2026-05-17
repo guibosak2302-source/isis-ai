@@ -1,9 +1,34 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
+import { jsPDF } from "jspdf";
 
 const CLICKSIGN_BASE = "https://sandbox.clicksign.com/api/v1";
 const token = process.env.CLICKSIGN_TOKEN ?? "";
+
+function gerarPDFBase64(conteudo: string, id: string): string {
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("CONTRATO DE PRESTAÇÃO DE SERVIÇO", 105, 20, { align: "center" });
+
+  doc.setLineWidth(0.5);
+  doc.line(20, 25, 190, 25);
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  const linhas = doc.splitTextToSize(conteudo, 170);
+  doc.text(linhas, 20, 35);
+
+  doc.setFontSize(9);
+  doc.setTextColor(128, 128, 128);
+  doc.text("Gerado por Bico AI — bico.ai", 105, 285, { align: "center" });
+
+  // suppress unused-var lint — id used in filename context only
+  void id;
+  return (doc.output("datauristring") as string).split(",")[1];
+}
 
 export async function POST(request: NextRequest) {
   const supabase = createServerClient(
@@ -22,16 +47,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { contrato_id, pdf_base64 } = await request.json() as {
-    contrato_id: string;
-    pdf_base64: string;
-  };
+  const { contrato_id } = await request.json() as { contrato_id: string };
 
-  // Fetch contrato with party profiles
+  // Fetch contrato with text and party profiles
   const { data: contrato } = await supabase
     .from("contratos")
     .select(`
-      id, clicksign_key,
+      id, descricao,
       contratante:contratante_id ( id, full_name, phone ),
       prestador:prestador_id ( id, full_name, phone )
     `)
@@ -45,10 +67,11 @@ export async function POST(request: NextRequest) {
   const contratante = contrato.contratante as unknown as { id: string; full_name: string | null; phone: string | null } | null;
   const prestador   = contrato.prestador   as unknown as { id: string; full_name: string | null; phone: string | null } | null;
 
-  // Contratante email comes from the authenticated session
   const contratanteEmail = user.email ?? `${contratante?.id ?? "contratante"}@bico.ai`;
-  // Prestador email: sandbox placeholder (real app would store/fetch it)
-  const prestadorEmail = `${prestador?.id ?? "prestador"}@bico.ai`;
+  const prestadorEmail   = `${prestador?.id ?? "prestador"}@bico.ai`;
+
+  // Generate PDF server-side
+  const pdfBase64 = gerarPDFBase64(contrato.descricao ?? "", contrato_id);
 
   try {
     // 1. Create document in Clicksign
@@ -57,7 +80,7 @@ export async function POST(request: NextRequest) {
       {
         document: {
           path: `/contratos/contrato-${contrato_id}.pdf`,
-          content_base64: `data:application/pdf;base64,${pdf_base64}`,
+          content_base64: `data:application/pdf;base64,${pdfBase64}`,
           deadline_at: null,
           auto_close: true,
           locale: "pt-BR",
@@ -65,7 +88,6 @@ export async function POST(request: NextRequest) {
         },
       }
     );
-
     const documentKey: string = docRes.data.document.key;
 
     // 2. Add contratante as signer
@@ -110,7 +132,7 @@ export async function POST(request: NextRequest) {
     );
     const signer2Key: string = signer2Res.data.signer.key;
 
-    // 4. Create signing requests (lists) to get signing URLs
+    // 4. Create signing requests to get signing URLs
     const [list1Res] = await Promise.all([
       axios.post(`${CLICKSIGN_BASE}/lists?access_token=${token}`, {
         list: { document_key: documentKey, signer_key: signer1Key, sign_as: "sign" },
@@ -123,7 +145,7 @@ export async function POST(request: NextRequest) {
     const requestSignatureKey: string = list1Res.data.list.request_signature_key;
     const signingLink = `https://sandbox.clicksign.com/sign/${requestSignatureKey}`;
 
-    // 5. Persist Clicksign data in contratos
+    // 5. Persist Clicksign data
     await supabase
       .from("contratos")
       .update({

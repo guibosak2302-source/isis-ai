@@ -105,35 +105,14 @@ export default function ContratoPage() {
   async function handleAssinar() {
     if (!contrato || signState === "loading") return;
     setSignState("loading");
-
-    // Generate PDF base64 client-side
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
-    doc.text("CONTRATO DE PRESTAÇÃO DE SERVIÇO", 105, 20, { align: "center" });
-    doc.setLineWidth(0.5);
-    doc.line(20, 25, 190, 25);
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    const linhas = doc.splitTextToSize(contrato.descricao ?? "", 170);
-    doc.text(linhas, 20, 35);
-    doc.setFontSize(9);
-    doc.setTextColor(128, 128, 128);
-    doc.text("Gerado por Bico AI — bico.ai", 105, 285, { align: "center" });
-
-    // Extract raw base64 (strip data URI prefix)
-    const dataUri = doc.output("datauristring") as string;
-    const pdfBase64 = dataUri.split(",")[1];
-
     try {
       const res = await fetch("/api/assinar-contrato", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contrato_id: contrato.id, pdf_base64: pdfBase64 }),
+        body: JSON.stringify({ contrato_id: contrato.id }),
       });
       const json = await res.json() as { link?: string; error?: string };
       if (!res.ok || !json.link) throw new Error(json.error ?? "Erro desconhecido");
-
       window.open(json.link, "_blank", "noopener,noreferrer");
       setContrato((prev) => prev ? { ...prev, status: "aguardando_assinatura" } : prev);
       setSignState("done");
