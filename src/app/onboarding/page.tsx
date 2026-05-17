@@ -1,60 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-const SLIDES = [
-  {
-    emoji: "🔍",
-    title: "Encontre quem resolve",
-    subtitle:
-      "Descreva o serviço e o Bico busca nas melhores fontes da sua região.",
-    pills: [
-      "📍 Google Maps · CNPJ · Instagram",
-      "💬 Profissionais avisados via WhatsApp",
-      "🥇 Selos Bronze, Prata e Ouro verificados",
-    ],
-  },
-  {
-    emoji: "🔒",
-    title: "Pagamento protegido",
-    subtitle:
-      "O dinheiro fica retido no Bico Pay e só é liberado quando você confirmar que o serviço ficou perfeito.",
-    pills: [
-      "🏦 Escrow — pagamento em garantia",
-      "📝 Contrato jurídico automático",
-      "⚡ PIX e cartão — rápido e seguro",
-    ],
-  },
-  {
-    emoji: "⭐",
-    title: "Score Bico",
-    subtitle:
-      "Cada profissional tem um Score calculado por pontualidade, qualidade, comunicação e preço.",
-    pills: [
-      "🥉 Bronze — cadastrado na base Bico",
-      "🥈 Prata — sem antecedentes criminais",
-      "🥇 Ouro — verificação completa + Score alto",
-    ],
-  },
-];
+import { createClient } from "@/lib/supabase";
 
 export default function OnboardingPage() {
-  const [current, setCurrent] = useState(0);
   const router = useRouter();
-  const slide = SLIDES[current];
-  const isLast = current === SLIDES.length - 1;
+  const [selected, setSelected] = useState<"contratante" | "prestador" | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  function handleNext() {
-    if (isLast) {
-      router.push("/cadastro");
-    } else {
-      setCurrent((c) => c + 1);
+  useEffect(() => {
+    async function check() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+      setUserId(user.id);
     }
-  }
+    check();
+  }, [router]);
 
-  function handleSkip() {
-    router.push("/cadastro");
+  async function handleSelect(type: "contratante" | "prestador") {
+    setSelected(type);
+    if (!userId) return;
+    setSaving(true);
+    const supabase = createClient();
+    await supabase.from("profiles").update({ type }).eq("id", userId);
+    router.push("/feed");
   }
 
   return (
@@ -63,178 +40,202 @@ export default function OnboardingPage() {
         backgroundColor: "#0F0F0F",
         minHeight: "100vh",
         fontFamily: "var(--font-inter), Inter, sans-serif",
-        display: "flex",
-        flexDirection: "column",
+        paddingTop: "80px",
+        textAlign: "center",
       }}
     >
-      {/* Header */}
-      <header
+      {/* Duck icon */}
+      <div style={{ marginBottom: "24px", display: "flex", justifyContent: "center" }}>
+        <SmallDuckSVG />
+      </div>
+
+      <h1
         style={{
-          height: "56px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          padding: "0 20px",
-          flexShrink: 0,
+          fontSize: "24px",
+          fontWeight: 700,
+          color: "#F0F0F0",
+          marginBottom: "8px",
         }}
       >
-        <button
-          onClick={handleSkip}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#888888",
-            fontSize: "14px",
-            fontFamily: "var(--font-inter), Inter, sans-serif",
-            cursor: "pointer",
-            padding: "8px 0",
-          }}
-        >
-          Pular
-        </button>
-      </header>
+        Bem-vindo ao Bico AI!
+      </h1>
 
-      {/* Slide content */}
+      <p
+        style={{
+          fontSize: "14px",
+          color: "#888888",
+          marginBottom: "40px",
+        }}
+      >
+        Como você vai usar o app?
+      </p>
+
+      {/* Role cards */}
       <div
         style={{
-          flex: 1,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          padding: "24px 24px 0",
-          maxWidth: "480px",
+          gap: "14px",
+          maxWidth: "360px",
           margin: "0 auto",
-          width: "100%",
+          padding: "0 24px",
         }}
       >
-        {/* Emoji */}
+        {/* Contratante */}
         <div
+          onClick={() => handleSelect("contratante")}
           style={{
-            width: "120px",
-            height: "120px",
             backgroundColor: "#1A1A1A",
-            border: "1px solid #2E2E2E",
-            borderRadius: "32px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "32px",
-            fontSize: "56px",
-            lineHeight: 1,
-          }}
-        >
-          {slide.emoji}
-        </div>
-
-        {/* Title */}
-        <h1
-          style={{
-            fontSize: "26px",
-            fontWeight: 700,
-            color: "#F0F0F0",
-            textAlign: "center",
-            lineHeight: 1.25,
-            marginBottom: "14px",
-          }}
-        >
-          {slide.title}
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            fontSize: "15px",
-            color: "#888888",
-            textAlign: "center",
-            lineHeight: 1.6,
-            marginBottom: "32px",
-            maxWidth: "340px",
-          }}
-        >
-          {slide.subtitle}
-        </p>
-
-        {/* Pills */}
-        <div
-          style={{
+            border: `1px solid ${selected === "contratante" ? "#FFD11A" : "#2E2E2E"}`,
+            borderRadius: "16px",
+            padding: "24px",
+            cursor: "pointer",
             width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
+            textAlign: "left",
+            boxSizing: "border-box",
+            transition: "border-color 0.15s",
           }}
         >
-          {slide.pills.map((pill) => (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "0",
+            }}
+          >
             <div
-              key={pill}
               style={{
-                backgroundColor: "#1A1A1A",
-                border: "1px solid #2E2E2E",
-                borderRadius: "12px",
-                padding: "10px 14px",
-                fontSize: "12px",
-                color: "#888888",
-                lineHeight: 1.5,
+                width: "32px",
+                height: "32px",
+                borderRadius: "50%",
+                backgroundColor: "#FFD11A20",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                flexShrink: 0,
               }}
             >
-              {pill}
+              🔧
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom nav area */}
-      <div
-        style={{
-          padding: "32px 24px 48px",
-          maxWidth: "480px",
-          margin: "0 auto",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "28px",
-        }}
-      >
-        {/* Dots */}
-        <div style={{ display: "flex", gap: "8px" }}>
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              aria-label={`Slide ${i + 1}`}
+            <span
               style={{
-                width: i === current ? "24px" : "8px",
-                height: "8px",
-                borderRadius: "999px",
-                backgroundColor: i === current ? "#FFD11A" : "#2E2E2E",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                transition: "width 0.2s ease, background-color 0.2s ease",
+                fontSize: "16px",
+                fontWeight: 600,
+                color: "#F0F0F0",
+                marginLeft: "12px",
               }}
-            />
-          ))}
+            >
+              Preciso de serviços
+            </span>
+          </div>
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#888888",
+              lineHeight: 1.5,
+              marginTop: "10px",
+            }}
+          >
+            Publico pedidos, contrato prestadores e pago com segurança.
+          </p>
         </div>
 
-        {/* CTA button */}
-        <button
-          onClick={handleNext}
+        {/* Prestador */}
+        <div
+          onClick={() => handleSelect("prestador")}
           style={{
-            width: "100%",
-            height: "52px",
-            backgroundColor: "#FFD11A",
-            color: "#000000",
-            border: "none",
-            borderRadius: "999px",
-            fontSize: "15px",
-            fontWeight: 600,
-            fontFamily: "var(--font-inter), Inter, sans-serif",
+            backgroundColor: "#1A1A1A",
+            border: `1px solid ${selected === "prestador" ? "#FFD11A" : "#2E2E2E"}`,
+            borderRadius: "16px",
+            padding: "24px",
             cursor: "pointer",
+            width: "100%",
+            textAlign: "left",
+            boxSizing: "border-box",
+            transition: "border-color 0.15s",
           }}
         >
-          {isLast ? "Começar" : "Próximo"}
-        </button>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "50%",
+                backgroundColor: "#FFD11A20",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                flexShrink: 0,
+              }}
+            >
+              ⭐
+            </div>
+            <span
+              style={{
+                fontSize: "16px",
+                fontWeight: 600,
+                color: "#F0F0F0",
+                marginLeft: "12px",
+              }}
+            >
+              Ofereço serviços
+            </span>
+          </div>
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#888888",
+              lineHeight: 1.5,
+              marginTop: "10px",
+            }}
+          >
+            Recebo pedidos, envio propostas e construo meu Score.
+          </p>
+        </div>
       </div>
+
+      {saving && (
+        <p
+          style={{
+            fontSize: "13px",
+            color: "#888888",
+            marginTop: "16px",
+            textAlign: "center",
+          }}
+        >
+          Salvando…
+        </p>
+      )}
     </div>
+  );
+}
+
+function SmallDuckSVG() {
+  return (
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Body */}
+      <ellipse cx="40" cy="52" rx="26" ry="20" fill="#FFD11A" />
+      {/* Head */}
+      <circle cx="54" cy="32" r="14" fill="#FFD11A" />
+      {/* Eye */}
+      <circle cx="59" cy="29" r="2.5" fill="#0F0F0F" />
+      {/* Beak */}
+      <path d="M66 33 L74 31 L66 36 Z" fill="#FF9900" />
+      {/* Wing */}
+      <ellipse cx="36" cy="52" rx="14" ry="9" fill="#FFBA00" transform="rotate(-10 36 52)" />
+    </svg>
   );
 }
