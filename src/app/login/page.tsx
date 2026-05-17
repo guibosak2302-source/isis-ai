@@ -47,10 +47,11 @@ export default function LoginPage() {
 
   async function handleGoogle() {
     const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: window.location.origin + "/auth/callback" },
     });
+    if (oauthError) setError("Erro ao entrar com Google. Tente novamente.");
   }
 
   return (
@@ -69,7 +70,7 @@ export default function LoginPage() {
       <div style={{ textAlign: "center", marginBottom: "36px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" width="56" height="56" alt="" style={{ display: "block" }} />
+          <img src="/Logo_sem_fundo.png" alt="Bico AI" width={64} height={64} style={{ display: "block", objectFit: "contain" }} />
           <h1
             style={{
               fontFamily: "var(--font-inter), Inter, sans-serif",
