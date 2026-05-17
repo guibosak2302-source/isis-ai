@@ -92,7 +92,7 @@ export default function CadastroPage() {
       <div style={{ textAlign: "center", marginBottom: "36px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" width="48" height="48" alt="" style={{ display: "block" }} />
+          <img src="/Logo_sem_fundo.png" width="48" height="48" alt="" style={{ display: "block" }} />
           <h1
             style={{
               fontFamily: "var(--font-inter), Inter, sans-serif",

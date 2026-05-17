@@ -509,7 +509,7 @@ function Navbar() {
     <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, height: "64px", backgroundColor: "#0F0F0F", borderBottom: "1px solid #2E2E2E", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" width="32" height="32" alt="" style={{ display: "block" }} />
+        <img src="/Logo_sem_fundo.png" width="32" height="32" alt="" style={{ display: "block" }} />
         <span style={{ fontWeight: 500, fontSize: "20px", letterSpacing: "-0.03em", color: "#F0F0F0" }}>Bico AI</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
