@@ -1,6 +1,47 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase";
+
+interface Profile {
+  full_name: string | null;
+  city: string | null;
+  state: string | null;
+}
 
 export default function MeuPerfilPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState<Profile>({ full_name: null, city: null, state: null });
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/"); return; }
+      setEmail(user.email ?? "");
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, city, state")
+        .eq("id", user.id)
+        .single();
+      if (data) setProfile(data);
+    }
+    load();
+  }, [router]);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+  }
+
+  const displayName = profile.full_name ?? email.split("@")[0] ?? "Usuário";
+  const initial = displayName.charAt(0).toUpperCase();
+  const location = [profile.city, profile.state].filter(Boolean).join(", ") || null;
+
   return (
     <div
       style={{
@@ -11,13 +52,13 @@ export default function MeuPerfilPage() {
       }}
     >
       <Header />
-      <CoverAndAvatar />
+      <CoverAndAvatar initial={initial} name={displayName} location={location} />
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
         <Stats />
         <ProviderCard />
         <MyPosts />
         <History />
-        <SettingsList />
+        <SettingsList onSignOut={handleSignOut} />
       </div>
       <BottomNav active="Perfil" />
     </div>
@@ -65,13 +106,10 @@ function Header() {
 }
 
 /* ─── Cover + Avatar ──────────────────────────────────────── */
-function CoverAndAvatar() {
+function CoverAndAvatar({ initial, name, location }: { initial: string; name: string; location: string | null }) {
   return (
     <div style={{ paddingTop: "56px" }}>
-      {/* Cover */}
       <div style={{ height: "110px", backgroundColor: "#1A1A1A" }} />
-
-      {/* Avatar row */}
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "0 16px" }}>
         <div style={{ position: "relative", display: "inline-block", marginTop: "-40px", marginBottom: "12px" }}>
           <div
@@ -86,9 +124,8 @@ function CoverAndAvatar() {
               justifyContent: "center",
             }}
           >
-            <span style={{ fontSize: "28px", fontWeight: 500, color: "#F0F0F0" }}>G</span>
+            <span style={{ fontSize: "28px", fontWeight: 500, color: "#F0F0F0" }}>{initial}</span>
           </div>
-          {/* Edit button */}
           <button
             aria-label="Editar foto"
             style={{
@@ -114,12 +151,14 @@ function CoverAndAvatar() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
           <div>
             <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#F0F0F0", marginBottom: "4px" }}>
-              Guilherme
+              {name}
             </h1>
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <PinIcon />
-              <span style={{ fontSize: "13px", color: "#555555" }}>Taubaté, SP</span>
-            </div>
+            {location && (
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <PinIcon />
+                <span style={{ fontSize: "13px", color: "#555555" }}>{location}</span>
+              </div>
+            )}
           </div>
           <button
             style={{
@@ -186,7 +225,7 @@ function ProviderCard() {
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
         <StarIcon />
-        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Ofereça seus serviços na Ísis</p>
+        <p style={{ fontSize: "15px", fontWeight: 500, color: "#F0F0F0" }}>Ofereça seus serviços na Bico</p>
       </div>
       <p style={{ fontSize: "13px", color: "#555555", marginBottom: "14px", lineHeight: 1.6 }}>
         Cadastre seus serviços e comece a receber pedidos
@@ -302,15 +341,15 @@ function History() {
 }
 
 /* ─── Settings List ───────────────────────────────────────── */
-const SETTINGS = [
-  { label: "Dados pessoais",   icon: <PersonIcon />,   href: "/configuracoes", danger: false },
-  { label: "Notificações",     icon: <BellIcon />,     href: "/notificacoes",  danger: false },
-  { label: "Privacidade",      icon: <LockIcon />,     href: undefined,        danger: false },
-  { label: "Ajuda e suporte",  icon: <HelpIcon />,     href: undefined,        danger: false },
-  { label: "Sair da conta",    icon: <LogoutIcon />,   href: undefined,        danger: true  },
-];
+function SettingsList({ onSignOut }: { onSignOut: () => void }) {
+  const items = [
+    { label: "Dados pessoais",  icon: <PersonIcon />,  href: "/configuracoes", danger: false, action: undefined as (() => void) | undefined },
+    { label: "Notificações",    icon: <BellIcon />,    href: "/notificacoes",  danger: false, action: undefined as (() => void) | undefined },
+    { label: "Privacidade",     icon: <LockIcon />,    href: undefined,        danger: false, action: undefined as (() => void) | undefined },
+    { label: "Ajuda e suporte", icon: <HelpIcon />,    href: undefined,        danger: false, action: undefined as (() => void) | undefined },
+    { label: "Sair da conta",   icon: <LogoutIcon />,  href: undefined,        danger: true,  action: onSignOut },
+  ];
 
-function SettingsList() {
   return (
     <div
       style={{
@@ -321,8 +360,8 @@ function SettingsList() {
         marginBottom: "24px",
       }}
     >
-      {SETTINGS.map(({ label, icon, href, danger }, i) => {
-        const isLast = i === SETTINGS.length - 1;
+      {items.map(({ label, icon, href, danger, action }, i) => {
+        const isLast = i === items.length - 1;
         const inner = (
           <div
             style={{
@@ -349,7 +388,11 @@ function SettingsList() {
             </Link>
           );
         }
-        return <div key={label}>{inner}</div>;
+        return (
+          <div key={label} onClick={action} role={action ? "button" : undefined}>
+            {inner}
+          </div>
+        );
       })}
     </div>
   );
@@ -358,7 +401,7 @@ function SettingsList() {
 /* ─── Bottom Nav ──────────────────────────────────────────── */
 const NAV_ITEMS = [
   { label: "Feed",    href: "/feed",       icon: <HomeIcon /> },
-  { label: "Buscar",  href: "/busca",       icon: <SearchIcon /> },
+  { label: "Buscar",  href: "/busca",      icon: <SearchIcon /> },
   { label: "Criar",   href: "/criar-post", icon: <CreateIcon />, special: true },
   { label: "Pedidos", href: "/pedidos",    icon: <ClipboardIcon /> },
   { label: "Perfil",  href: "/meu-perfil", icon: <UserIcon /> },
