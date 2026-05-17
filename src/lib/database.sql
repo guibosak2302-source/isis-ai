@@ -12,8 +12,14 @@ create table public.profiles (
   score integer default 0,
   seal text default 'bronze' check (seal in ('bronze', 'prata', 'ouro')),
   verified boolean default false,
+  latitude numeric,
+  longitude numeric,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+
+-- Migração: adicionar coordenadas em perfis existentes
+-- alter table public.profiles add column if not exists latitude numeric;
+-- alter table public.profiles add column if not exists longitude numeric;
 
 -- TABELA DE POSTS
 create table public.posts (
@@ -29,8 +35,14 @@ create table public.posts (
   deadline text,
   status text default 'aberto' check (status in ('aberto', 'em_andamento', 'concluido', 'cancelado')),
   photos text[],
+  latitude numeric,
+  longitude numeric,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+
+-- Migração: adicionar coordenadas em instâncias existentes
+-- alter table public.posts add column if not exists latitude numeric;
+-- alter table public.posts add column if not exists longitude numeric;
 
 -- TABELA DE CANDIDATURAS
 create table public.candidaturas (

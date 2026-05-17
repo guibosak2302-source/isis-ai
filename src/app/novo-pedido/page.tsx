@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import BuscaLocalizacao from "@/components/BuscaLocalizacao";
 
 const CATEGORIES = [
   "Limpeza", "Elétrica", "Hidráulica", "Pintura",
@@ -17,6 +18,8 @@ export default function NovoPedidoPage() {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [city, setCity] = useState("");
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
   const [budgetMin, setBudgetMin] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -73,7 +76,13 @@ export default function NovoPedidoPage() {
       budget_min: budgetMin ? parseFloat(budgetMin) : null,
       photos: photoUrl ? [photoUrl] : null,
       status: "aberto",
+      ...(lat != null ? { latitude: lat, longitude: lng } : {}),
     });
+
+    // Also persist location on the user's profile so prestador search works
+    if (lat != null) {
+      void supabase.from("profiles").update({ latitude: lat, longitude: lng }).eq("id", userId);
+    }
 
     setLoading(false);
     if (insertError) {
@@ -170,12 +179,14 @@ export default function NovoPedidoPage() {
         {/* City */}
         <div style={{ marginBottom: "20px" }}>
           <label style={labelStyle}>Cidade *</label>
-          <input
-            type="text"
-            placeholder="Ex: Taubaté, SP"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            style={inputStyle}
+          <BuscaLocalizacao
+            placeholder="Buscar cidade ou bairro…"
+            defaultValue={city}
+            onSelect={(place) => {
+              setCity(place.city || place.label);
+              setLat(place.lat);
+              setLng(place.lng);
+            }}
           />
         </div>
 
