@@ -91,8 +91,7 @@ export default function CadastroPage() {
       {/* Logo */}
       <div style={{ textAlign: "center", marginBottom: "36px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/Logo_sem_fundo.png" width="48" height="48" alt="" style={{ display: "block" }} />
+          <DuckLogo />
           <h1
             style={{
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -181,6 +180,13 @@ export default function CadastroPage() {
         </Link>
       </p>
     </main>
+  );
+}
+
+function DuckLogo() {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/logo.svg" alt="Bico AI" width={56} height={56} style={{ display: "block" }} />
   );
 }
 

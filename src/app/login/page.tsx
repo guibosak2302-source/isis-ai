@@ -69,8 +69,7 @@ export default function LoginPage() {
       {/* Wordmark + Slogan */}
       <div style={{ textAlign: "center", marginBottom: "36px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", marginBottom: "12px" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/Logo_sem_fundo.png" alt="Bico AI" width={64} height={64} style={{ display: "block", objectFit: "contain" }} />
+          <DuckLogo />
           <h1
             style={{
               fontFamily: "var(--font-inter), Inter, sans-serif",
@@ -278,6 +277,13 @@ export default function LoginPage() {
         Ao continuar, você aceita os Termos e Política de Privacidade.
       </p>
     </main>
+  );
+}
+
+function DuckLogo() {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/logo.svg" alt="Bico AI" width={64} height={64} style={{ display: "block" }} />
   );
 }
 
