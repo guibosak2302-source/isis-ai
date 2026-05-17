@@ -63,6 +63,7 @@ export default function MeuPerfilPage() {
         {profile.type === "prestador" && (
           <ScoreCard score={profile.score ?? 0} seal={profile.seal} userId={userId} />
         )}
+        {userId && <AvaliacoesRecebidas userId={userId} />}
         <ProviderCard />
         <MyPosts />
         <History />
@@ -185,6 +186,108 @@ function CoverAndAvatar({ initial, name, location }: { initial: string; name: st
             Editar perfil
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Avaliações Recebidas ────────────────────────────────── */
+interface AvaliacaoItem {
+  id: string;
+  qualidade: number;
+  pontualidade: number;
+  comunicacao: number;
+  preco: number;
+  comentario: string | null;
+  created_at: string;
+  avaliador: { full_name: string | null } | null;
+}
+
+function AvaliacoesRecebidas({ userId }: { userId: string }) {
+  const [avaliacoes, setAvaliacoes] = useState<AvaliacaoItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("avaliacoes")
+        .select("id, qualidade, pontualidade, comunicacao, preco, comentario, created_at, avaliador:avaliador_id ( full_name )")
+        .eq("avaliado_id", userId)
+        .order("created_at", { ascending: false });
+      setAvaliacoes((data as unknown as AvaliacaoItem[]) ?? []);
+      setLoading(false);
+    }
+    load();
+  }, [userId]);
+
+  if (loading || avaliacoes.length === 0) return null;
+
+  const total = avaliacoes.length;
+  const mediaGeral =
+    avaliacoes.reduce((acc, a) => acc + (a.qualidade + a.pontualidade + a.comunicacao + a.preco) / 4, 0) / total;
+  const ultimas5 = avaliacoes.slice(0, 5);
+
+  return (
+    <div style={{ marginBottom: "24px" }}>
+      {/* Summary header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+        <h2 style={{ fontSize: "16px", fontWeight: 500, color: "#F0F0F0" }}>Avaliações recebidas</h2>
+        <span style={{ fontSize: "13px", color: "#555555" }}>{total} no total</span>
+      </div>
+
+      {/* Average score card */}
+      <div style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "16px", marginBottom: "12px", display: "flex", alignItems: "center", gap: "16px" }}>
+        <div style={{ textAlign: "center", flexShrink: 0 }}>
+          <p style={{ fontSize: "32px", fontWeight: 700, color: "#FFD11A", lineHeight: 1 }}>{mediaGeral.toFixed(1)}</p>
+          <p style={{ fontSize: "11px", color: "#555555", marginTop: "4px" }}>de 5</p>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", gap: "3px", marginBottom: "6px" }}>
+            {[1, 2, 3, 4, 5].map((s) => (
+              <span key={s} style={{ fontSize: "18px", color: s <= Math.round(mediaGeral) ? "#FFD11A" : "#2E2E2E" }}>★</span>
+            ))}
+          </div>
+          <p style={{ fontSize: "12px", color: "#888888" }}>
+            Baseado em {total} avaliação{total !== 1 ? "ões" : ""}
+          </p>
+        </div>
+      </div>
+
+      {/* Last 5 reviews */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {ultimas5.map((av) => {
+          const notaMedia = (av.qualidade + av.pontualidade + av.comunicacao + av.preco) / 4;
+          const nomeAvaliador = av.avaliador?.full_name ?? "Usuário";
+          const inicial = nomeAvaliador.charAt(0).toUpperCase();
+          const dataFormatada = new Date(av.created_at).toLocaleDateString("pt-BR");
+
+          return (
+            <div key={av.id} style={{ backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "12px", padding: "14px 16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: av.comentario ? "10px" : "0" }}>
+                <div style={{ width: 34, height: 34, borderRadius: "50%", backgroundColor: "#2A2A2A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: "13px", fontWeight: 500, color: "#F0F0F0" }}>{inicial}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: "14px", fontWeight: 500, color: "#F0F0F0" }}>{nomeAvaliador}</span>
+                    <span style={{ fontSize: "11px", color: "#555555", flexShrink: 0, marginLeft: "8px" }}>{dataFormatada}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: "2px", marginTop: "2px" }}>
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <span key={s} style={{ fontSize: "13px", color: s <= Math.round(notaMedia) ? "#FFD11A" : "#2E2E2E" }}>★</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {av.comentario && (
+                <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6, paddingLeft: "44px" }}>
+                  {av.comentario}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

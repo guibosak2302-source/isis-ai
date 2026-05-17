@@ -15,8 +15,8 @@ interface Contrato {
   valor_total: number | null;
   status: string;
   created_at: string;
-  contratante: { full_name: string | null } | null;
-  prestador: { full_name: string | null; id?: string } | null;
+  contratante: { id: string; full_name: string | null } | null;
+  prestador: { id: string; full_name: string | null } | null;
 }
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
@@ -50,7 +50,7 @@ export default function ContratoPage() {
         .from("contratos")
         .select(`
           id, descricao, valor_total, status, created_at,
-          contratante:contratante_id ( full_name ),
+          contratante:contratante_id ( id, full_name ),
           prestador:prestador_id ( id, full_name )
         `)
         .eq("id", id)
@@ -136,7 +136,7 @@ export default function ContratoPage() {
     setContrato((prev) => prev ? { ...prev, status: "concluido" } : prev);
 
     // Trigger score recalculation for the prestador
-    const prestadorId = (contrato.prestador as unknown as { id?: string } | null)?.id;
+    const prestadorId = contrato.prestador?.id;
     if (prestadorId) {
       void fetch("/api/calcular-score", {
         method: "POST",
@@ -276,6 +276,28 @@ export default function ContratoPage() {
                 : "Marcar como concluído"}
             </button>
           )}
+
+          {/* Avaliar — shown to both parties once contract is concluded */}
+          {userId && contrato.status === "concluido" && (
+            <>
+              {userId === contrato.contratante?.id && (
+                <Link
+                  href={`/avaliar/${contrato.id}`}
+                  style={{ width: "100%", height: "50px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", textDecoration: "none" }}
+                >
+                  <StarIcon /> Avaliar prestador
+                </Link>
+              )}
+              {userId === contrato.prestador?.id && (
+                <Link
+                  href={`/avaliar/${contrato.id}`}
+                  style={{ width: "100%", height: "50px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", textDecoration: "none" }}
+                >
+                  <StarIcon /> Avaliar contratante
+                </Link>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -305,4 +327,7 @@ function PixIcon() {
 }
 function DownloadIcon() {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>;
+}
+function StarIcon() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
 }
