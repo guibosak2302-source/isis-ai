@@ -148,7 +148,7 @@ export default function LandingPage() {
           {/* CTA buttons */}
           <div style={{ maxWidth: "320px", margin: "0 auto" }}>
             <Link
-              href="/convite"
+              href="/cadastro"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -532,7 +532,7 @@ export default function LandingPage() {
               serviços no Brasil.
             </p>
             <Link
-              href="/convite"
+              href="/cadastro"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

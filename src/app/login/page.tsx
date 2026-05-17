@@ -205,7 +205,7 @@ export default function LoginPage() {
 
         {/* Criar conta */}
         <Link
-          href="/convite"
+          href="/cadastro"
           style={{
             width: "100%",
             height: "52px",
