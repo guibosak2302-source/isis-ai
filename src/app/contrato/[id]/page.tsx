@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase";
 import jsPDF from "jspdf";
 
 type SignState = "idle" | "loading" | "done" | "error";
+type ConcluirState = "idle" | "loading" | "done";
 
 interface Contrato {
   id: string;
@@ -15,7 +16,7 @@ interface Contrato {
   status: string;
   created_at: string;
   contratante: { full_name: string | null } | null;
-  prestador: { full_name: string | null } | null;
+  prestador: { full_name: string | null; id?: string } | null;
 }
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
@@ -35,19 +36,22 @@ export default function ContratoPage() {
   const [loading, setLoading] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [signState, setSignState] = useState<SignState>("idle");
+  const [concluirState, setConcluirState] = useState<ConcluirState>("idle");
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.replace("/"); return; }
+      setUserId(user.id);
 
       const { data } = await supabase
         .from("contratos")
         .select(`
           id, descricao, valor_total, status, created_at,
           contratante:contratante_id ( full_name ),
-          prestador:prestador_id ( full_name )
+          prestador:prestador_id ( id, full_name )
         `)
         .eq("id", id)
         .single();
@@ -119,6 +123,28 @@ export default function ContratoPage() {
     } catch {
       setSignState("error");
     }
+  }
+
+  async function handleConcluir() {
+    if (!contrato || concluirState !== "idle") return;
+    setConcluirState("loading");
+    const supabase = createClient();
+    await supabase
+      .from("contratos")
+      .update({ status: "concluido" })
+      .eq("id", contrato.id);
+    setContrato((prev) => prev ? { ...prev, status: "concluido" } : prev);
+
+    // Trigger score recalculation for the prestador
+    const prestadorId = (contrato.prestador as unknown as { id?: string } | null)?.id;
+    if (prestadorId) {
+      void fetch("/api/calcular-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prestador_id: prestadorId }),
+      });
+    }
+    setConcluirState("done");
   }
 
   if (loading) {
@@ -228,6 +254,27 @@ export default function ContratoPage() {
             <p style={{ fontSize: "12px", color: "#E24B4A", textAlign: "center", marginTop: "4px" }}>
               Erro ao enviar. Verifique o token do Clicksign e tente novamente.
             </p>
+          )}
+
+          {/* Marcar como concluído — only visible to contratante when contract is not already done */}
+          {userId && contrato.status !== "concluido" && contrato.status !== "cancelado" && (
+            <button
+              onClick={handleConcluir}
+              disabled={concluirState !== "idle"}
+              style={{
+                width: "100%", height: "50px",
+                backgroundColor: concluirState === "done" ? "#1D9E75" : "transparent",
+                color: concluirState === "done" ? "#FFFFFF" : concluirState === "loading" ? "#555555" : "#1D9E75",
+                border: `1px solid ${concluirState === "done" ? "#1D9E75" : concluirState === "loading" ? "#2A2A2A" : "#1D9E7540"}`,
+                borderRadius: "999px", fontSize: "14px", fontWeight: 500,
+                fontFamily: "var(--font-inter), Inter, sans-serif",
+                cursor: concluirState !== "idle" ? "not-allowed" : "pointer",
+              }}
+            >
+              {concluirState === "loading" ? "Concluindo…"
+                : concluirState === "done" ? "✓ Contrato concluído!"
+                : "Marcar como concluído"}
+            </button>
           )}
         </div>
       </div>

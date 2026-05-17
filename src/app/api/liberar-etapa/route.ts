@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
+import { recalcularScore } from "@/lib/scoreCalculator";
 
 const ASAAS = "https://sandbox.asaas.com/api/v3";
 const asaasHeaders = () => ({ access_token: process.env.ASAAS_TOKEN ?? "" });
@@ -131,6 +132,13 @@ export async function POST(request: NextRequest) {
 
   if (dbError) {
     return NextResponse.json({ error: dbError.message }, { status: 500 });
+  }
+
+  // Recalculate prestador score asynchronously — don't block the response
+  if (contrato.prestador?.id) {
+    void recalcularScore(contrato.prestador.id).catch((e) =>
+      console.warn("Score recalculation failed:", e)
+    );
   }
 
   return NextResponse.json({
