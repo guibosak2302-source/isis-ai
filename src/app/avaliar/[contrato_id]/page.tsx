@@ -39,7 +39,7 @@ export default function AvaliarPage() {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
       setUserId(user.id);
 
       const { data } = await supabase

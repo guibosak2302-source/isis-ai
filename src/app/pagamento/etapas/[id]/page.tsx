@@ -47,7 +47,7 @@ export default function EtapasPage() {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
 
       const { data: pag } = await supabase
         .from("pagamentos")

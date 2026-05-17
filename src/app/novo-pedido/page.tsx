@@ -31,7 +31,7 @@ export default function NovoPedidoPage() {
     async function checkAuth() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
       setUserId(user.id);
     }
     checkAuth();

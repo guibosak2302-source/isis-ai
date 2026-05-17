@@ -39,7 +39,7 @@ function AvaliacaoPage() {
     setError("");
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/"); return; }
+    if (!user) { router.replace("/login"); return; }
 
     const { error: dbError } = await supabase.from("avaliacoes").insert({
       contrato_id: contrato_id || null,

@@ -47,7 +47,7 @@ export default function PagamentoPage() {
     async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/"); return; }
+      if (!user) { router.replace("/login"); return; }
 
       const [{ data: c }, { data: p }] = await Promise.all([
         supabase.from("contratos").select("id, valor_total, descricao").eq("id", contratoId).single(),

@@ -85,7 +85,7 @@ export default function FeedPage() {
   }, []);
 
   function openModal(post: Post) {
-    if (!userId) { router.push("/"); return; }
+    if (!userId) { router.replace("/login"); return; }
     setModal({ post, descricao: "", valor: "", sending: false, error: "" });
   }
 
