@@ -43,11 +43,6 @@ export default function PostPage() {
   const [interested, setInterested] = useState(false);
   const [interestCount, setInterestCount] = useState(0);
   const [interestLoading, setInterestLoading] = useState(false);
-  const [modal, setModal] = useState(false);
-  const [descricao, setDescricao] = useState("");
-  const [valor, setValor] = useState("");
-  const [sending, setSending] = useState(false);
-  const [modalError, setModalError] = useState("");
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
@@ -85,37 +80,12 @@ export default function PostPage() {
     } else {
       const { data: existing } = await supabase.from("candidaturas").select("id, status").eq("post_id", id).eq("prestador_id", userId).maybeSingle();
       if (!existing) {
-        await supabase.from("candidaturas").insert({ post_id: id, prestador_id: userId, status: "interesse", descricao: "", valor: 0 });
+        await supabase.from("candidaturas").insert({ post_id: id, prestador_id: userId, status: "interesse", proposta: "Tenho interesse neste serviço", preco: 0 });
         setInterested(true);
         setInterestCount((c) => c + 1);
       }
     }
     setInterestLoading(false);
-  }
-
-  async function submitProposta() {
-    if (!userId || !post) return;
-    if (!descricao.trim()) { setModalError("Escreva sua proposta"); return; }
-    if (!valor) { setModalError("Informe seu preço"); return; }
-    setSending(true);
-    setModalError("");
-    const supabase = createClient();
-
-    const { data: existing } = await supabase.from("candidaturas").select("id, status").eq("post_id", id).eq("prestador_id", userId).maybeSingle();
-    if (existing && existing.status !== "interesse") {
-      setModalError("Você já enviou uma proposta para este pedido"); setSending(false); return;
-    }
-
-    const op = existing
-      ? supabase.from("candidaturas").update({ descricao: descricao.trim(), valor: parseFloat(valor), status: "pendente" }).eq("id", existing.id)
-      : supabase.from("candidaturas").insert({ post_id: id, prestador_id: userId, descricao: descricao.trim(), valor: parseFloat(valor), status: "pendente" });
-
-    const { error } = await op;
-    if (error) { setModalError("Erro ao enviar. Tente novamente."); setSending(false); return; }
-
-    setModal(false);
-    setSent(true);
-    setInterested(false);
   }
 
   if (loading) {
@@ -221,7 +191,7 @@ export default function PostPage() {
           {!sent && (
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <button
-                onClick={() => setModal(true)}
+                onClick={() => { if (!userId) { router.replace("/login"); return; } router.push(`/candidatura/${id}`); }}
                 style={{ width: "100%", height: "52px", backgroundColor: "#FFD11A", color: "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "15px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}
               >
                 Enviar proposta
@@ -248,32 +218,6 @@ export default function PostPage() {
       </main>
 
       <BottomNav active="" />
-
-      {/* Proposta modal */}
-      {modal && (
-        <>
-          <div onClick={() => !sending && setModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)", zIndex: 100, backdropFilter: "blur(2px)" }} />
-          <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 101, backgroundColor: "#111111", border: "1px solid #2E2E2E", borderTopLeftRadius: "20px", borderTopRightRadius: "20px", padding: "24px 20px 40px", maxWidth: "600px", margin: "0 auto" }}>
-            <div style={{ width: "36px", height: "4px", borderRadius: "2px", backgroundColor: "#3A3A3A", margin: "0 auto 20px" }} />
-            <h3 style={{ fontSize: "17px", fontWeight: 500, color: "#F0F0F0", marginBottom: "20px" }}>Enviar proposta</h3>
-            <label style={{ display: "block", fontSize: "11px", color: "#888888", marginBottom: "6px", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>Sua proposta *</label>
-            <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descreva como você pode ajudar..." rows={4} disabled={sending}
-              style={{ width: "100%", backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "10px", padding: "12px 14px", fontSize: "14px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif", outline: "none", resize: "vertical", lineHeight: 1.6, boxSizing: "border-box" as const, marginBottom: "14px" }}
-            />
-            <label style={{ display: "block", fontSize: "11px", color: "#888888", marginBottom: "6px", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>Seu preço R$ *</label>
-            <input type="number" value={valor} onChange={(e) => setValor(e.target.value)} placeholder="Ex: 350" min={0} disabled={sending}
-              style={{ width: "100%", height: "50px", backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "10px", padding: "0 14px", fontSize: "15px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif", outline: "none", boxSizing: "border-box" as const, marginBottom: "16px" }}
-            />
-            {modalError && <p style={{ fontSize: "13px", color: "#E24B4A", marginBottom: "12px" }}>{modalError}</p>}
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={() => setModal(false)} style={{ flex: 1, height: "48px", backgroundColor: "transparent", color: "#888888", border: "1px solid #2E2E2E", borderRadius: "999px", fontSize: "14px", fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>Cancelar</button>
-              <button onClick={submitProposta} disabled={sending} style={{ flex: 2, height: "48px", backgroundColor: sending ? "#3A3A3A" : "#FFD11A", color: sending ? "#888888" : "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: sending ? "not-allowed" : "pointer" }}>
-                {sending ? "Enviando…" : "Enviar proposta"}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }
