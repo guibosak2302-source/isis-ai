@@ -181,7 +181,8 @@ export default function FeedPage() {
         .eq("post_id", post.id).eq("prestador_id", userId).maybeSingle();
       if (existing) return; // already has a proposta
       await supabase.from("candidaturas").insert({
-        post_id: post.id, prestador_id: userId, status: "interesse", descricao: "", valor: 0,
+        post_id: post.id, prestador_id: userId, status: "interesse",
+        proposta: "Tenho interesse neste serviço", preco: 0,
       });
       setMyInterests((prev) => new Set([...prev, post.id]));
       setInterestCounts((prev) => ({ ...prev, [post.id]: (prev[post.id] ?? 0) + 1 }));
@@ -431,7 +432,7 @@ function PostCard({
       {/* Photo */}
       {post.photo_url && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={post.photo_url} alt="" style={{ width: "100%", height: "200px", objectFit: "cover", display: "block" }} />
+        <img src={post.photo_url} alt="" style={{ width: "100%", height: "180px", objectFit: "cover", display: "block" }} />
       )}
 
       <div style={{ padding: "16px 20px 20px", position: "relative" }}>
@@ -487,9 +488,9 @@ function PostCard({
             onClick={onInteresse}
             style={{
               flex: 2, height: "40px", borderRadius: "999px",
-              backgroundColor: interested ? "#1A2E1A" : post.isMock ? "#2A2A2A" : "#FFD11A",
-              color: interested ? "#6FCF97" : post.isMock ? "#555555" : "#0F0F0F",
-              border: interested ? "1px solid #2E5E2E" : "none",
+              backgroundColor: interested ? "#22c55e" : post.isMock ? "#2A2A2A" : "#FFD11A",
+              color: interested ? "#fff" : post.isMock ? "#555555" : "#0F0F0F",
+              border: "none",
               fontSize: "13px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif",
               cursor: post.isMock ? "default" : "pointer",
             }}
