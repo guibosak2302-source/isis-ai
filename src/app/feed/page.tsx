@@ -30,70 +30,7 @@ interface Post {
   latitude: number | null;
   longitude: number | null;
   profiles: Profile | null;
-  isMock?: boolean;
-  mockInteresse?: number;
 }
-
-interface ModalState {
-  post: Post;
-  descricao: string;
-  valor: string;
-  sending: boolean;
-  error: string;
-}
-
-const MOCK_POSTS: Post[] = [
-  {
-    id: "mock-1", user_id: "mock", isMock: true, mockInteresse: 3,
-    title: "Preciso de faxineira semanal",
-    description: "Apartamento 2 quartos, preciso de faxina toda semana, preferencialmente às sextas.",
-    category: "Faxina", city: "São Paulo", budget_min: 150,
-    photo_url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
-    created_at: new Date(Date.now() - 5 * 60000).toISOString(),
-    latitude: null, longitude: null,
-    profiles: { id: "m1", full_name: "Maria Silva", email: null, avatar_url: null, city: "São Paulo", score: null, seal: null, verified: false },
-  },
-  {
-    id: "mock-2", user_id: "mock", isMock: true, mockInteresse: 7,
-    title: "Instalação de tomadas e disjuntor",
-    description: "Preciso de eletricista para instalar 3 tomadas e trocar disjuntor da cozinha.",
-    category: "Elétrica", city: "Guarulhos", budget_min: 200,
-    photo_url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400",
-    created_at: new Date(Date.now() - 30 * 60000).toISOString(),
-    latitude: null, longitude: null,
-    profiles: { id: "m2", full_name: "João Pereira", email: null, avatar_url: null, city: "Guarulhos", score: null, seal: null, verified: false },
-  },
-  {
-    id: "mock-3", user_id: "mock", isMock: true, mockInteresse: 4,
-    title: "Pintura de sala e quarto",
-    description: "Sala e quarto para pintar, já tenho a tinta. Preciso de mão de obra.",
-    category: "Pintura", city: "Santo André", budget_min: 400,
-    photo_url: "https://images.unsplash.com/photo-1562259929-b4e1fd3aef09?w=400",
-    created_at: new Date(Date.now() - 2 * 3600000).toISOString(),
-    latitude: null, longitude: null,
-    profiles: { id: "m3", full_name: "Ana Costa", email: null, avatar_url: null, city: "Santo André", score: null, seal: null, verified: false },
-  },
-  {
-    id: "mock-4", user_id: "mock", isMock: true, mockInteresse: 2,
-    title: "Aulas de inglês para iniciantes",
-    description: "Procuro professor de inglês para aulas semanais, sou iniciante.",
-    category: "Aulas", city: "Campinas", budget_min: 80,
-    photo_url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400",
-    created_at: new Date(Date.now() - 5 * 3600000).toISOString(),
-    latitude: null, longitude: null,
-    profiles: { id: "m4", full_name: "Carlos Mendes", email: null, avatar_url: null, city: "Campinas", score: null, seal: null, verified: false },
-  },
-  {
-    id: "mock-5", user_id: "mock", isMock: true, mockInteresse: 6,
-    title: "Montagem de móveis da sala",
-    description: "Comprei móveis novos e preciso de ajuda para montar sofá, rack e estante.",
-    category: "Reformas", city: "São Paulo", budget_min: 120,
-    photo_url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400",
-    created_at: new Date(Date.now() - 8 * 3600000).toISOString(),
-    latitude: null, longitude: null,
-    profiles: { id: "m5", full_name: "Fernanda Lima", email: null, avatar_url: null, city: "São Paulo", score: null, seal: null, verified: false },
-  },
-];
 
 function relativeTime(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -116,7 +53,6 @@ export default function FeedPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [userId, setUserId] = useState<string | null | undefined>(undefined);
-  const [modal, setModal] = useState<ModalState | null>(null);
   const [filterCity, setFilterCity] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [userLat, setUserLat] = useState<number | null>(null);
@@ -166,7 +102,6 @@ export default function FeedPage() {
 
   async function toggleInteresse(post: Post) {
     if (!userId) { router.replace("/login"); return; }
-    if (post.isMock) return;
 
     const supabase = createClient();
     const isInterested = myInterests.has(post.id);
@@ -189,44 +124,6 @@ export default function FeedPage() {
     }
   }
 
-  function openModal(post: Post) {
-    if (!userId) { router.replace("/login"); return; }
-    if (post.isMock) return;
-    setModal({ post, descricao: "", valor: "", sending: false, error: "" });
-  }
-
-  async function submitProposta() {
-    if (!modal || !userId) return;
-    if (!modal.descricao.trim()) { setModal((m) => m && ({ ...m, error: "Escreva sua proposta" })); return; }
-    if (!modal.valor) { setModal((m) => m && ({ ...m, error: "Informe seu preço" })); return; }
-    setModal((m) => m && ({ ...m, sending: true, error: "" }));
-    const supabase = createClient();
-
-    const { data: existing } = await supabase.from("candidaturas").select("id, status")
-      .eq("post_id", modal.post.id).eq("prestador_id", userId).maybeSingle();
-    if (existing && existing.status !== "interesse") {
-      setModal((m) => m && ({ ...m, sending: false, error: "Você já enviou uma proposta para este pedido" }));
-      return;
-    }
-
-    const op = existing
-      ? supabase.from("candidaturas").update({ descricao: modal.descricao.trim(), valor: parseFloat(modal.valor), status: "pendente" }).eq("id", existing.id)
-      : supabase.from("candidaturas").insert({ post_id: modal.post.id, prestador_id: userId, descricao: modal.descricao.trim(), valor: parseFloat(modal.valor), status: "pendente" });
-
-    const { error } = await op;
-    if (error) { setModal((m) => m && ({ ...m, sending: false, error: "Erro ao enviar. Tente novamente." })); return; }
-
-    void fetch("/api/notificar-whatsapp", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: modal.post.user_id, mensagem: `🔔 Bico AI: Nova proposta para '${modal.post.title ?? "seu pedido"}'!`, tipo: "nova_candidatura" }),
-    });
-
-    if (existing) {
-      setMyInterests((prev) => { const s = new Set(prev); s.delete(modal.post.id); return s; });
-    }
-    setModal(null);
-  }
-
   function pegarLocalizacao() {
     if (!navigator.geolocation) return;
     setGeoLoading(true);
@@ -246,10 +143,8 @@ export default function FeedPage() {
     if (activeCategory !== "Todos") {
       result = result.filter((p) => p.category === activeCategory);
     }
-    return result.length > 0 ? result : MOCK_POSTS;
+    return result;
   }, [posts, filterCity, activeCategory]);
-
-  const showingMocks = filteredPosts !== null && filteredPosts.length > 0 && filteredPosts[0].isMock;
 
   return (
     <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
@@ -285,28 +180,38 @@ export default function FeedPage() {
             <h2 style={{ fontSize: "18px", fontWeight: 500, color: "#F0F0F0" }}>
               {filterCity ? `Pedidos em ${filterCity}` : activeCategory === "Todos" ? "Perto de você" : activeCategory}
             </h2>
-            {filteredPosts && (
+            {filteredPosts && filteredPosts.length > 0 && (
               <p style={{ fontSize: "13px", color: "#555555", marginTop: "2px" }}>
-                {showingMocks ? "Exemplos de pedidos" : `${filteredPosts.length} pedido${filteredPosts.length !== 1 ? "s" : ""}`}
+                {filteredPosts.length} pedido{filteredPosts.length !== 1 ? "s" : ""}
               </p>
             )}
           </div>
 
           {filteredPosts === null ? (
             <LoadingSkeleton />
+          ) : filteredPosts.length === 0 ? (
+            <div style={{ textAlign: "center", paddingTop: "80px" }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "16px" }}>
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" />
+              </svg>
+              <p style={{ fontSize: "16px", fontWeight: 500, color: "#888888", marginBottom: "8px" }}>Nenhum pedido ainda</p>
+              <p style={{ fontSize: "13px", color: "#555555", marginBottom: "24px" }}>Seja o primeiro a postar!</p>
+              <Link href="/novo-pedido" style={{ display: "inline-flex", alignItems: "center", height: "44px", padding: "0 28px", backgroundColor: "#FFD11A", color: "#0F0F0F", borderRadius: "999px", fontSize: "14px", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-inter), Inter, sans-serif" }}>
+                Criar pedido
+              </Link>
+            </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {filteredPosts.map((post) => {
-                const distKm = !post.isMock && userLat != null && userLng != null && post.latitude != null && post.longitude != null
+                const distKm = userLat != null && userLng != null && post.latitude != null && post.longitude != null
                   ? haversine(userLat, userLng, post.latitude, post.longitude) : undefined;
                 return (
                   <PostCard
                     key={post.id}
                     post={post}
                     interested={myInterests.has(post.id)}
-                    interestCount={post.isMock ? (post.mockInteresse ?? 0) : (interestCounts[post.id] ?? 0)}
+                    interestCount={interestCounts[post.id] ?? 0}
                     onInteresse={() => toggleInteresse(post)}
-                    onProposta={() => openModal(post)}
                     distKm={distKm}
                   />
                 );
@@ -316,44 +221,9 @@ export default function FeedPage() {
         </div>
       </main>
       <BottomNav active="Feed" />
-
-      {modal && (
-        <>
-          <div onClick={() => !modal.sending && setModal(null)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)", zIndex: 100, backdropFilter: "blur(2px)" }} />
-          <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 101, backgroundColor: "#111111", border: "1px solid #2E2E2E", borderTopLeftRadius: "20px", borderTopRightRadius: "20px", padding: "24px 20px 40px", maxWidth: "600px", margin: "0 auto" }}>
-            <div style={{ width: "36px", height: "4px", borderRadius: "2px", backgroundColor: "#3A3A3A", margin: "0 auto 20px" }} />
-            <p style={{ fontSize: "13px", color: "#888888", marginBottom: "4px" }}>Enviando proposta</p>
-            <h3 style={{ fontSize: "17px", fontWeight: 500, color: "#F0F0F0", marginBottom: "20px", lineHeight: 1.4 }}>
-              {modal.post.title ?? modal.post.description?.slice(0, 60) ?? "Pedido"}
-            </h3>
-            <label style={labelStyle}>Sua proposta *</label>
-            <textarea value={modal.descricao} onChange={(e) => setModal((m) => m && ({ ...m, descricao: e.target.value }))}
-              placeholder="Descreva como você pode ajudar, sua experiência, prazo..." rows={4} disabled={modal.sending}
-              style={{ width: "100%", backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "10px", padding: "12px 14px", fontSize: "14px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif", outline: "none", resize: "vertical", lineHeight: 1.6, boxSizing: "border-box", marginBottom: "14px" }}
-            />
-            <label style={labelStyle}>Seu preço R$ *</label>
-            <input type="number" value={modal.valor} onChange={(e) => setModal((m) => m && ({ ...m, valor: e.target.value }))}
-              placeholder="Ex: 350" min={0} disabled={modal.sending}
-              style={{ width: "100%", height: "50px", backgroundColor: "#1A1A1A", border: "1px solid #2E2E2E", borderRadius: "10px", padding: "0 14px", fontSize: "15px", color: "#F0F0F0", fontFamily: "var(--font-inter), Inter, sans-serif", outline: "none", boxSizing: "border-box", marginBottom: "16px" }}
-            />
-            {modal.error && <p style={{ fontSize: "13px", color: "#E24B4A", marginBottom: "12px" }}>{modal.error}</p>}
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={() => setModal(null)} disabled={modal.sending} style={{ flex: 1, height: "48px", backgroundColor: "transparent", color: "#888888", border: "1px solid #2E2E2E", borderRadius: "999px", fontSize: "14px", fontFamily: "var(--font-inter), Inter, sans-serif", cursor: "pointer" }}>Cancelar</button>
-              <button onClick={submitProposta} disabled={modal.sending} style={{ flex: 2, height: "48px", backgroundColor: modal.sending ? "#3A3A3A" : "#FFD11A", color: modal.sending ? "#888888" : "#0F0F0F", border: "none", borderRadius: "999px", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-inter), Inter, sans-serif", cursor: modal.sending ? "not-allowed" : "pointer" }}>
-                {modal.sending ? "Enviando…" : "Enviar proposta"}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }
-
-const labelStyle: React.CSSProperties = {
-  display: "block", fontSize: "11px", color: "#888888", marginBottom: "6px",
-  textTransform: "uppercase", letterSpacing: "0.06em",
-};
 
 /* ─── Categories ──────────────────────────────────────────── */
 const CATEGORY_LIST = [
@@ -416,10 +286,10 @@ export function displayName(profile: { full_name?: string | null; email?: string
 }
 
 function PostCard({
-  post, interested, interestCount, onInteresse, onProposta, distKm,
+  post, interested, interestCount, onInteresse, distKm,
 }: {
   post: Post; interested: boolean; interestCount: number;
-  onInteresse: () => void; onProposta: () => void; distKm?: number;
+  onInteresse: () => void; distKm?: number;
 }) {
   const name = displayName(post.profiles);
   const initial = name.charAt(0).toUpperCase();
@@ -435,13 +305,7 @@ function PostCard({
         <img src={post.photo_url} alt="" style={{ width: "100%", height: "180px", objectFit: "cover", display: "block" }} />
       )}
 
-      <div style={{ padding: "16px 20px 20px", position: "relative" }}>
-        {post.isMock && (
-          <div style={{ position: "absolute", top: 16, right: 20, backgroundColor: "#2A2A2A", border: "1px solid #3A3A3A", borderRadius: "6px", padding: "2px 8px", fontSize: "10px", color: "#555555", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-            Exemplo
-          </div>
-        )}
-
+      <div style={{ padding: "16px 20px 20px" }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
           <div style={{ width: 40, height: 40, borderRadius: "50%", backgroundColor: "#FFD11A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -488,17 +352,17 @@ function PostCard({
             onClick={onInteresse}
             style={{
               flex: 2, height: "40px", borderRadius: "999px",
-              backgroundColor: interested ? "#22c55e" : post.isMock ? "#2A2A2A" : "#FFD11A",
-              color: interested ? "#fff" : post.isMock ? "#555555" : "#0F0F0F",
+              backgroundColor: interested ? "#22c55e" : "#FFD11A",
+              color: interested ? "#fff" : "#0F0F0F",
               border: "none",
               fontSize: "13px", fontWeight: 500, fontFamily: "var(--font-inter), Inter, sans-serif",
-              cursor: post.isMock ? "default" : "pointer",
+              cursor: "pointer",
             }}
           >
             {interested ? "✓ Interessado" : "Tenho interesse"}
           </button>
           <Link
-            href={post.isMock ? "#" : `/post/${post.id}`}
+            href={`/post/${post.id}`}
             style={{
               flex: 1, height: "40px", borderRadius: "999px", backgroundColor: "transparent",
               color: "#888888", border: "1px solid #3A3A3A", fontSize: "13px",
